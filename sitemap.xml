@@ -1,15 +1,35 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://yoursite.com/blog/archives/</loc>
-        <lastmod>2013-05-23T11:03:54-04:00</lastmod>
+        <loc>
+            http://eriktaubeneck.github.io/blog/2013/01/07/using-flask-with-nginx-and-uwsgi/
+        </loc>
+        <lastmod>2013-05-23T11:54:00-04:00</lastmod>
     </url>
     <url>
-        <loc>http://yoursite.com/</loc>
-        <lastmod>2013-05-23T11:03:54-04:00</lastmod>
+        <loc>
+            http://eriktaubeneck.github.io/blog/2013/01/15/using-the-facebook-javascript-sdk-and-jquery-to-create-user-accounts-with-a-flask-app/
+        </loc>
+        <lastmod>2013-05-23T11:53:27-04:00</lastmod>
     </url>
     <url>
-        <loc>http://yoursite.com/robots.txt</loc>
+        <loc>http://eriktaubeneck.github.io/blog/2013/03/19/print-can-be-deceiving/</loc>
+        <lastmod>2013-05-23T11:46:50-04:00</lastmod>
+    </url>
+    <url>
+        <loc>http://eriktaubeneck.github.io/blog/2013/05/21/unlocking-technology/</loc>
+        <lastmod>2013-05-23T11:30:29-04:00</lastmod>
+    </url>
+    <url>
+        <loc>http://eriktaubeneck.github.io/blog/archives/</loc>
+        <lastmod>2013-05-23T11:54:00-04:00</lastmod>
+    </url>
+    <url>
+        <loc>http://eriktaubeneck.github.io/</loc>
+        <lastmod>2013-05-23T11:54:00-04:00</lastmod>
+    </url>
+    <url>
+        <loc>http://eriktaubeneck.github.io/robots.txt</loc>
         <lastmod>2013-05-23T11:03:54-04:00</lastmod>
     </url>
 </urlset>

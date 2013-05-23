@@ -1,0 +1,401 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Using Flask with nginx and uWSGI - skien.cc</title>
+  <meta name="author" content="Erik Taubeneck">
+
+  
+  <meta name="description" content="Starting with AWS I&rsquo;m using Amazon Web Services for hosting my application. It has all sorts of fantastic capabilities, but for small stuff all &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://eriktaubeneck.github.io/blog/2013/01/07/using-flask-with-nginx-and-uwsgi">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="skien.cc" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">skien.cc</a></h1>
+  
+    <h2>a mathematician/economist/statistician by schooling, a data scientist by trade, and a python hacker by night, skien.cc (pronounced skīəns) is my blog aimed to track explorations in all of the above.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:eriktaubeneck.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Using Flask With Nginx and uWSGI</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-07T11:49:00-05:00" pubdate data-updated="true">Jan 7<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Starting with AWS</h2>
+
+<p>I&rsquo;m using <a href="http://aws.amazon.com">Amazon Web Services</a> for hosting my application. It has all sorts of fantastic capabilities, but for small stuff all I&rsquo;m really using it for is to run a Ubuntu 12.04 Server. (AMI: ubuntu/images/ebs/ubuntu-precise-12.04-amd64-server-20121001 (ami-3d4ff254)). This is on the free tier, so if you&rsquo;re a new account, you can run one of these for free for a year. If not, running it full time will cost you about $15/month. Attach that thing to a elastic IP (they&rsquo;re free as long as you&rsquo;re using it) and connect with SSH.</p>
+
+<pre><code>ssh -i key.pem ubuntu@aws-ip-address
+</code></pre>
+
+<p>One of the first things I do is add my public key to <code>~/.ssh/authorized_keys</code> on the server so that I can connect without the <code>-i key.pem</code>.</p>
+
+<!-- more -->
+
+
+<h2>Installing nginx (engine-x)</h2>
+
+<p>First, add the correct repo so that you can install the correct version. Create a file <code>/etc/apt/sources.list.d/nginx-lucid.list</code> and add the following:</p>
+
+<pre><code>deb http://nginx.org/packages/ubuntu/ lucid nginx
+deb-src http://nginx.org/packages/ubuntu/ lucid nginx
+</code></pre>
+
+<p>We will also add the gpg key to to the apt keyring. From your home directory, run:</p>
+
+<pre><code>wget http://nginx.org/keys/nginx_signing.key
+sudo apt-key add nginx_signing.key
+rm nginx_signing.key
+</code></pre>
+
+<p>Now we can install nginx with:</p>
+
+<pre><code>sudo apt-get update
+sudo apt-get install nginx
+</code></pre>
+
+<h2>Installing uWSGI</h2>
+
+<p>First, we need to install pip, then we can use pip to install uISGI.</p>
+
+<pre><code>sudo apt-get install python-dev build-essential python-pip
+sudo pip install uwsgi
+</code></pre>
+
+<p>We are going to want to un uWSGI in the background, so we will create a uwsgi user:</p>
+
+<pre><code>sudo useradd -c 'uwsgi user,,,' -g nginx -d /nonexistent -s /bin/false uwsgi
+</code></pre>
+
+<p>Now, create the file <code>/etc/init/uwsgi.conf</code> and put the following in it:</p>
+
+<pre><code>description "uWSGI"
+start on runlevel [2345]
+stop on runlevel [06]
+
+respawn
+
+exec uwsgi --master --processes 4 --die-on-term --uid uwsgi --gid nginx --socket /tmp/uwsgi.sock --chmod-socket 660 --no-site --vhost --logto /var/log/uwsgi.log
+</code></pre>
+
+<h2>Flask Configuration</h2>
+
+<p>We need to set up a Python virtual environment so that we can point uWSGI to the correct python interpreter. If you plan on ever using MySQL with Flask, then you&rsquo;ll need to use the <code>--system-site-packages</code> option for your virtual environment. For some reason, I was unable to install python-mysqldb so that the virtual environment could use it without this option.</p>
+
+<pre><code>sudo pip install virtualenv
+sudo virtualenv --system-site-packages /srv/webapps/helloworld/env
+source /srv/webapps/helloworld/env/bin/activate
+</code></pre>
+
+<p>You are now using the virtual environment. To install Flask, simply run:</p>
+
+<pre><code>sudo pip install flask
+</code></pre>
+
+<p>Now, we can deactivate the virtual environment with:</p>
+
+<pre><code>deactivate
+</code></pre>
+
+<p>For right now, I&rsquo;m just going to set up the hello world Flask app. Going to <code>aws-ip-address</code> should simply produce &ldquo;Hello, world!&rdquo;. We are going to store this in <code>/srv/webapps/helloworld</code>. It can really go wherever you want, so adjust accordingly if you want to put it somewhere else.</p>
+
+<pre><code>sudo mkdir -p /etc/webapps/helloworld
+</code></pre>
+
+<p>Now, inside of this directory, we are going to put our Flask app. It seems odd, but we are going to create another folder called <code>helloworld</code>. Then inside of that, we are going put the webapp inside of that dir in the file <code>__init__.py</code>. We will also create the <code>static</code> folder for static files like images and css stylesheets.</p>
+
+<pre><code>cd /etc/webapps/helloworld
+sudo mkdir helloworld
+sudo mkdir helloworld/static
+sudo touch helloworld/__init__.py
+</code></pre>
+
+<p>Open this file and include:</p>
+
+<pre><code>from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def landing():
+  return 'Hello, world!'
+</code></pre>
+
+<p>This allows us to import <code>helloworld</code> as a module. In <code>/etc/webapps/helloworld</code> create a file called <code>runserver.py</code>. In this we put:</p>
+
+<pre><code>from helloworld import app
+
+if __name__ == '__main__':
+  app.run(host='0.0.0.0', port=80)
+</code></pre>
+
+<p>The <code>if __name__ == '__main__'</code> is extremely important, because we only want this part to run if we run the script ourselves (rather than through a uWSGI process.). By manually setting the host and port like this, we should be able to run this and be able to access it through the built in development server. From <code>/srv/webapps/helloworld</code> run:</p>
+
+<pre><code>source /env/bin/activate
+sudo python runserver.py
+</code></pre>
+
+<p>Now, by going to <code>aws-ip-address</code> in your browser, you should see &ldquo;Hello, world!&rdquo;.  If you get an error that the address is already in use, nginx is probably already running and you can kill it with <code>sudo killall nginx</code>. If the page seems to hang and never loads, check your AWS security groups to make sure you have port 80 (HTTP) open. When you&rsquo;re done, deactivate the virtual environment:</p>
+
+<pre><code>deactivate
+</code></pre>
+
+<p>Congrats! You have a Flask app running. Now, let&rsquo;s getting running with nginx and uWSGI so it can handle a bit more traffic.</p>
+
+<h2>Setting up nginx and uWSGI</h2>
+
+<p>First, let&rsquo;s add some permissions for our uwsgi user.</p>
+
+<pre><code>sudo usermod -a -G nginx uwsgi
+</code></pre>
+
+<p>adds the user <code>uwsgi</code> to the group <code>nginx</code>.</p>
+
+<pre><code>sudo chown -R uwsgi:nginx /srv/webapps/helloworld
+</code></pre>
+
+<p>changes the owner of the directory to <code>uwsgi:nginx</code>.</p>
+
+<pre><code>sudo chmod -R g+w /srv/webapps/helloworld
+</code></pre>
+
+<p>give the group owner write capabilities to so that uWSGI can write the compiled python files.</p>
+
+<p>nginx uses <code>.conf</code> files to set it&rsquo;s configuration options. We first remove the default configuration file:</p>
+
+<pre><code>sudo rm /etc/nginx/conf.d/default.conf
+</code></pre>
+
+<p>If you don&rsquo;t have this file, you may be running a different version on nginx. Now create <code>/etc/nginx/conf.d/helloworld.conf</code> and include the following:</p>
+
+<pre><code>server {
+    listen       80;
+    server_name  localhost;
+
+    location /static {
+        alias /srv/webapps/helloworld/helloworld/static;
+    }
+
+    location / {
+        include uwsgi_params;
+        uwsgi_pass unix:/tmp/uwsgi.sock;
+        uwsgi_param UWSGI_CHDIR /srv/webapps/helloworld;
+        uwsgi_param UWSGI_PYHOME /srv/webapps/helloworld/env;
+        uwsgi_param UWSGI_MODULE helloworld;
+        uwsgi_param UWSGI_CALLABLE app;
+    }
+}
+</code></pre>
+
+<p>And there you go! Flask with a real deployment option. That said, I should say that I am not a deployment expert, and much of this here is exactly from a <a href="http://blog.kramerapps.com/post/22551999777/flask-uwsgi-nginx-ubuntu">blog by Conrad Kramer</a> with a few changes. Any suggestions on how to make this process easier or better, links to other tutorials, or anything of the like, please let me know at erik(dot)taubeneck(at)gmail.com.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Erik Taubeneck</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-07T11:49:00-05:00" pubdate data-updated="true">Jan 7<span>th</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://eriktaubeneck.github.io/blog/2013/01/07/using-flask-with-nginx-and-uwsgi/" data-via="" data-counturl="http://eriktaubeneck.github.io/blog/2013/01/07/using-flask-with-nginx-and-uwsgi/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/01/15/using-the-facebook-javascript-sdk-and-jquery-to-create-user-accounts-with-a-flask-app/" title="Next Post: Using the Facebook Javascript SDK and jQuery to Create User Accounts with a Flask App">Using the Facebook Javascript SDK and jQuery to Create User Accounts with a Flask App &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/21/unlocking-technology/">Unlocking Technology</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/19/print-can-be-deceiving/">Print Can Be Deceiving</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/15/using-the-facebook-javascript-sdk-and-jquery-to-create-user-accounts-with-a-flask-app/">Using the Facebook Javascript SDK and jQuery to Create User Accounts With a Flask App</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/07/using-flask-with-nginx-and-uwsgi/">Using Flask With Nginx and uWSGI</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/eriktaubeneck">@eriktaubeneck</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'eriktaubeneck',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Erik Taubeneck -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
