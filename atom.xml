@@ -4,7 +4,7 @@
   <title><![CDATA[skien.cc]]></title>
   <link href="http://eriktaubeneck.github.io/atom.xml" rel="self"/>
   <link href="http://eriktaubeneck.github.io/"/>
-  <updated>2013-05-24T13:08:56-04:00</updated>
+  <updated>2013-06-06T18:25:34-04:00</updated>
   <id>http://eriktaubeneck.github.io/</id>
   <author>
     <name><![CDATA[Erik Taubeneck]]></name>
@@ -96,9 +96,9 @@ except TwitterError as error:
 <pre><code>try:
   x = twitter_api.call()
 except:
-  if type(error) == list and error[0]['message'] == 'error message 1':
+  if type(error) == list and error[0]['message'] == 'error code 1':
     #do whatever you need for error message 1
-  elif error = 'error message 2':
+  elif error == 'error code 2':
     #do whatever you need for error message 2
   else:
     raise #Errors should never pass silently.
