@@ -9,7 +9,7 @@ categories:
 This is more of a short musing than a blog post, but maybe some insight that can help a beginner. This is written specifically with respect to Python, but I think some of the basic ideas translate to other object oriented languages.
 
 when `print` was your best friend
-=================================
+-----------------
 
 When someone is new to Python, and more so when new to programming in general, `print` is your best friend. Learning a new language is done by comparing what you expect happen and what actually happen. The prototypical example in any language is
 
@@ -20,7 +20,7 @@ and a new comer to Python going through something like [Learn Python the Hard Wa
 <!-- more -->
 
 when `print` isn't used
-=======================
+-------------------
 
 There are varying types of "systems" you can build in Python: (in rough order of rising complexity) scripts, packages, applications, web services/apis. This list is certainly not exhaustive, but except for the most basic scripts that calculate something like a summary statistic, `print` is rarely used.
 
@@ -31,7 +31,7 @@ Most python "systems" (or really in any language) are used to deal with data str
 In this case, we are looking for the *answer* to the problem. However, most "systems" aren't designed to answer a problem, but to *solve* it. A python module typically defines certain models and methods for manipulating those methods. A web application models objects like users and is able to pass objects specific to that user to the browser. A web scrapper loads external webpages, allowing you to collect relevant data from the page. You are unlikely to use `print` to handle that data. More likely you will store it to a database or a flat file.
 
 when `print` can be deceiving
-=============================
+--------------------
 
 You will never stop using `print`, it just will stop to be the intention of your programs. However, when ever working with a new module or framework, often times you are back to Hello World. By now you are able to read the docs and write a small program without any issue. But as you start to explore the more subtle features, often the docs will simply imply the correct implementation.
 
@@ -56,9 +56,9 @@ The result I got here in one case was `[{'message':'error code 1'}]` and in the 
     try:
       x = twitter_api.call()
     except:
-      if type(error) == list and error[0]['message'] == 'error message 1':
+      if type(error) == list and error[0]['message'] == 'error code 1':
         #do whatever you need for error message 1
-      elif error = 'error message 2':
+      elif error == 'error code 2':
         #do whatever you need for error message 2
       else:
         raise #Errors should never pass silently.
