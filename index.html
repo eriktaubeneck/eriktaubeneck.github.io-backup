@@ -9,7 +9,7 @@
   <meta name="author" content="Erik Taubeneck">
 
   
-  <meta name="description" content="I recently read an opinion piece on Wired, Beyond Unlocking: Don&rsquo;t Let Them Kill the First Decent Copyright Reform by Kyle Wiens. The author &hellip;">
+  <meta name="description" content="Flask-Twitter-OEmbedder The Twitter API V1.1 provides an endpoint for easily embedding tweets into your webpages. However, Twitter rate limits this &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,55 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/">Flask-Twitter-OEmbedder and Flask Extension Testing</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-26T15:37:00-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Flask-Twitter-OEmbedder</h2>
+
+<p>The Twitter API V1.1 provides an endpoint for easily <a href="https://dev.twitter.com/docs/api/1.1/get/statuses/oembed">embedding tweets</a> into your webpages. However, Twitter rate limits this endpoint and requires authorization. Flask Twitter OEmbedder gets your Twitter credentials from your <code>app.config</code> and exposes the <code>oembed_tweet</code> function to the Jinja templates. Flask Twitter OEmbedder also manages the caching of the tweets, given an arbitrary cache using Flask-Cache.</p>
+
+<p>You can check it out and fork it on <a href="https://github.com/eriktaubeneck/flask-twitter-oembedder">GitHub</a>. Feature requests, issues, and anything else are encouraged! This is very much alpha and I plan to continue working on it.</p>
+
+<h2>Flask Extension Testing</h2>
+
+<p><a href="https://github.com/eriktaubeneck/flask-twitter-oembedder">Flask-Twitter-OEmbedder</a> was the first Flask extension I have written (and really the first proper Python package I&rsquo;ve ever written). This summer I am lucky enough to be participating in <a href="https://www.hackerschool.com/">Hacker School</a> and one of my goals for the batch was to be able to write unit tests for my code that I develop. Since this was my first proper package, I figured it was a great place to start.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -271,6 +320,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/">Flask-Twitter-OEmbedder and Flask Extension Testing</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/05/21/unlocking-technology/">Unlocking Technology</a>

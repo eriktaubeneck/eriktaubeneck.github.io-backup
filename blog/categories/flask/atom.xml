@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Flask | skien.cc]]></title>
+  <link href="http://eriktaubeneck.github.io/blog/categories/flask/atom.xml" rel="self"/>
+  <link href="http://eriktaubeneck.github.io/"/>
+  <updated>2013-06-27T12:36:39-04:00</updated>
+  <id>http://eriktaubeneck.github.io/</id>
+  <author>
+    <name><![CDATA[Erik Taubeneck]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Flask-Twitter-OEmbedder and Flask Extension Testing]]></title>
+    <link href="http://eriktaubeneck.github.io/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/"/>
+    <updated>2013-06-26T15:37:00-04:00</updated>
+    <id>http://eriktaubeneck.github.io/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing</id>
+    <content type="html"><![CDATA[<h2>Flask-Twitter-OEmbedder</h2>
+
+<p>The Twitter API V1.1 provides an endpoint for easily <a href="https://dev.twitter.com/docs/api/1.1/get/statuses/oembed">embedding tweets</a> into your webpages. However, Twitter rate limits this endpoint and requires authorization. Flask Twitter OEmbedder gets your Twitter credentials from your <code>app.config</code> and exposes the <code>oembed_tweet</code> function to the Jinja templates. Flask Twitter OEmbedder also manages the caching of the tweets, given an arbitrary cache using Flask-Cache.</p>
+
+<p>You can check it out and fork it on <a href="https://github.com/eriktaubeneck/flask-twitter-oembedder">GitHub</a>. Feature requests, issues, and anything else are encouraged! This is very much alpha and I plan to continue working on it.</p>
+
+<h2>Flask Extension Testing</h2>
+
+<p><a href="https://github.com/eriktaubeneck/flask-twitter-oembedder">Flask-Twitter-OEmbedder</a> was the first Flask extension I have written (and really the first proper Python package I&rsquo;ve ever written). This summer I am lucky enough to be participating in <a href="https://www.hackerschool.com/">Hacker School</a> and one of my goals for the batch was to be able to write unit tests for my code that I develop. Since this was my first proper package, I figured it was a great place to start.</p>
+
+<!-- more -->
+
+
+<p>Testing in the abstract seems reflexive and redundent; I wrote code specifically to perform <code>x</code>, why would I write more code to make sure that it does <code>x</code>? This was a particularly difficult mental block for me, especially coming to development from mathematics. However, as your code base grows and relies on more and more abstraction, when something breaks, testing helps you find exactly what you broke and where to fix it. It&rsquo;s not uncommon for libraries and extensions to change their API&rsquo;s at times, in which case it may not even be code that you wrote to do <code>x</code>, and now it does <code>y</code>. Luckily earlier this year, I attended PyCon and saw <a href="http://pyvideo.org/video/1674/getting-started-with-automated-testing">this</a> great presentation on getting starting with automated testing Python.</p>
+
+<p>After getting past my mental testing block, I was faced with a few other challanges with getting testing working with my Flask extension. I had broken my extension into a handful of base states which I wanted to test:</p>
+
+<ul>
+<li>the <code>oembed_tweet()</code> function is avaliable in the Jinja templates</li>
+<li>the <code>oembed_tweet()</code> function properly embeds a tweet when given a valid tweet id</li>
+<li>the <code>oembed_tweet()</code> function fails properly (depending on the <code>app.debug</code> and local <code>debug</code> state) when given an invalid tweet id</li>
+</ul>
+
+
+<p>Each of these presented their own challanges. The first challange however, was just approaching the problem at hand. The testing documentation for Flask is all based for testing Flask apps, not Flask extensions. However, it quickly became clear that it was sufficent to use <a href="http://pythonhosted.org/Flask-Testing/">Flask-Testing</a> to create a &ldquo;dummy&rdquo; app which would utilize my extension and be able to test if it worked properly.  Unfortunetly, Flask-Testing doesn&rsquo;t have a method like <code>assertExists</code>, so I ended up testing</p>
+
+<pre><code> assert type(self.get_context_variable('oembed_tweet')) is types.FunctionType
+</code></pre>
+
+<p>The next challange was being able to run the tests offline. In general, unit tests shouldn&rsquo;t care if external API&rsquo;s are working or not. It is certainly useful and appropriate in some cases to write tests that to check for this, but for this test we just want to know if our code is working as expected, assuming that Twitter&rsquo;s API is working correctly.We(I paired with one of the awesome Hacker School facilitators, <a href="https://github.com/zachallaun">Zach Allaun</a>) started with <a href="https://github.com/kevin1024/vcrpy">vcrpy</a>, which is a port of the Ruby <a href="https://github.com/vcr/vcr">vcr</a> gem, however this didn&rsquo;t work quite right. We then moved onto <a href="https://github.com/uber/cassette">cassette</a> but it unfortunetly didn&rsquo;t play nice with HTTPS. Finally we landed on <a href="https://github.com/gabrielfalcao/HTTPretty">HTTPretty</a> which did exactly what we needed. We grabbed the actual response from Twitter and dumped it into a JSON, then HTTPretty blocks any out going requests to specific urls and returns the content of the JSON as if the request had gone through normally. It can be used as followed:</p>
+
+<pre><code>@httpretty.activate    
+def test_oembed_tweet_valid_id_debug_off(self):
+    with open('tests/data/99530515043983360.json') as f:
+        httpretty.register_uri(httpretty.GET, 'https://api.twitter.com/1.1/statuses/oembed.json?id=99530515043983360',
+            body = f.read())
+    response = self.client.get('/')
+    oembed_tweet = self.get_context_variable('oembed_tweet')
+    valid = oembed_tweet('99530515043983360')
+    assert type(valid) is Markup
+</code></pre>
+
+<p>In this example, the <code>oembed_tweet</code> fuction makes a GET request using the <code>requests</code> package to the <code>uri</code> that we specified in the <code>httpretty.register_uri()</code> call, and the response is what we specified as the <code>body</code> in the same function.</p>
+
+<p>One final interesting case is when we wanted to test what happens when we want to test how Flask-Twitter-OEmbedder handles an error from the Twitter API. In a development setting, we likely want this to actually raise an exception so that we can investigate what is causing the error (this could be a number of things: incorrect tweet id, Twitter API outage, deleted tweet, etc), but in production we would likely want it to fail gracefully and just return an empty string. Testing for an exception is fairly straight forward:</p>
+
+<pre><code>try:
+    invalid = oembed_tweet('abc')
+except Exception as e:
+    assert type(e) is KeyError
+</code></pre>
+
+<p>There is one little trick here, however, that is easy to overlook. We are expecting the second line to fail, and then we are asserting that the failure is the type that we expect. However, what if the second line doesn&rsquo;t fail? In the context of the test, we would classify this as a failure, since the failure on line 2 is what we want. But in the code above, if line 2 doesn&rsquo;t fail for some reason, the <code>assert</code> will never happen and the test will pass. We can fix this by adding one line after line 2:</p>
+
+<pre><code>try:
+    invalid = oembed_tweet('abc')
+    assert False
+except Exception as e:
+    assert type(e) is KeyError
+</code></pre>
+
+<p>The addition of <code>assert False</code> will force the <code>try</code> clause to fail, even if line 2 doesn&rsquo;t fail as expected, and since <code>assert False</code> raises an <code>Assertion Error</code>, line 5 will fail properly.</p>
+]]></content>
+  </entry>
+  
+</feed>

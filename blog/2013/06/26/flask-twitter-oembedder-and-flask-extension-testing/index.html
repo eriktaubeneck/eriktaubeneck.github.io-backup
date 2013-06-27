@@ -1,0 +1,329 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Flask-Twitter-OEmbedder and Flask Extension Testing - skien.cc</title>
+  <meta name="author" content="Erik Taubeneck">
+
+  
+  <meta name="description" content="Flask-Twitter-OEmbedder The Twitter API V1.1 provides an endpoint for easily embedding tweets into your webpages. However, Twitter rate limits this &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://eriktaubeneck.github.io/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="skien.cc" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">skien.cc</a></h1>
+  
+    <h2>a mathematician/economist/statistician by schooling, a data scientist by trade, and a python hacker by night, skien.cc (pronounced skīəns) is my blog aimed to track explorations in all of the above.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:eriktaubeneck.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Flask-Twitter-OEmbedder and Flask Extension Testing</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-26T15:37:00-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Flask-Twitter-OEmbedder</h2>
+
+<p>The Twitter API V1.1 provides an endpoint for easily <a href="https://dev.twitter.com/docs/api/1.1/get/statuses/oembed">embedding tweets</a> into your webpages. However, Twitter rate limits this endpoint and requires authorization. Flask Twitter OEmbedder gets your Twitter credentials from your <code>app.config</code> and exposes the <code>oembed_tweet</code> function to the Jinja templates. Flask Twitter OEmbedder also manages the caching of the tweets, given an arbitrary cache using Flask-Cache.</p>
+
+<p>You can check it out and fork it on <a href="https://github.com/eriktaubeneck/flask-twitter-oembedder">GitHub</a>. Feature requests, issues, and anything else are encouraged! This is very much alpha and I plan to continue working on it.</p>
+
+<h2>Flask Extension Testing</h2>
+
+<p><a href="https://github.com/eriktaubeneck/flask-twitter-oembedder">Flask-Twitter-OEmbedder</a> was the first Flask extension I have written (and really the first proper Python package I&rsquo;ve ever written). This summer I am lucky enough to be participating in <a href="https://www.hackerschool.com/">Hacker School</a> and one of my goals for the batch was to be able to write unit tests for my code that I develop. Since this was my first proper package, I figured it was a great place to start.</p>
+
+<!-- more -->
+
+
+<p>Testing in the abstract seems reflexive and redundent; I wrote code specifically to perform <code>x</code>, why would I write more code to make sure that it does <code>x</code>? This was a particularly difficult mental block for me, especially coming to development from mathematics. However, as your code base grows and relies on more and more abstraction, when something breaks, testing helps you find exactly what you broke and where to fix it. It&rsquo;s not uncommon for libraries and extensions to change their API&rsquo;s at times, in which case it may not even be code that you wrote to do <code>x</code>, and now it does <code>y</code>. Luckily earlier this year, I attended PyCon and saw <a href="http://pyvideo.org/video/1674/getting-started-with-automated-testing">this</a> great presentation on getting starting with automated testing Python.</p>
+
+<p>After getting past my mental testing block, I was faced with a few other challanges with getting testing working with my Flask extension. I had broken my extension into a handful of base states which I wanted to test:</p>
+
+<ul>
+<li>the <code>oembed_tweet()</code> function is avaliable in the Jinja templates</li>
+<li>the <code>oembed_tweet()</code> function properly embeds a tweet when given a valid tweet id</li>
+<li>the <code>oembed_tweet()</code> function fails properly (depending on the <code>app.debug</code> and local <code>debug</code> state) when given an invalid tweet id</li>
+</ul>
+
+
+<p>Each of these presented their own challanges. The first challange however, was just approaching the problem at hand. The testing documentation for Flask is all based for testing Flask apps, not Flask extensions. However, it quickly became clear that it was sufficent to use <a href="http://pythonhosted.org/Flask-Testing/">Flask-Testing</a> to create a &ldquo;dummy&rdquo; app which would utilize my extension and be able to test if it worked properly.  Unfortunetly, Flask-Testing doesn&rsquo;t have a method like <code>assertExists</code>, so I ended up testing</p>
+
+<pre><code> assert type(self.get_context_variable('oembed_tweet')) is types.FunctionType
+</code></pre>
+
+<p>The next challange was being able to run the tests offline. In general, unit tests shouldn&rsquo;t care if external API&rsquo;s are working or not. It is certainly useful and appropriate in some cases to write tests that to check for this, but for this test we just want to know if our code is working as expected, assuming that Twitter&rsquo;s API is working correctly.We(I paired with one of the awesome Hacker School facilitators, <a href="https://github.com/zachallaun">Zach Allaun</a>) started with <a href="https://github.com/kevin1024/vcrpy">vcrpy</a>, which is a port of the Ruby <a href="https://github.com/vcr/vcr">vcr</a> gem, however this didn&rsquo;t work quite right. We then moved onto <a href="https://github.com/uber/cassette">cassette</a> but it unfortunetly didn&rsquo;t play nice with HTTPS. Finally we landed on <a href="https://github.com/gabrielfalcao/HTTPretty">HTTPretty</a> which did exactly what we needed. We grabbed the actual response from Twitter and dumped it into a JSON, then HTTPretty blocks any out going requests to specific urls and returns the content of the JSON as if the request had gone through normally. It can be used as followed:</p>
+
+<pre><code>@httpretty.activate    
+def test_oembed_tweet_valid_id_debug_off(self):
+    with open('tests/data/99530515043983360.json') as f:
+        httpretty.register_uri(httpretty.GET, 'https://api.twitter.com/1.1/statuses/oembed.json?id=99530515043983360',
+            body = f.read())
+    response = self.client.get('/')
+    oembed_tweet = self.get_context_variable('oembed_tweet')
+    valid = oembed_tweet('99530515043983360')
+    assert type(valid) is Markup
+</code></pre>
+
+<p>In this example, the <code>oembed_tweet</code> fuction makes a GET request using the <code>requests</code> package to the <code>uri</code> that we specified in the <code>httpretty.register_uri()</code> call, and the response is what we specified as the <code>body</code> in the same function.</p>
+
+<p>One final interesting case is when we wanted to test what happens when we want to test how Flask-Twitter-OEmbedder handles an error from the Twitter API. In a development setting, we likely want this to actually raise an exception so that we can investigate what is causing the error (this could be a number of things: incorrect tweet id, Twitter API outage, deleted tweet, etc), but in production we would likely want it to fail gracefully and just return an empty string. Testing for an exception is fairly straight forward:</p>
+
+<pre><code>try:
+    invalid = oembed_tweet('abc')
+except Exception as e:
+    assert type(e) is KeyError
+</code></pre>
+
+<p>There is one little trick here, however, that is easy to overlook. We are expecting the second line to fail, and then we are asserting that the failure is the type that we expect. However, what if the second line doesn&rsquo;t fail? In the context of the test, we would classify this as a failure, since the failure on line 2 is what we want. But in the code above, if line 2 doesn&rsquo;t fail for some reason, the <code>assert</code> will never happen and the test will pass. We can fix this by adding one line after line 2:</p>
+
+<pre><code>try:
+    invalid = oembed_tweet('abc')
+    assert False
+except Exception as e:
+    assert type(e) is KeyError
+</code></pre>
+
+<p>The addition of <code>assert False</code> will force the <code>try</code> clause to fail, even if line 2 doesn&rsquo;t fail as expected, and since <code>assert False</code> raises an <code>Assertion Error</code>, line 5 will fail properly.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Erik Taubeneck</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-26T15:37:00-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/flask/'>Flask</a>, <a class='category' href='/blog/categories/python/'>Python</a>, <a class='category' href='/blog/categories/testing/'>Testing</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://eriktaubeneck.github.io/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/" data-via="" data-counturl="http://eriktaubeneck.github.io/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/05/21/unlocking-technology/" title="Previous Post: Unlocking Technology">&laquo; Unlocking Technology</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/">Flask-Twitter-OEmbedder and Flask Extension Testing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/21/unlocking-technology/">Unlocking Technology</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/19/print-can-be-deceiving/">Print Can Be Deceiving</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/15/using-the-facebook-javascript-sdk-and-jquery-to-create-user-accounts-with-a-flask-app/">Using the Facebook Javascript SDK and jQuery to Create User Accounts With a Flask App</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/07/using-flask-with-nginx-and-uwsgi/">Using Flask With Nginx and uWSGI</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/eriktaubeneck">@eriktaubeneck</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'eriktaubeneck',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Erik Taubeneck -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'skiencc';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://eriktaubeneck.github.io/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/';
+        var disqus_url = 'http://eriktaubeneck.github.io/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
