@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: copyright | skien.cc]]></title>
-  <link href="http://eriktaubeneck.github.io/blog/categories/copyright/atom.xml" rel="self"/>
-  <link href="http://eriktaubeneck.github.io/"/>
-  <updated>2013-06-27T12:36:39-04:00</updated>
-  <id>http://eriktaubeneck.github.io/</id>
+  <link href="http://skien.cc/blog/categories/copyright/atom.xml" rel="self"/>
+  <link href="http://skien.cc/"/>
+  <updated>2014-01-15T03:50:25-05:00</updated>
+  <id>http://skien.cc/</id>
   <author>
     <name><![CDATA[Erik Taubeneck]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Unlocking Technology]]></title>
-    <link href="http://eriktaubeneck.github.io/blog/2013/05/21/unlocking-technology/"/>
+    <link href="http://skien.cc/blog/2013/05/21/unlocking-technology/"/>
     <updated>2013-05-21T11:26:00-04:00</updated>
-    <id>http://eriktaubeneck.github.io/blog/2013/05/21/unlocking-technology</id>
+    <id>http://skien.cc/blog/2013/05/21/unlocking-technology</id>
     <content type="html"><![CDATA[<p>I recently read an opinion piece on Wired, <a href="http://www.wired.com/opinion/2013/05/dont-let-them/">Beyond Unlocking: Don&rsquo;t Let Them Kill the First Decent Copyright Reform</a> by Kyle Wiens. The author touts the bill as &ldquo;<em>not</em> a band-aid,&rdquo; but &ldquo;a solution&rdquo; because</p>
 
 <blockquote><p>[it] would allow all consumers to circumvent the digital locks on their mobile devices. Anyone could access and modify software on their devices, in the same way they already modify and repair hardware.</p></blockquote>
