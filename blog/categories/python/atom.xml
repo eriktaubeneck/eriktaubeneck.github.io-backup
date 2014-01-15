@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Python | skien.cc]]></title>
-  <link href="http://skien.cc/blog/categories/python/atom.xml" rel="self"/>
-  <link href="http://skien.cc/"/>
-  <updated>2014-01-15T03:50:25-05:00</updated>
-  <id>http://skien.cc/</id>
+  <link href="http://eriktaubeneck.github.io/blog/categories/python/atom.xml" rel="self"/>
+  <link href="http://eriktaubeneck.github.io/"/>
+  <updated>2014-01-15T04:15:04-05:00</updated>
+  <id>http://eriktaubeneck.github.io/</id>
   <author>
     <name><![CDATA[Erik Taubeneck]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Flask-Twitter-OEmbedder and Flask Extension Testing]]></title>
-    <link href="http://skien.cc/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/"/>
+    <link href="http://eriktaubeneck.github.io/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/"/>
     <updated>2013-06-26T15:37:00-04:00</updated>
-    <id>http://skien.cc/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing</id>
+    <id>http://eriktaubeneck.github.io/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing</id>
     <content type="html"><![CDATA[<h2>Flask-Twitter-OEmbedder</h2>
 
 <p>The Twitter API V1.1 provides an endpoint for easily <a href="https://dev.twitter.com/docs/api/1.1/get/statuses/oembed">embedding tweets</a> into your webpages. However, Twitter rate limits this endpoint and requires authorization. Flask Twitter OEmbedder gets your Twitter credentials from your <code>app.config</code> and exposes the <code>oembed_tweet</code> function to the Jinja templates. Flask Twitter OEmbedder also manages the caching of the tweets, given an arbitrary cache using Flask-Cache.</p>
