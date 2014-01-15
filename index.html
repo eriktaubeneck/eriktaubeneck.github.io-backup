@@ -9,7 +9,7 @@
   <meta name="author" content="Erik Taubeneck">
 
   
-  <meta name="description" content="Flask-Twitter-OEmbedder The Twitter API V1.1 provides an endpoint for easily embedding tweets into your webpages. However, Twitter rate limits this &hellip;">
+  <meta name="description" content="Note: Examples here are built with respect to Flask SQLAlchemy, and while some notation may match that convention, the concepts should apply to use &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/">SQLAlchemy and Race Conditions: Implementing `get_one_or_create()`</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-15T13:57:00-05:00" pubdate data-updated="true">Jan 15<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Note: Examples here are built with respect to <a href="http://pythonhosted.org/Flask-SQLAlchemy/">Flask SQLAlchemy</a>, and while some notation may match that convention, the concepts should apply to use of <a href="http://www.sqlalchemy.org/">SQLAlchemy</a> in general.</p>
+
+<h2>Motivation</h2>
+
+<p>Suppose we have a <a href="http://flask.pocoo.org/">Flask</a> app that interacts with an API on a site that hosts webgames. Our users have OAuth&#8217;ed our application into the API so we can see their activity, and we want to track which games they have beat. (We&rsquo;ll assume that users only beat a game once or more generally we are only concerned with the first time they beat it.) We create the <code>Game</code> and <code>GameBeat</code> models like so:</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -337,6 +384,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/">SQLAlchemy and Race Conditions: Implementing `get_one_or_create()`</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/">Flask-Twitter-OEmbedder and Flask Extension Testing</a>
       </li>
     
@@ -350,10 +401,6 @@
     
       <li class="post">
         <a href="/blog/2013/01/15/using-the-facebook-javascript-sdk-and-jquery-to-create-user-accounts-with-a-flask-app/">Using the Facebook Javascript SDK and jQuery to Create User Accounts With a Flask App</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/01/07/using-flask-with-nginx-and-uwsgi/">Using Flask With Nginx and uWSGI</a>
       </li>
     
   </ul>

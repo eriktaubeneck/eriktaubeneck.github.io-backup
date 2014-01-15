@@ -1,24 +1,100 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[skien.cc]]></title>
-  <link href="http://eriktaubeneck.github.io/atom.xml" rel="self"/>
-  <link href="http://eriktaubeneck.github.io/"/>
-  <updated>2014-01-15T13:59:14-05:00</updated>
-  <id>http://eriktaubeneck.github.io/</id>
-  <author>
-    <name><![CDATA[Erik Taubeneck]]></name>
-    
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>SQLAlchemy and Race Conditions: Implementing `get_one_or_create()` - skien.cc</title>
+  <meta name="author" content="Erik Taubeneck">
 
   
-  <entry>
-    <title type="html"><![CDATA[SQLAlchemy and Race Conditions: Implementing `get_one_or_create()`]]></title>
-    <link href="http://eriktaubeneck.github.io/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/"/>
-    <updated>2014-01-15T13:57:00-05:00</updated>
-    <id>http://eriktaubeneck.github.io/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing</id>
-    <content type="html"><![CDATA[<p>Note: Examples here are built with respect to <a href="http://pythonhosted.org/Flask-SQLAlchemy/">Flask SQLAlchemy</a>, and while some notation may match that convention, the concepts should apply to use of <a href="http://www.sqlalchemy.org/">SQLAlchemy</a> in general.</p>
+  <meta name="description" content="Note: Examples here are built with respect to Flask SQLAlchemy, and while some notation may match that convention, the concepts should apply to use &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://eriktaubeneck.github.io/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="skien.cc" type="application/atom+xml">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">skien.cc</a></h1>
+  
+    <h2>a mathematician/economist/statistician by schooling, a data scientist by trade, and a python hacker by night, skien.cc (pronounced skīəns) is my blog aimed to track explorations in all of the above.</h2>
+  
+  <div class="clear"></div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:eriktaubeneck.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">SQLAlchemy and Race Conditions: Implementing `get_one_or_create()`</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-15T13:57:00-05:00" pubdate data-updated="true">Jan 15<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Note: Examples here are built with respect to <a href="http://pythonhosted.org/Flask-SQLAlchemy/">Flask SQLAlchemy</a>, and while some notation may match that convention, the concepts should apply to use of <a href="http://www.sqlalchemy.org/">SQLAlchemy</a> in general.</p>
 
 <h2>Motivation</h2>
 
@@ -458,657 +534,181 @@
 <p>How does this work in Tornado or Twisted? My friend and former colleague <a href="https://github.com/bmuller">Brian Muller</a> wrote <a href="http://findingscience.com/twistar/">Twistar</a>, a Python implementation of a nonblocking active record pattern interface to relational databases (built to use with Twisted). It&rsquo;s been on my list of packages to read. To some extent, building a webapp in Twisted has a high upfront cost, but it also has this added value of forcing you to think deeper and see these problems before you have a few hundred duplicated entries in your database.</p>
 
 <p>I love Flask and the community, and it has all been very good to me as being quite new to web app development, but part of me wants to start playing around with the JS template systems like <a href="http://facebook.github.io/react/">React</a>. This also makes sense as you start getting into the realm of iOS and Android apps. At some point you have many different &ldquo;front ends&rdquo; and your backend is really just serving up data to fill it. At that point, a centralized template system like Jinja makes less sense, and moving from Flask to Twisted makes more sense.</p>
-]]></content>
-  </entry>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-  <entry>
-    <title type="html"><![CDATA[Flask-Twitter-OEmbedder and Flask Extension Testing]]></title>
-    <link href="http://eriktaubeneck.github.io/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/"/>
-    <updated>2013-06-26T15:37:00-04:00</updated>
-    <id>http://eriktaubeneck.github.io/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing</id>
-    <content type="html"><![CDATA[<h2>Flask-Twitter-OEmbedder</h2>
 
-<p>The Twitter API V1.1 provides an endpoint for easily <a href="https://dev.twitter.com/docs/api/1.1/get/statuses/oembed">embedding tweets</a> into your webpages. However, Twitter rate limits this endpoint and requires authorization. Flask Twitter OEmbedder gets your Twitter credentials from your <code>app.config</code> and exposes the <code>oembed_tweet</code> function to the Jinja templates. Flask Twitter OEmbedder also manages the caching of the tweets, given an arbitrary cache using Flask-Cache.</p>
+<span class="byline author vcard">Posted by <span class="fn">Erik Taubeneck</span></span>
 
-<p>You can check it out and fork it on <a href="https://github.com/eriktaubeneck/flask-twitter-oembedder">GitHub</a>. Feature requests, issues, and anything else are encouraged! This is very much alpha and I plan to continue working on it.</p>
-
-<h2>Flask Extension Testing</h2>
-
-<p><a href="https://github.com/eriktaubeneck/flask-twitter-oembedder">Flask-Twitter-OEmbedder</a> was the first Flask extension I have written (and really the first proper Python package I&rsquo;ve ever written). This summer I am lucky enough to be participating in <a href="https://www.hackerschool.com/">Hacker School</a> and one of my goals for the batch was to be able to write unit tests for my code that I develop. Since this was my first proper package, I figured it was a great place to start.</p>
-
-<!-- more -->
+      
 
 
-<p>Testing in the abstract seems reflexive and redundent; I wrote code specifically to perform <code>x</code>, why would I write more code to make sure that it does <code>x</code>? This was a particularly difficult mental block for me, especially coming to development from mathematics. However, as your code base grows and relies on more and more abstraction, when something breaks, testing helps you find exactly what you broke and where to fix it. It&rsquo;s not uncommon for libraries and extensions to change their API&rsquo;s at times, in which case it may not even be code that you wrote to do <code>x</code>, and now it does <code>y</code>. Luckily earlier this year, I attended PyCon and saw <a href="http://pyvideo.org/video/1674/getting-started-with-automated-testing">this</a> great presentation on getting starting with automated testing Python.</p>
-
-<p>After getting past my mental testing block, I was faced with a few other challanges with getting testing working with my Flask extension. I had broken my extension into a handful of base states which I wanted to test:</p>
-
-<ul>
-<li>the <code>oembed_tweet()</code> function is avaliable in the Jinja templates</li>
-<li>the <code>oembed_tweet()</code> function properly embeds a tweet when given a valid tweet id</li>
-<li>the <code>oembed_tweet()</code> function fails properly (depending on the <code>app.debug</code> and local <code>debug</code> state) when given an invalid tweet id</li>
-</ul>
 
 
-<p>Each of these presented their own challanges. The first challange however, was just approaching the problem at hand. The testing documentation for Flask is all based for testing Flask apps, not Flask extensions. However, it quickly became clear that it was sufficent to use <a href="http://pythonhosted.org/Flask-Testing/">Flask-Testing</a> to create a &ldquo;dummy&rdquo; app which would utilize my extension and be able to test if it worked properly.  Unfortunetly, Flask-Testing doesn&rsquo;t have a method like <code>assertExists</code>, so I ended up testing</p>
 
-<pre><code> assert type(self.get_context_variable('oembed_tweet')) is types.FunctionType
-</code></pre>
 
-<p>The next challange was being able to run the tests offline. In general, unit tests shouldn&rsquo;t care if external API&rsquo;s are working or not. It is certainly useful and appropriate in some cases to write tests that to check for this, but for this test we just want to know if our code is working as expected, assuming that Twitter&rsquo;s API is working correctly.We(I paired with one of the awesome Hacker School facilitators, <a href="https://github.com/zachallaun">Zach Allaun</a>) started with <a href="https://github.com/kevin1024/vcrpy">vcrpy</a>, which is a port of the Ruby <a href="https://github.com/vcr/vcr">vcr</a> gem, however this didn&rsquo;t work quite right. We then moved onto <a href="https://github.com/uber/cassette">cassette</a> but it unfortunetly didn&rsquo;t play nice with HTTPS. Finally we landed on <a href="https://github.com/gabrielfalcao/HTTPretty">HTTPretty</a> which did exactly what we needed. We grabbed the actual response from Twitter and dumped it into a JSON, then HTTPretty blocks any out going requests to specific urls and returns the content of the JSON as if the request had gone through normally. It can be used as followed:</p>
 
-<pre><code>@httpretty.activate    
-def test_oembed_tweet_valid_id_debug_off(self):
-    with open('tests/data/99530515043983360.json') as f:
-        httpretty.register_uri(httpretty.GET, 'https://api.twitter.com/1.1/statuses/oembed.json?id=99530515043983360',
-            body = f.read())
-    response = self.client.get('/')
-    oembed_tweet = self.get_context_variable('oembed_tweet')
-    valid = oembed_tweet('99530515043983360')
-    assert type(valid) is Markup
-</code></pre>
 
-<p>In this example, the <code>oembed_tweet</code> fuction makes a GET request using the <code>requests</code> package to the <code>uri</code> that we specified in the <code>httpretty.register_uri()</code> call, and the response is what we specified as the <code>body</code> in the same function.</p>
-
-<p>One final interesting case is when we wanted to test what happens when we want to test how Flask-Twitter-OEmbedder handles an error from the Twitter API. In a development setting, we likely want this to actually raise an exception so that we can investigate what is causing the error (this could be a number of things: incorrect tweet id, Twitter API outage, deleted tweet, etc), but in production we would likely want it to fail gracefully and just return an empty string. Testing for an exception is fairly straight forward:</p>
-
-<pre><code>try:
-    invalid = oembed_tweet('abc')
-except Exception as e:
-    assert type(e) is KeyError
-</code></pre>
-
-<p>There is one little trick here, however, that is easy to overlook. We are expecting the second line to fail, and then we are asserting that the failure is the type that we expect. However, what if the second line doesn&rsquo;t fail? In the context of the test, we would classify this as a failure, since the failure on line 2 is what we want. But in the code above, if line 2 doesn&rsquo;t fail for some reason, the <code>assert</code> will never happen and the test will pass. We can fix this by adding one line after line 2:</p>
-
-<pre><code>try:
-    invalid = oembed_tweet('abc')
-    assert False
-except Exception as e:
-    assert type(e) is KeyError
-</code></pre>
-
-<p>The addition of <code>assert False</code> will force the <code>try</code> clause to fail, even if line 2 doesn&rsquo;t fail as expected, and since <code>assert False</code> raises an <code>Assertion Error</code>, line 5 will fail properly.</p>
-]]></content>
-  </entry>
   
-  <entry>
-    <title type="html"><![CDATA[Unlocking Technology]]></title>
-    <link href="http://eriktaubeneck.github.io/blog/2013/05/21/unlocking-technology/"/>
-    <updated>2013-05-21T11:26:00-04:00</updated>
-    <id>http://eriktaubeneck.github.io/blog/2013/05/21/unlocking-technology</id>
-    <content type="html"><![CDATA[<p>I recently read an opinion piece on Wired, <a href="http://www.wired.com/opinion/2013/05/dont-let-them/">Beyond Unlocking: Don&rsquo;t Let Them Kill the First Decent Copyright Reform</a> by Kyle Wiens. The author touts the bill as &ldquo;<em>not</em> a band-aid,&rdquo; but &ldquo;a solution&rdquo; because</p>
-
-<blockquote><p>[it] would allow all consumers to circumvent the digital locks on their mobile devices. Anyone could access and modify software on their devices, in the same way they already modify and repair hardware.</p></blockquote>
-
-<p>On the surface, this seems like pretty clear position. I bought my hardware, I own it, I should be able to take it apart and use it however I want! The only reason tech companies would want to put digital locks on whatever devices they sell is because they want to maintain complete control of their platform and make more money. Those damn corporate fat cats! How could you not want to support such a clear and open policy?</p>
-
-<p>But I argue (in homage to <a href="http://www.freakonomics.com/">Freakonomics</a>) that there is a hidden side here.</p>
-
-<!-- more -->
 
 
-<p>One of Wiens &ldquo;side effects&rdquo; of the current &ldquo;faulty approach&rdquo; to copyright is &ldquo;scientists who can&rsquo;t install Linux on game consoles to build affordable <a href="http://www.syracuse.com/news/index.ssf/2011/03/rome_labs_supercomputer_is_mad.html">supercomputer</a> cluster <a href="http://www.joystiq.com/2010/05/12/air-force-disappointed-by-ps3s-other-os-removal/">for research</a> purposes.&rdquo; This is my first clue that something is quite wrong here. I&rsquo;ve seen some cool stuff with <a href="http://arstechnica.com/security/2012/12/25-gpu-cluster-cracks-every-standard-windows-password-in-6-hours/">GPU hacking</a>, but what the hell do these guys need with the controller that comes with each console? For a 25-core system, you&rsquo;d get 25 disc drives, 25 hdmi ports, and 25 hard drives when you&rsquo;re probably using an entirely separate data store.</p>
+<time datetime="2014-01-15T13:57:00-05:00" pubdate data-updated="true">Jan 15<span>th</span>, 2014</time>
+      
 
-<p>The answer? Video game consoles are cheaper than the parts inside of them. If you google <a href="https://www.google.com/search?q=video+game+console+lose+money&amp;aq=f&amp;oq=video+game+console+lose+money">&ldquo;video game console lose money&rdquo;</a>, it&rsquo;s pretty obvious that consoles like the Xbox 360 and Playstation 3 end up at a market price that is well below the cost of the parts and labor required to produce them. This probably shouldn&rsquo;t come as a huge surprise; it&rsquo;s not a secret that these consoles are sold at a loss to generate greater demand for the games.</p>
-
-<p>So what about these scientists, who aren&rsquo;t purchasing any games for their PS3s? In economic terms, these uses are receiving a subsidy towards their hardware. The cost of this subsidy is shared between consumers who purchase games and the producers of the consoles (the ratio of which is dependent on the demand elasticity of the console). Gamers should be upset about this. Their games are both more expensive and also receive less R&amp;D funding because others are abusing an arbitrage.</p>
-
-<p>I think everyone can agree that generally, stealing is bad. Property law is one of the main functions of government, and intellectual property is difficult. But when someone hacks a PS3 or unlocks their iPhone, they are not only stealing from the likes of Sony or Apple, but also from consumers. So how about a compromise. Require all technology to have the ability to be unlocked, which is available at a market driven price (along with a likely change or loss of warranty). This allows manufacturers to reclaim their losses on consoles that won&rsquo;t be used for their intended use, and still allow anyone to use their technology however they want. But I want to use my iPhone with the app store, and I want to use my XBox 360 to play Mass Effect and Portal, and I want that subsidy because I&rsquo;m OK playing by the rules. The economic impact of this policy would be a sharp increase in price of all of our devices; that means less people will buy them, less money will be spent on apps (and threaten the emerging cottage industry), and less money will be spent on the R&amp;D on technology as a general.</p>
-]]></content>
-  </entry>
+<span class="categories">
   
-  <entry>
-    <title type="html"><![CDATA[print can be deceiving]]></title>
-    <link href="http://eriktaubeneck.github.io/blog/2013/03/19/print-can-be-deceiving/"/>
-    <updated>2013-03-19T11:42:00-04:00</updated>
-    <id>http://eriktaubeneck.github.io/blog/2013/03/19/print-can-be-deceiving</id>
-    <content type="html"><![CDATA[<p>This is more of a short musing than a blog post, but maybe some insight that can help a beginner. This is written specifically with respect to Python, but I think some of the basic ideas translate to other object oriented languages.</p>
-
-<h2>when <code>print</code> was your best friend</h2>
-
-<p>When someone is new to Python, and more so when new to programming in general, <code>print</code> is your best friend. Learning a new language is done by comparing what you expect happen and what actually happen. The prototypical example in any language is</p>
-
-<pre><code>print 'Hello World!'
-</code></pre>
-
-<p>and a new comer to Python going through something like <a href="http://learnpythonthehardway.org/">Learn Python the Hard Way</a> (LPTHW) will spend a number of lessons where a script ends with a <code>print</code> statement revealing the <em>answer</em>. This is notable because in a production system, <code>print</code> isn&rsquo;t used much at all, unless something goes wrong.</p>
-
-<!-- more -->
-
-
-<h2>when <code>print</code> isn&rsquo;t used</h2>
-
-<p>There are varying types of &ldquo;systems&rdquo; you can build in Python: (in rough order of rising complexity) scripts, packages, applications, web services/apis. This list is certainly not exhaustive, but except for the most basic scripts that calculate something like a summary statistic, <code>print</code> is rarely used.</p>
-
-<p>Most python &ldquo;systems&rdquo; (or really in any language) are used to deal with data structures that are rarely reduced down to one dimension. For example, <a href="http://projecteuler.net/problem=1">Project Euler, Problem 1</a> challenges you to find the sum of all the multiples of 3 or 5 below 1000. Python accomplishes this in 1 step:</p>
-
-<pre><code>print sum([x for x in range(1000) if x % 3 == 0 or x % 5 == 0])
-</code></pre>
-
-<p>In this case, we are looking for the <em>answer</em> to the problem. However, most &ldquo;systems&rdquo; aren&rsquo;t designed to answer a problem, but to <em>solve</em> it. A python module typically defines certain models and methods for manipulating those methods. A web application models objects like users and is able to pass objects specific to that user to the browser. A web scrapper loads external webpages, allowing you to collect relevant data from the page. You are unlikely to use <code>print</code> to handle that data. More likely you will store it to a database or a flat file.</p>
-
-<h2>when <code>print</code> can be deceiving</h2>
-
-<p>You will never stop using <code>print</code>, it just will stop to be the intention of your programs. However, when ever working with a new module or framework, often times you are back to Hello World. By now you are able to read the docs and write a small program without any issue. But as you start to explore the more subtle features, often the docs will simply imply the correct implementation.</p>
-
-<p><code>print</code> will again be your best friend when you mess something up and you&rsquo;re trying to figure out where you went wrong. However, <code>print</code> can often hide important things when you are debugging. For example, in an interactive python session:</p>
-
-<pre><code>&gt;&gt;&gt; print 2
-2
-&gt;&gt;&gt; print '2'
-2
-</code></pre>
-
-<p><code>print</code> isn&rsquo;t going let you know if the object you are printing here is a <code>int</code> or a <code>str</code>. Even more insidious, it could be a custom class with an attribute <code>val = 2</code> with it&rsquo;s <code>__repr__</code> method defined as <code>print self.val</code>. This is roughly the problem I recently ran into.</p>
-
-<p>I was working with the <a href="https://github.com/bear/python-twitter">python-twitter</a> module and trying to deal with different twitter errors differently. The pseudo-code to figure out the errors:</p>
-
-<pre><code>try:
-  x = twitter_api.call()
-except TwitterError as error:
-  print error
-</code></pre>
-
-<p>The result I got here in one case was <code>[{'message':'error code 1'}]</code> and in the other <code>error code 2</code>. Now this is kind of a pain in the ass, and really the result of python-twitter handling different errors with different methods (probably an issue worth fixing), but it&rsquo;s solvable with</p>
-
-<pre><code>try:
-  x = twitter_api.call()
-except:
-  if type(error) == list and error[0]['message'] == 'error code 1':
-    #do whatever you need for error message 1
-  elif error == 'error code 2':
-    #do whatever you need for error message 2
-  else:
-    raise #Errors should never pass silently.
-</code></pre>
-
-<p>The problem here is that error is not a <code>str</code> but a instance of the <code>TwitterError</code> class, which has an attribute <code>message</code> that is printed when <code>print</code> is called on the object. This is expect behavior, and quite obviously implied by <code>TwitterError as error</code>. But easy enough to miss. A find and replace of <code>error</code> to <code>error.message</code> on the above code fixes it.</p>
-
-<p>One really handy way to help with these types of situations is running <code>python -i your_script.py</code>. This will open up an interactive session after the script exits upon an error or on completion. In this case, I was able observe the <code>error</code> variable after the <code>TwitterError</code> was raised when I thought that it would be captured. So remember, <code>print</code> doesn&rsquo;t always give you the full picture.</p>
-]]></content>
-  </entry>
+    <a class='category' href='/blog/categories/celery/'>Celery</a>, <a class='category' href='/blog/categories/sqlalchemy/'>SQLAlchemy</a>, <a class='category' href='/blog/categories/python/'>python</a>
   
-  <entry>
-    <title type="html"><![CDATA[Using the Facebook Javascript SDK and jQuery to Create User Accounts with a Flask App]]></title>
-    <link href="http://eriktaubeneck.github.io/blog/2013/01/15/using-the-facebook-javascript-sdk-and-jquery-to-create-user-accounts-with-a-flask-app/"/>
-    <updated>2013-01-15T11:51:00-05:00</updated>
-    <id>http://eriktaubeneck.github.io/blog/2013/01/15/using-the-facebook-javascript-sdk-and-jquery-to-create-user-accounts-with-a-flask-app</id>
-    <content type="html"><![CDATA[<p>Before we get started, the full code is available on <a href="https://github.com/eriktaubeneck/flask_facebook_login">GitHub</a>.</p>
-
-<h2>Getting Started with <a href="https://developers.facebook.com/">developers.facebook.com</a></h2>
-
-<p>To work with any of the Facebook APIs, you need to be a Facebook developer. Just go to <a href="https://developers.facebook.com/">developers.facebook.com</a> and sign up with your Facebook account. Once you&rsquo;re signed in, click on Apps and create a new app. In order to actually communicate with the app, you will need to register the app with a domain name where the app will live. One option for this is to use (heroku)[<a href="http://www.heroku.com/">http://www.heroku.com/</a>], although I used AWS on a subdomain of my existing domain. The repo in it&rsquo;s current state isn&rsquo;t set up for heroku, and may require a few changes to run there.</p>
-
-<h2>Using the Facebook JavaScript SDK</h2>
-
-<p>I should first point out that Facebook has <a href="https://developers.facebook.com/docs/howtos/login/getting-started/">fantastic documentation</a> for using this SDK. This section is mostly the same as the their content, with a few Flask specific things.</p>
-
-<!-- more -->
+</span>
 
 
-<p>We start by inserting the JavaScript SDK initialization snippet after the opening of the <code>&lt;body&gt;</code> tag in <code>layout.html</code> and <code>index.html</code>. I put</p>
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://eriktaubeneck.github.io/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/" data-via="" data-counturl="http://eriktaubeneck.github.io/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/" >Tweet</a>
+  
+  
+  
+</div>
 
-<pre><code>&lt;div id="fb-root"&gt;&lt;/div&gt;
-</code></pre>
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/" title="Previous Post: Flask-Twitter-OEmbedder and Flask Extension Testing">&laquo; Flask-Twitter-OEmbedder and Flask Extension Testing</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-<p>in <code>layout.html</code> and then</p>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
-<pre><code>&lt;script&gt;
-  // Additional JS functions here
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : 'YOUR_APP_ID', // App ID
-      channelUrl : '//WWW.YOUR_DOMAIN.COM/channel.html', // Channel File
-      status     : true, // check login status
-      cookie     : true, // enable cookies to allow the server to access the session
-      xfbml      : true  // parse XFBML
+</div>
+
+<aside class="sidebar">
+  <img src="/images/me.jpg">
+  <p>
+  Follow Me <a href="https://twitter.com/taubeneck">@taubeneck</a>
+  </p>
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/">SQLAlchemy and Race Conditions: Implementing `get_one_or_create()`</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/">Flask-Twitter-OEmbedder and Flask Extension Testing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/21/unlocking-technology/">Unlocking Technology</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/19/print-can-be-deceiving/">Print Can Be Deceiving</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/15/using-the-facebook-javascript-sdk-and-jquery-to-create-user-accounts-with-a-flask-app/">Using the Facebook Javascript SDK and jQuery to Create User Accounts With a Flask App</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/eriktaubeneck">@eriktaubeneck</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'eriktaubeneck',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
     });
-    // Additional init code here
-  };
-  // Load the SDK Asynchronously
-  (function(d){
-     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement('script'); js.id = id; js.async = true;
-     js.src = "//connect.facebook.net/en_US/all.js";
-     ref.parentNode.insertBefore(js, ref);
-   }(document));
-&lt;/script&gt;
-</code></pre>
-
-<p>in a block called <code>facebook_js</code> in <code>index.html</code>, which extends <code>layout.hmtl</code>. I imagine some of the logic that we are going to build out will vary from page to page, hence making it specific to the <code>index.html</code> page, rather than in ever page that extends <code>layout.html</code>.</p>
-
-<p>You will need to make two changes specific to your app: the <code>appId</code> and <code>channelUrl</code>. I hard coded the <code>channelUrl</code> to an absolute url, <code>http://my.app.com/channel</code> (but there are probably better ways to do this). I also added a route in the flask app. In <code>__init__.py</code>, add</p>
-
-<pre><code>@app.route('/channel')
-def channel():
-  return render_template('channel.html')
-</code></pre>
-
-<p>and in <code>templates/</code> add a file called <code>channel.html</code> with just</p>
-
-<pre><code>&lt;script src="http://eriktaubeneck.github.io//connect.facebook.net/en_US/all.js"&gt;&lt;/script&gt;
-</code></pre>
-
-<p>in it.  Now we are set up to interface with Facebook. We now will need to check if the user is logged into Facebook and has authorized our app. In the above code block <code>facebook_js</code>, add the following within the <code>window.fbAsyncInit</code> function declaration (where we have <code>// Additional init code here</code>):</p>
-
-<pre><code>FB.getLoginStatus(function(response) {
-  if (response.status === 'connected') {
-    // connected
-  } else if (response.status === 'not_authorized') {
-    // not_authorized
-  } else {
-    // not_logged_in
-  }
- });
-</code></pre>
-
-<p>Right now, this code doesn&rsquo;t actually do anything, but we can now define different actions depending upon three cases: users is logged in to Facebook and has authorized your app, user is logged in to Facebook but not authorized your app, or user is not logged in to Facebook (and hence authorization is unknown).</p>
-
-<h2>Six Cases</h2>
-
-<p>At this point we will introduce the concept of the app user as well. The idea here is that we will want to store the <code>facebook_id</code> server side so that we can poll their account info with another part of the application (or another process altogether). After we create or get the user, we will store the user object in the <code>session</code> variable. Now, when a user comes to our site, this will double the number of possible cases to 6:</p>
-
-<ol>
-<li>App user is logged in AND user is logged into Facebook and has authorized your app</li>
-<li>App user is logged in AND user is logged into Facebook but not authorized your app</li>
-<li>App user is logged in AND user is not logged into Facebook (and hence authorization is unknown)</li>
-<li>App user is not logged in AND user is logged into Facebook and has authorized your app</li>
-<li>App user is not logged in AND user is logged into Facebook but not authorized your app</li>
-<li>App user is not logged in AND user is not logged into Facebook (and hence authorization is unknown)</li>
-</ol>
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
 
 
-<p>To handle these cases, we will render the JavaScript in the template differently depending upon if the user object exists:</p>
 
-<pre><code>FB.getLoginStatus(function(response) {
-  if (response.status === 'connected') {
-    // user not logged in but connected to facebook. case 4.
-    console.log('user not logged in but connected to facebook')
-  } else if (response.status === 'not_authorized') {
-    // user not logged in but app not_authorized on facebook. case 5. 
-    console.log('user not logged in but app not_authorized on facebook')
-  } else {
-    // user not logged in and not_logged_in to facebook. case 6.
-    console.log('user not logged in and not_logged_in to facebook')
-  }
-});      
-</code></pre>
 
-<p>Again, this code doesn&rsquo;t actually do anything, but just sets us up to define what happens in each of these cases. To handle most of these cases, I used modals, provided by <a href="http://foundation.zurb.com/docs/reveal.php">Foundation 3</a>. Foundation is much like Twitter Bootstrap, but I found it to be more awesome. (I just came upon it, you&rsquo;ll note that my <a href="http://skien.cc/fractal_game/random">Fractal Stock Game</a> was built with Twitter Bootstrap).</p>
 
-<p>So now let&rsquo;s go through these case by case. In our first case, if the user is logged in on our site, as well as Facebook and authorized our app, we really don&rsquo;t need to do anything. This is what we want. So we don&rsquo;t need to do anything here. The next two cases assume that the user already exists on the app side, and has either removed the access to the Facebook app, or is not currently logged into Facebook. The fourth case assumes the user has authorized our app, is currently logged into Facebook, but not our app. We will come back to these cases.</p>
-
-<p>Let&rsquo;s skip to the case where the user is a new user and has yet to authorize our app. We will either get case 5 or 6, depending upon if the user is currently signed into Facebook. Either way, we will want to prompt the user to login to Facebook (if needed) and authorize our app. This is done by calling the following function from the Facebook JavaScript SDK:</p>
-
-<pre><code>FB.login(function(response) {
-    if (response.authResponse) {
-        // connected
-        console.log('login successful')
-    } else {
-        // cancelled
-        console.log('login failed ')
-    }
-});
-</code></pre>
-
-<p>Now, this produces a pop-up from Facebook to allow the user to login (if needed) and then authorize the app. Most browsers will block popups like this if they are generated directly upon the page load, so it&rsquo;s better to attach this call to a user action, like clicking a button. So in the body of <code>index.html</code>, I created a modal with the following:</p>
-
-<pre><code>&lt;div id="login_modal" class="reveal-modal"&gt;
-  &lt;h2&gt; Welcome to creeper! &lt;/h2&gt;
-  &lt;p&gt;
-    Creeper requires you to login through your Facebook account.
-  &lt;/p&gt;
-    &lt;a href="#" id="facebook_login" class="button"&gt; Get started. Login with Facebook. &lt;/a&gt;
-  &lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-
-<p>We want this modal to appear in cases 5 and 6, and we want to attach the <code>FB.login()</code> function to the button in the modal. To accomplish the first, we add following to cases 5 and 6 in the <code>FB.getLoginStatus()</code> functions:</p>
-
-<pre><code>$("#login_modal").reveal();
-</code></pre>
-
-<p>It&rsquo;s important to note that the following is called before this chunk of Facebook JavaScript as this action above requires jQuery:</p>
-
-<pre><code>&lt;script src=&gt;&lt;/script&gt;
-&lt;script src=&gt;&lt;/script&gt;
-&lt;script src=&gt;&lt;/script&gt;
-</code></pre>
-
-<p>Now, we can attach the <code>FB.login()</code> function to the button in the modal using jQuery as well:</p>
-
-<pre><code>$(function(){
-  $('a#facebook_login').bind('click', function () {
-      FB.login(function(response) {
-          if (response.authResponse) {
-              // connected
-              console.log('login successful')
-          } else {
-              // cancelled
-              console.log('login failed ')
-          }
-      });
-      return false;
-    });
-  });
-</code></pre>
-
-<p>To deal with cases 2 and 3, we include the following 2 modals:</p>
-
-<pre><code>&lt;div id="user_no_facebook_auth_modal" class="reveal-modal"&gt;
-  &lt;h2&gt; Whoops! &lt;/h2&gt;
-  &lt;p&gt;
-    It seems that creeper isn't authorized on your Facebook account anymore.
-  &lt;/p&gt;
-    &lt;a href="#" id="facebook_login" class="button"&gt; Reconnect to Facebook. &lt;/a&gt;
-  &lt;/p&gt;
-&lt;/div&gt;  
-
-&lt;div id="user_no_facebook_login_modal" class="reveal-modal"&gt;
-  &lt;h2&gt; Whoops! &lt;/h2&gt;
-  &lt;p&gt;
-    It seems that you aren't logged into Facebook currently. Creeper works closely with 
-    your Facebook account.
-  &lt;/p&gt;
-    &lt;a href="#" id="facebook_login" class="button"&gt; Login to Facebook. &lt;/a&gt;
-  &lt;/p&gt;
-&lt;/div&gt;
-</code></pre>
-
-<p>and attach to case 2 with:</p>
-
-<pre><code>$("#user_no_facebook_auth_modal").reveal();
-</code></pre>
-
-<p>and attach to case 3 with:</p>
-
-<pre><code>$("#user_no_facebook_login_modal").reveal();
-</code></pre>
-
-<p>Since the <code>&lt;a&gt;</code> tags all have <code>id="facebook_login"</code>, so the <code>FB.login</code> function is attached to these buttons as well automatically.</p>
-
-<p>The final case, case 4, is fairly simple. The user is logged into Facebook and authorized our app, so we just need to get that user object.</p>
-
-<h2>Creating and Getting the App User Object</h2>
-
-<p>So far we&rsquo;ve only considered if the user object exists, but we haven&rsquo;t talked about creating and fetching it from the Flask app. Luckily we can pass data from the JavaScript response to the Flask app using jQuery. To do this, we make a JavaScript function <code>get_user()</code>:</p>
-
-<pre><code>function get_user() {
-    FB.api('/me', function(response) {
-      $.getJSON($SCRIPT_ROOT + '/_get_facebook_login', 
-                { facebook_id: response.id, name: response.name },
-                function(data) {
-                  console.log(data);
-                  location.reload(true);
-                });
-    });
-}
-</code></pre>
-
-<p>In a basic set up, <code>$SCRITP_ROOT</code> will be an empty string, however the <a href="http://flask.pocoo.org/docs/patterns/jquery/">Flask docs</a> recommends using it and setting it to:</p>
-
-<pre><code>&lt;script type=text/javascript&gt;
-  $SCRIPT_ROOT = ;
-&lt;/script&gt;
-</code></pre>
-
-<p>This must be set before it&rsquo;s reference, obviously.</p>
-
-<p>The <code>$.getJSON()</code> function takes a url, an object, <em>data</em>, and a function, <em>func</em>. The function makes a GET request to the url with the contents of the data object as query parameters. Once it gets a response, it calls <em>func</em> with the response value as an argument.</p>
-
-<p>Now, on the Flask app, we render <code>index.html</code> at <code>/</code> with:</p>
-
-<pre><code>@app.route('/')
-def landing():
-  return render_template('index.html', user=session.get('user', None))
-</code></pre>
-
-<p>This is going to pass a <code>user=None</code> until the user is set. So let&rsquo;s create the user.  First, let&rsquo;s define the <code>Users</code> class:</p>
-
-<pre><code>class Users(db.Model):
-  id = db.Column(db.Integer, primary_key=True)
-  facebook_id = db.Column(db.Integer)
-  name = db.Column(db.String(50))
-
-  def __init__(self,facebook_id, name):
-    self.facebook_id = facebook_id
-    self.name = name
-</code></pre>
-
-<p>I put this in a separate <code>models.py</code>, but it can also go in <code>__init__.py</code> after the app is defined. Now, at <code>/_get_facebook_login</code> we attach:</p>
-
-<pre><code>@app.route('/_get_facebook_login')
-def get_facebook_login():
-  facebook_id = request.args.get('facebook_id', False, type=int)
-  name = request.args.get('name', '', type=str)
-  if facebook_id:
-    user = Users.query.filter_by(facebook_id=facebook_id).first()
-    if not user:
-      user = Users(facebook_id,name)
-      db.session.add(user)
-      db.session.commit()
-    session['user'] = user
-  return jsonify(result=1)
-</code></pre>
-
-<p>This function looks for <code>facebook_id</code> and <code>name</code> from the request sent by <code>$.getJSON()</code> function. If we don&rsquo;t get the <code>facebook_id</code> then it skips getting the user and just returns <code>{"result":"1"}</code>. If we do, we first try to get a user from our database with that <code>facebook_id</code>, and if there is none, we create the user and commit it to the database. Either way, we add the user to the session. We could return a different value showing we now have the user, but we don&rsquo;t do anything with that data in the JavaScript. Now that the session has a user object, by returning a result, <em>func</em> in <code>$.getJSON()</code> gets called. This triggers <code>location.reload(true);</code>, which reloads the page.</p>
-
-<p>The final thing we need to do is drop in <code>get_user()</code> in a few places. In the end, the <code>FB.login()</code> call will look like:</p>
-
-<pre><code>$(function(){
-  $('a#facebook_login').bind('click', function () {
-    FB.login(function(response) {
-      if (response.authResponse) {
-        // connected
-        console.log('login successful')
-        get_user()
-      } else {
-        // cancelled
-        console.log('login failed ')
-      }
-    });
-return false;
-  });
-});
-</code></pre>
-
-<p>and our <code>FB.getLoginStatus()</code> call will look like:</p>
-
-<pre><code>  FB.getLoginStatus(function(response) {
-    if (response.status === 'connected') {
-      // connected
-      console.log('connected')
-      $("#no_user_facebook_modal").reveal()
-      get_user()
-    } else if (response.status === 'not_authorized') {
-      // not_authorized
-      console.log('not authorized')
-      $("#login_modal").reveal();
-    } else {
-      // not_logged_in
-      console.log('not logged in')
-      $("#login_modal").reveal();
-    }
-   });      
-</code></pre>
-
-<p>And that&rsquo;s about it. The full code is available on <a href="https://github.com/eriktaubeneck/flask_facebook_login">GitHub</a>, so fork me!</p>
-]]></content>
-  </entry>
   
-  <entry>
-    <title type="html"><![CDATA[Using Flask with nginx and uWSGI]]></title>
-    <link href="http://eriktaubeneck.github.io/blog/2013/01/07/using-flask-with-nginx-and-uwsgi/"/>
-    <updated>2013-01-07T11:49:00-05:00</updated>
-    <id>http://eriktaubeneck.github.io/blog/2013/01/07/using-flask-with-nginx-and-uwsgi</id>
-    <content type="html"><![CDATA[<h2>Starting with AWS</h2>
-
-<p>I&rsquo;m using <a href="http://aws.amazon.com">Amazon Web Services</a> for hosting my application. It has all sorts of fantastic capabilities, but for small stuff all I&rsquo;m really using it for is to run a Ubuntu 12.04 Server. (AMI: ubuntu/images/ebs/ubuntu-precise-12.04-amd64-server-20121001 (ami-3d4ff254)). This is on the free tier, so if you&rsquo;re a new account, you can run one of these for free for a year. If not, running it full time will cost you about $15/month. Attach that thing to a elastic IP (they&rsquo;re free as long as you&rsquo;re using it) and connect with SSH.</p>
-
-<pre><code>ssh -i key.pem ubuntu@aws-ip-address
-</code></pre>
-
-<p>One of the first things I do is add my public key to <code>~/.ssh/authorized_keys</code> on the server so that I can connect without the <code>-i key.pem</code>.</p>
-
-<!-- more -->
+</aside>
 
 
-<h2>Installing nginx (engine-x)</h2>
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Erik Taubeneck -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
 
-<p>First, add the correct repo so that you can install the correct version. Create a file <code>/etc/apt/sources.list.d/nginx-lucid.list</code> and add the following:</p>
-
-<pre><code>deb http://nginx.org/packages/ubuntu/ lucid nginx
-deb-src http://nginx.org/packages/ubuntu/ lucid nginx
-</code></pre>
-
-<p>We will also add the gpg key to to the apt keyring. From your home directory, run:</p>
-
-<pre><code>wget http://nginx.org/keys/nginx_signing.key
-sudo apt-key add nginx_signing.key
-rm nginx_signing.key
-</code></pre>
-
-<p>Now we can install nginx with:</p>
-
-<pre><code>sudo apt-get update
-sudo apt-get install nginx
-</code></pre>
-
-<h2>Installing uWSGI</h2>
-
-<p>First, we need to install pip, then we can use pip to install uISGI.</p>
-
-<pre><code>sudo apt-get install python-dev build-essential python-pip
-sudo pip install uwsgi
-</code></pre>
-
-<p>We are going to want to un uWSGI in the background, so we will create a uwsgi user:</p>
-
-<pre><code>sudo useradd -c 'uwsgi user,,,' -g nginx -d /nonexistent -s /bin/false uwsgi
-</code></pre>
-
-<p>Now, create the file <code>/etc/init/uwsgi.conf</code> and put the following in it:</p>
-
-<pre><code>description "uWSGI"
-start on runlevel [2345]
-stop on runlevel [06]
-
-respawn
-
-exec uwsgi --master --processes 4 --die-on-term --uid uwsgi --gid nginx --socket /tmp/uwsgi.sock --chmod-socket 660 --no-site --vhost --logto /var/log/uwsgi.log
-</code></pre>
-
-<h2>Flask Configuration</h2>
-
-<p>We need to set up a Python virtual environment so that we can point uWSGI to the correct python interpreter. If you plan on ever using MySQL with Flask, then you&rsquo;ll need to use the <code>--system-site-packages</code> option for your virtual environment. For some reason, I was unable to install python-mysqldb so that the virtual environment could use it without this option.</p>
-
-<pre><code>sudo pip install virtualenv
-sudo virtualenv --system-site-packages /srv/webapps/helloworld/env
-source /srv/webapps/helloworld/env/bin/activate
-</code></pre>
-
-<p>You are now using the virtual environment. To install Flask, simply run:</p>
-
-<pre><code>sudo pip install flask
-</code></pre>
-
-<p>Now, we can deactivate the virtual environment with:</p>
-
-<pre><code>deactivate
-</code></pre>
-
-<p>For right now, I&rsquo;m just going to set up the hello world Flask app. Going to <code>aws-ip-address</code> should simply produce &ldquo;Hello, world!&rdquo;. We are going to store this in <code>/srv/webapps/helloworld</code>. It can really go wherever you want, so adjust accordingly if you want to put it somewhere else.</p>
-
-<pre><code>sudo mkdir -p /etc/webapps/helloworld
-</code></pre>
-
-<p>Now, inside of this directory, we are going to put our Flask app. It seems odd, but we are going to create another folder called <code>helloworld</code>. Then inside of that, we are going put the webapp inside of that dir in the file <code>__init__.py</code>. We will also create the <code>static</code> folder for static files like images and css stylesheets.</p>
-
-<pre><code>cd /etc/webapps/helloworld
-sudo mkdir helloworld
-sudo mkdir helloworld/static
-sudo touch helloworld/__init__.py
-</code></pre>
-
-<p>Open this file and include:</p>
-
-<pre><code>from flask import Flask
-app = Flask(__name__)
-
-@app.route('/')
-def landing():
-  return 'Hello, world!'
-</code></pre>
-
-<p>This allows us to import <code>helloworld</code> as a module. In <code>/etc/webapps/helloworld</code> create a file called <code>runserver.py</code>. In this we put:</p>
-
-<pre><code>from helloworld import app
-
-if __name__ == '__main__':
-  app.run(host='0.0.0.0', port=80)
-</code></pre>
-
-<p>The <code>if __name__ == '__main__'</code> is extremely important, because we only want this part to run if we run the script ourselves (rather than through a uWSGI process.). By manually setting the host and port like this, we should be able to run this and be able to access it through the built in development server. From <code>/srv/webapps/helloworld</code> run:</p>
-
-<pre><code>source /env/bin/activate
-sudo python runserver.py
-</code></pre>
-
-<p>Now, by going to <code>aws-ip-address</code> in your browser, you should see &ldquo;Hello, world!&rdquo;.  If you get an error that the address is already in use, nginx is probably already running and you can kill it with <code>sudo killall nginx</code>. If the page seems to hang and never loads, check your AWS security groups to make sure you have port 80 (HTTP) open. When you&rsquo;re done, deactivate the virtual environment:</p>
-
-<pre><code>deactivate
-</code></pre>
-
-<p>Congrats! You have a Flask app running. Now, let&rsquo;s getting running with nginx and uWSGI so it can handle a bit more traffic.</p>
-
-<h2>Setting up nginx and uWSGI</h2>
-
-<p>First, let&rsquo;s add some permissions for our uwsgi user.</p>
-
-<pre><code>sudo usermod -a -G nginx uwsgi
-</code></pre>
-
-<p>adds the user <code>uwsgi</code> to the group <code>nginx</code>.</p>
-
-<pre><code>sudo chown -R uwsgi:nginx /srv/webapps/helloworld
-</code></pre>
-
-<p>changes the owner of the directory to <code>uwsgi:nginx</code>.</p>
-
-<pre><code>sudo chmod -R g+w /srv/webapps/helloworld
-</code></pre>
-
-<p>give the group owner write capabilities to so that uWSGI can write the compiled python files.</p>
-
-<p>nginx uses <code>.conf</code> files to set it&rsquo;s configuration options. We first remove the default configuration file:</p>
-
-<pre><code>sudo rm /etc/nginx/conf.d/default.conf
-</code></pre>
-
-<p>If you don&rsquo;t have this file, you may be running a different version on nginx. Now create <code>/etc/nginx/conf.d/helloworld.conf</code> and include the following:</p>
-
-<pre><code>server {
-    listen       80;
-    server_name  localhost;
-
-    location /static {
-        alias /srv/webapps/helloworld/helloworld/static;
-    }
-
-    location / {
-        include uwsgi_params;
-        uwsgi_pass unix:/tmp/uwsgi.sock;
-        uwsgi_param UWSGI_CHDIR /srv/webapps/helloworld;
-        uwsgi_param UWSGI_PYHOME /srv/webapps/helloworld/env;
-        uwsgi_param UWSGI_MODULE helloworld;
-        uwsgi_param UWSGI_CALLABLE app;
-    }
-}
-</code></pre>
-
-<p>And there you go! Flask with a real deployment option. That said, I should say that I am not a deployment expert, and much of this here is exactly from a <a href="http://blog.kramerapps.com/post/22551999777/flask-uwsgi-nginx-ubuntu">blog by Conrad Kramer</a> with a few changes. Any suggestions on how to make this process easier or better, links to other tutorials, or anything of the like, please let me know at erik(dot)taubeneck(at)gmail.com.</p>
-]]></content>
-  </entry>
+</footer>
   
-</feed>
+
+<script type="text/javascript">
+      var disqus_shortname = 'skiencc';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://eriktaubeneck.github.io/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/';
+        var disqus_url = 'http://eriktaubeneck.github.io/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
