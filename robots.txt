@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://eriktaubeneck.github.io/sitemap.xml 
+Sitemap: http://skien.cc/sitemap.xml 

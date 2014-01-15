@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: SQLAlchemy | skien.cc]]></title>
-  <link href="http://eriktaubeneck.github.io/blog/categories/sqlalchemy/atom.xml" rel="self"/>
-  <link href="http://eriktaubeneck.github.io/"/>
-  <updated>2014-01-15T13:59:14-05:00</updated>
-  <id>http://eriktaubeneck.github.io/</id>
+  <link href="http://skien.cc/blog/categories/sqlalchemy/atom.xml" rel="self"/>
+  <link href="http://skien.cc/"/>
+  <updated>2014-01-15T14:02:36-05:00</updated>
+  <id>http://skien.cc/</id>
   <author>
     <name><![CDATA[Erik Taubeneck]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[SQLAlchemy and Race Conditions: Implementing `get_one_or_create()`]]></title>
-    <link href="http://eriktaubeneck.github.io/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/"/>
+    <link href="http://skien.cc/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/"/>
     <updated>2014-01-15T13:57:00-05:00</updated>
-    <id>http://eriktaubeneck.github.io/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing</id>
+    <id>http://skien.cc/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing</id>
     <content type="html"><![CDATA[<p>Note: Examples here are built with respect to <a href="http://pythonhosted.org/Flask-SQLAlchemy/">Flask SQLAlchemy</a>, and while some notation may match that convention, the concepts should apply to use of <a href="http://www.sqlalchemy.org/">SQLAlchemy</a> in general.</p>
 
 <h2>Motivation</h2>

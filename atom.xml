@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[skien.cc]]></title>
-  <link href="http://eriktaubeneck.github.io/atom.xml" rel="self"/>
-  <link href="http://eriktaubeneck.github.io/"/>
-  <updated>2014-01-15T13:59:14-05:00</updated>
-  <id>http://eriktaubeneck.github.io/</id>
+  <link href="http://skien.cc/atom.xml" rel="self"/>
+  <link href="http://skien.cc/"/>
+  <updated>2014-01-15T14:02:36-05:00</updated>
+  <id>http://skien.cc/</id>
   <author>
     <name><![CDATA[Erik Taubeneck]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[SQLAlchemy and Race Conditions: Implementing `get_one_or_create()`]]></title>
-    <link href="http://eriktaubeneck.github.io/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/"/>
+    <link href="http://skien.cc/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/"/>
     <updated>2014-01-15T13:57:00-05:00</updated>
-    <id>http://eriktaubeneck.github.io/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing</id>
+    <id>http://skien.cc/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing</id>
     <content type="html"><![CDATA[<p>Note: Examples here are built with respect to <a href="http://pythonhosted.org/Flask-SQLAlchemy/">Flask SQLAlchemy</a>, and while some notation may match that convention, the concepts should apply to use of <a href="http://www.sqlalchemy.org/">SQLAlchemy</a> in general.</p>
 
 <h2>Motivation</h2>
@@ -463,9 +463,9 @@
   
   <entry>
     <title type="html"><![CDATA[Flask-Twitter-OEmbedder and Flask Extension Testing]]></title>
-    <link href="http://eriktaubeneck.github.io/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/"/>
+    <link href="http://skien.cc/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/"/>
     <updated>2013-06-26T15:37:00-04:00</updated>
-    <id>http://eriktaubeneck.github.io/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing</id>
+    <id>http://skien.cc/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing</id>
     <content type="html"><![CDATA[<h2>Flask-Twitter-OEmbedder</h2>
 
 <p>The Twitter API V1.1 provides an endpoint for easily <a href="https://dev.twitter.com/docs/api/1.1/get/statuses/oembed">embedding tweets</a> into your webpages. However, Twitter rate limits this endpoint and requires authorization. Flask Twitter OEmbedder gets your Twitter credentials from your <code>app.config</code> and exposes the <code>oembed_tweet</code> function to the Jinja templates. Flask Twitter OEmbedder also manages the caching of the tweets, given an arbitrary cache using Flask-Cache.</p>
@@ -533,9 +533,9 @@ except Exception as e:
   
   <entry>
     <title type="html"><![CDATA[Unlocking Technology]]></title>
-    <link href="http://eriktaubeneck.github.io/blog/2013/05/21/unlocking-technology/"/>
+    <link href="http://skien.cc/blog/2013/05/21/unlocking-technology/"/>
     <updated>2013-05-21T11:26:00-04:00</updated>
-    <id>http://eriktaubeneck.github.io/blog/2013/05/21/unlocking-technology</id>
+    <id>http://skien.cc/blog/2013/05/21/unlocking-technology</id>
     <content type="html"><![CDATA[<p>I recently read an opinion piece on Wired, <a href="http://www.wired.com/opinion/2013/05/dont-let-them/">Beyond Unlocking: Don&rsquo;t Let Them Kill the First Decent Copyright Reform</a> by Kyle Wiens. The author touts the bill as &ldquo;<em>not</em> a band-aid,&rdquo; but &ldquo;a solution&rdquo; because</p>
 
 <blockquote><p>[it] would allow all consumers to circumvent the digital locks on their mobile devices. Anyone could access and modify software on their devices, in the same way they already modify and repair hardware.</p></blockquote>
@@ -559,9 +559,9 @@ except Exception as e:
   
   <entry>
     <title type="html"><![CDATA[print can be deceiving]]></title>
-    <link href="http://eriktaubeneck.github.io/blog/2013/03/19/print-can-be-deceiving/"/>
+    <link href="http://skien.cc/blog/2013/03/19/print-can-be-deceiving/"/>
     <updated>2013-03-19T11:42:00-04:00</updated>
-    <id>http://eriktaubeneck.github.io/blog/2013/03/19/print-can-be-deceiving</id>
+    <id>http://skien.cc/blog/2013/03/19/print-can-be-deceiving</id>
     <content type="html"><![CDATA[<p>This is more of a short musing than a blog post, but maybe some insight that can help a beginner. This is written specifically with respect to Python, but I think some of the basic ideas translate to other object oriented languages.</p>
 
 <h2>when <code>print</code> was your best friend</h2>
@@ -630,9 +630,9 @@ except:
   
   <entry>
     <title type="html"><![CDATA[Using the Facebook Javascript SDK and jQuery to Create User Accounts with a Flask App]]></title>
-    <link href="http://eriktaubeneck.github.io/blog/2013/01/15/using-the-facebook-javascript-sdk-and-jquery-to-create-user-accounts-with-a-flask-app/"/>
+    <link href="http://skien.cc/blog/2013/01/15/using-the-facebook-javascript-sdk-and-jquery-to-create-user-accounts-with-a-flask-app/"/>
     <updated>2013-01-15T11:51:00-05:00</updated>
-    <id>http://eriktaubeneck.github.io/blog/2013/01/15/using-the-facebook-javascript-sdk-and-jquery-to-create-user-accounts-with-a-flask-app</id>
+    <id>http://skien.cc/blog/2013/01/15/using-the-facebook-javascript-sdk-and-jquery-to-create-user-accounts-with-a-flask-app</id>
     <content type="html"><![CDATA[<p>Before we get started, the full code is available on <a href="https://github.com/eriktaubeneck/flask_facebook_login">GitHub</a>.</p>
 
 <h2>Getting Started with <a href="https://developers.facebook.com/">developers.facebook.com</a></h2>
@@ -687,7 +687,7 @@ def channel():
 
 <p>and in <code>templates/</code> add a file called <code>channel.html</code> with just</p>
 
-<pre><code>&lt;script src="http://eriktaubeneck.github.io//connect.facebook.net/en_US/all.js"&gt;&lt;/script&gt;
+<pre><code>&lt;script src="http://skien.cc//connect.facebook.net/en_US/all.js"&gt;&lt;/script&gt;
 </code></pre>
 
 <p>in it.  Now we are set up to interface with Facebook. We now will need to check if the user is logged into Facebook and has authorized our app. In the above code block <code>facebook_js</code>, add the following within the <code>window.fbAsyncInit</code> function declaration (where we have <code>// Additional init code here</code>):</p>
@@ -939,9 +939,9 @@ return false;
   
   <entry>
     <title type="html"><![CDATA[Using Flask with nginx and uWSGI]]></title>
-    <link href="http://eriktaubeneck.github.io/blog/2013/01/07/using-flask-with-nginx-and-uwsgi/"/>
+    <link href="http://skien.cc/blog/2013/01/07/using-flask-with-nginx-and-uwsgi/"/>
     <updated>2013-01-07T11:49:00-05:00</updated>
-    <id>http://eriktaubeneck.github.io/blog/2013/01/07/using-flask-with-nginx-and-uwsgi</id>
+    <id>http://skien.cc/blog/2013/01/07/using-flask-with-nginx-and-uwsgi</id>
     <content type="html"><![CDATA[<h2>Starting with AWS</h2>
 
 <p>I&rsquo;m using <a href="http://aws.amazon.com">Amazon Web Services</a> for hosting my application. It has all sorts of fantastic capabilities, but for small stuff all I&rsquo;m really using it for is to run a Ubuntu 12.04 Server. (AMI: ubuntu/images/ebs/ubuntu-precise-12.04-amd64-server-20121001 (ami-3d4ff254)). This is on the free tier, so if you&rsquo;re a new account, you can run one of these for free for a year. If not, running it full time will cost you about $15/month. Attach that thing to a elastic IP (they&rsquo;re free as long as you&rsquo;re using it) and connect with SSH.</p>
