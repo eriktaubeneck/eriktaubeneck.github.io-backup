@@ -1,0 +1,310 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>On Markdown - skien.cc</title>
+  <meta name="author" content="Erik Taubeneck">
+
+  
+  <meta name="description" content="In the beginning, their was LaTeX As a former mathematics student, I have an unusual soft spot for LaTeX. Despite it&rsquo;s obscenely verbose and &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://skien.cc/blog/2014/01/23/on-markdown/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="skien.cc" type="application/atom+xml">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">skien.cc</a></h1>
+  
+    <h2>a mathematician/economist/statistician by schooling, a data scientist by trade, and a python hacker by night, skien.cc (pronounced skīəns) is my blog aimed to track explorations in all of the above.</h2>
+  
+  <div class="clear"></div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:skien.cc" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">On Markdown</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-23T19:12:29-05:00" pubdate data-updated="true">Jan 23<span>rd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>In the beginning, their was LaTeX</h2>
+
+<p>As a former mathematics student, I have an unusual soft spot for <a href="http://www.latex-project.org/">LaTeX</a>. Despite it&rsquo;s obscenely verbose and quirky syntax, it was more than a breath of fresh air compared to Word&rsquo;s Equation Editor. (It required a highlighting, 4 clicks, and keyboard input to create an exponent, if I remember correctly.) But not only does LaTeX keep your fingers on the keyboard, it&rsquo;s output is <a href="http://www.somethingofthatilk.com/index.php?id=135">the most beautiful thing I&rsquo;ve ever laid eyes on</a>. I mean, just look at this inequality:</p>
+
+<p><img src="http://i.imgur.com/sp6oB9E.png"></p>
+
+<!-- more -->
+
+
+<p>Even using a slew of macros and shortcuts, reading LaTeX code is burdensome at best, and this will forever keep it&rsquo;s use out of the main stream. Worse, making formatting changes in LaTeX is onerous. Luckily for math students their are really great one&rsquo;s already created that are perfect for your homework, and journals traditionally provide their own. (My University library did not, however. Spent at least 8 hours and an argument with the librarian working on the Title page with spots for my advisors&#8217; signatures&#8217;.) Because of this, LaTeX will never be a mainstream word processor.</p>
+
+<p>However, I think there is one core design aspect of LaTeX that is far more ideal than traditional word processors: separation of corpus and design.</p>
+
+<h2>Enter Markdown</h2>
+
+<p>Markdown was created in 2004 with the idea to &ldquo;make writing simple web pages, and especially weblog entries, as easy as writing an email&rdquo; (quote from the late Aaron Swartz&rsquo;s <a href="http://www.aaronsw.com/weblog/001189">blog post announcing the release</a>.) It has gained a deal of popularity in web culture on sites such as <a href="https://www.reddit.com">reddit</a> and <a href="https://www.github.com">GitHub</a>, as well with some excellent hacker tools like <a href="http://ipython.org/notebook.html">iPython Notebook</a> and <a href="http://octopress.org">Octopress***</a>. (This site is powered by Octopress and each post is written in Markdown.)</p>
+
+<p>There is a more thorough example on wikipedia <a href="http://en.wikipedia.org/wiki/Markdown">Wikipedia</a>, but for example <code>*italics*</code> renders as <em>italicts</em>, <code>**bold**</code> as <strong>bold</strong>, and <code>[links](http://skien.cc)</code> as <a href="http://skien.cc">links</a>.</p>
+
+<p>The really clever thing here is that for <em>most</em> documents, there is very limited formatting to add. For web documents, like blog posts and comment sections, you mostly need sections, paragraphs, italics, bold, links, inline images, and inline quotes. Developers like the ability to add in text <code>code</code> and</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>inline code blocks.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Best of all, you don&rsquo;t have to write in HTML (Who want&rsquo;s to write an article in <em>raw</em> HTML? Ain&rsquo;t nobody got time for that.) and you can achieve a great deal of formatting.</p>
+
+<h3>A Business Case</h3>
+
+<p>The key is separating the writing of a document from the design of a document, and Markdown achieves this with flying colors. For the author, the marked up text is easy to read and easy to write. For the designer, the CSS likely already exists if you have a website (although they may wish to update it slightly.)</p>
+
+<p>A system for sharing these documents like developers share <a href="https://gist.github.com/">Gists</a> could easily replace email attachments and grant extra security  (either through obscurity or something stronger.) Authors could also update or take down old documents, whereas an attachment lives on in the receivers inbox forever. (Nothing would would prevent the viewer from saving the content when they see it, but this would require premeditation and would be a rather uncommon event in my opinion.)</p>
+
+<p>If you&rsquo;d like to create PDF&rsquo;s, it&rsquo;s not too painful create a base template in, you guessed it, LaTeX, and then produce PDF&rsquo;s for printed material (or for when you&rsquo;d really like to send an attachment rather than a link.) And if you <em>really</em> need to, you can even generate a Word document. After the initial fixed cost of developing these templates, you&rsquo;ll have a dead simple way to generate standardized documents without the variable cost of worrying about format on each one.</p>
+
+<p>Many free tools exists to work with Markdown as well. One of my favorites is <a href="http://mouapp.com/">Mou</a>, which allows you to view a rendered version of the file side by side with an editor. (I&rsquo;m using it now.) <a href="http://dillinger.io/">Dillinger</a> does the same thing in the browser, and can connect to Dropbox, GitHub, and Google Drive. As more tools like these emerge, I predict a sharp decline in demand for over powered text editors like Microsoft Word.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Erik Taubeneck</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-23T19:12:29-05:00" pubdate data-updated="true">Jan 23<span>rd</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/latex/'>LaTeX</a>, <a class='category' href='/blog/categories/markdown/'>Markdown</a>, <a class='category' href='/blog/categories/design/'>design</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://skien.cc/blog/2014/01/23/on-markdown/" data-via="" data-counturl="http://skien.cc/blog/2014/01/23/on-markdown/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/" title="Previous Post: SQLAlchemy and Race Conditions: Implementing `get_one_or_create()`">&laquo; SQLAlchemy and Race Conditions: Implementing `get_one_or_create()`</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  <img src="/images/me.jpg">
+  <p>
+  Follow Me <a href="https://twitter.com/taubeneck">@taubeneck</a>
+  </p>
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/01/23/on-markdown/">On Markdown</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/">SQLAlchemy and Race Conditions: Implementing `get_one_or_create()`</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/">Flask-Twitter-OEmbedder and Flask Extension Testing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/21/unlocking-technology/">Unlocking Technology</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/19/print-can-be-deceiving/">Print Can Be Deceiving</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/eriktaubeneck">@eriktaubeneck</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'eriktaubeneck',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Erik Taubeneck -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'skiencc';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://skien.cc/blog/2014/01/23/on-markdown/';
+        var disqus_url = 'http://skien.cc/blog/2014/01/23/on-markdown/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
