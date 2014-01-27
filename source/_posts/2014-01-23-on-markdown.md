@@ -5,7 +5,7 @@ date: 2014-01-23 19:12:29 -0500
 comments: true
 categories: [design, Markdown, LaTeX]
 ---
-## In the beginning, their was LaTeX
+## In the beginning, there was LaTeX
 
 As a former mathematics student, I have an unusual soft spot for [LaTeX](http://www.latex-project.org/). Despite it's obscenely verbose and quirky syntax, it was more than a breath of fresh air compared to Word's Equation Editor. (It required a highlighting, 4 clicks, and keyboard input to create an exponent, if I remember correctly.) But not only does LaTeX keep your fingers on the keyboard, it's output is [the most beautiful thing I've ever laid eyes on](http://www.somethingofthatilk.com/index.php?id=135). I mean, just look at this inequality:
 
