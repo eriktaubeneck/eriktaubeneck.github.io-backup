@@ -4,7 +4,7 @@
   <title><![CDATA[Category: design | skien.cc]]></title>
   <link href="http://skien.cc/blog/categories/design/atom.xml" rel="self"/>
   <link href="http://skien.cc/"/>
-  <updated>2014-01-24T11:50:45-05:00</updated>
+  <updated>2014-01-27T12:48:39-05:00</updated>
   <id>http://skien.cc/</id>
   <author>
     <name><![CDATA[Erik Taubeneck]]></name>
@@ -18,7 +18,7 @@
     <link href="http://skien.cc/blog/2014/01/23/on-markdown/"/>
     <updated>2014-01-23T19:12:29-05:00</updated>
     <id>http://skien.cc/blog/2014/01/23/on-markdown</id>
-    <content type="html"><![CDATA[<h2>In the beginning, their was LaTeX</h2>
+    <content type="html"><![CDATA[<h2>In the beginning, there was LaTeX</h2>
 
 <p>As a former mathematics student, I have an unusual soft spot for <a href="http://www.latex-project.org/">LaTeX</a>. Despite it&rsquo;s obscenely verbose and quirky syntax, it was more than a breath of fresh air compared to Word&rsquo;s Equation Editor. (It required a highlighting, 4 clicks, and keyboard input to create an exponent, if I remember correctly.) But not only does LaTeX keep your fingers on the keyboard, it&rsquo;s output is <a href="http://www.somethingofthatilk.com/index.php?id=135">the most beautiful thing I&rsquo;ve ever laid eyes on</a>. I mean, just look at this inequality:</p>
 
