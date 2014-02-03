@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Postgres | skien.cc]]></title>
   <link href="http://skien.cc/blog/categories/postgres/atom.xml" rel="self"/>
   <link href="http://skien.cc/"/>
-  <updated>2014-02-03T13:04:12-05:00</updated>
+  <updated>2014-02-03T16:18:51-05:00</updated>
   <id>http://skien.cc/</id>
   <author>
     <name><![CDATA[Erik Taubeneck]]></name>
@@ -25,7 +25,7 @@
 <!-- more -->
 
 
-<p>```
+<p>``` python
 class Game(db.Model):</p>
 
 <pre><code>__tablename__  = 'games'

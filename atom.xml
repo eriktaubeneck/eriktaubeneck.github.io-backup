@@ -4,7 +4,7 @@
   <title><![CDATA[skien.cc]]></title>
   <link href="http://skien.cc/atom.xml" rel="self"/>
   <link href="http://skien.cc/"/>
-  <updated>2014-02-03T13:04:12-05:00</updated>
+  <updated>2014-02-03T16:18:51-05:00</updated>
   <id>http://skien.cc/</id>
   <author>
     <name><![CDATA[Erik Taubeneck]]></name>
@@ -27,7 +27,7 @@
 
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -48,45 +48,47 @@
 <span class='line-number'>19</span>
 <span class='line-number'>20</span>
 <span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Game(db.Model):
-</span><span class='line'>    __tablename__  = 'games'
-</span><span class='line'>    id = db.Column(db.Integer, primary_key=True)
-</span><span class='line'>    provider_game_id = db.Column(db.String(255))
-</span><span class='line'>    provider_game_name = db.Column(db.String(255))
-</span><span class='line'>    provider_game_category = db.Column(db.String(255))
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">class</span> <span class="nc">Game</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">__tablename__</span>  <span class="o">=</span> <span class="s">&#39;games&#39;</span>
+</span><span class='line'>    <span class="nb">id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">provider_game_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">255</span><span class="p">))</span>
+</span><span class='line'>    <span class="n">provider_game_name</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">255</span><span class="p">))</span>
+</span><span class='line'>    <span class="n">provider_game_category</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">255</span><span class="p">))</span>
 </span><span class='line'>
-</span><span class='line'>class GameBeat(db.Model):
-</span><span class='line'>    __tablename__ = 'game_beats'
-</span><span class='line'>    id = db.Column(db.Integer, primary_key=True)
-</span><span class='line'>    game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
-</span><span class='line'>    game = db.relationship("Game",
-</span><span class='line'>                           backref="beats",
-</span><span class='line'>                           lazy="joined",
-</span><span class='line'>                           innerjoin=True)
-</span><span class='line'>    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-</span><span class='line'>    user = db.relationship("User",
-</span><span class='line'>                           backref="game_beats",
-</span><span class='line'>                           lazy="joined",
-</span><span class='line'>                           innerjoin=True)
-</span><span class='line'>    beat_at = db.Column(db.DateTime())</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="k">class</span> <span class="nc">GameBeat</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;game_beats&#39;</span>
+</span><span class='line'>    <span class="nb">id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">game_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;games.id&#39;</span><span class="p">))</span>
+</span><span class='line'>    <span class="n">game</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">relationship</span><span class="p">(</span><span class="s">&quot;Game&quot;</span><span class="p">,</span>
+</span><span class='line'>                           <span class="n">backref</span><span class="o">=</span><span class="s">&quot;beats&quot;</span><span class="p">,</span>
+</span><span class='line'>                           <span class="n">lazy</span><span class="o">=</span><span class="s">&quot;joined&quot;</span><span class="p">,</span>
+</span><span class='line'>                           <span class="n">innerjoin</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">user_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;users.id&#39;</span><span class="p">))</span>
+</span><span class='line'>    <span class="n">user</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">relationship</span><span class="p">(</span><span class="s">&quot;User&quot;</span><span class="p">,</span>
+</span><span class='line'>                           <span class="n">backref</span><span class="o">=</span><span class="s">&quot;game_beats&quot;</span><span class="p">,</span>
+</span><span class='line'>                           <span class="n">lazy</span><span class="o">=</span><span class="s">&quot;joined&quot;</span><span class="p">,</span>
+</span><span class='line'>                           <span class="n">innerjoin</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">beat_at</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">DateTime</span><span class="p">())</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>but had accidentally created multiple <code>Game</code> objects with the same <code>provider_game_id</code> attribute. At the very least, we would rather have the class definition and database representation put a unique constraint on this attribute so that if we ever attempted to create such a duplicate <code>Game</code> object, we&rsquo;ll end up raising a <code>IntegrityError</code> and the duplicate won&rsquo;t actually get added to the datastore. (Again, a <a href="http://skien.cc/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/">previous post</a> discusses how to handle this).</p>
 
 <p>The class definition updates to:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Game(db.Model):
-</span><span class='line'>    __tablename__  = 'games'
-</span><span class='line'>    id = db.Column(db.Integer, primary_key=True)
-</span><span class='line'>    provider_game_id = db.Column(db.String(255), unique=True)
-</span><span class='line'>    provider_game_name = db.Column(db.String(255))
-</span><span class='line'>    provider_game_category = db.Column(db.String(255))</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">class</span> <span class="nc">Game</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">__tablename__</span>  <span class="o">=</span> <span class="s">&#39;games&#39;</span>
+</span><span class='line'>    <span class="nb">id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">provider_game_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">provider_game_name</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">255</span><span class="p">))</span>
+</span><span class='line'>    <span class="n">provider_game_category</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">255</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>We still, however need to make the update to our datastore (Postgres, in our case), along with finding and eliminating the duplicates we introduced into the system.</p>
@@ -97,34 +99,37 @@
 
 <p><code>alembic</code> provides the useful <code>autogenerate</code> option that can be used like so:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ alembic --autogenerate -m "add unique constraint to Game.provider_game_id"</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="err">$</span> <span class="n">alembic</span> <span class="o">--</span><span class="n">autogenerate</span> <span class="o">-</span><span class="n">m</span> <span class="s">&quot;add unique constraint to Game.provider_game_id&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>(Some <a href="http://alembic.readthedocs.org/en/latest/tutorial.html#auto-generating-migrations">setup</a> is required to get this option to work.) You should now have a new file in your <code>alembic/versions</code> directory with the name something like <code>10f2a956bad5_add_unique_constrain.py</code>. (Your hash at the beginning is going to almost certainly be different.) If you look at the file, you&rsquo;ll notice that it is mostly empty. Unfortunately, <code>alembic</code> isn&rsquo;t able to identify newly added unique constraints automatically, so we will have to fill it in.</p>
 
 <p>I found the <a href="http://alembic.readthedocs.org/en/rel_0_1/ops.html#alembic.op.create_unique_constraint">documentation</a> on adding a unique constraint a bit confusing at first. The function we want to use is <code>op.create_unique_constraint()</code>, which takes arguments <code>name</code>, <code>source</code>, and <code>local_cols</code>. At first, I thought <code>name</code> was the name of the column which I wanted to make unique, however it&rsquo;s actually the name of the constraint. In my setup (with Postgres), I was able to let <code>name = None</code> and have SQLAlchemy and Postgres sort it out. The <code>source</code> is just a string of the name of the table, and <code>local_cols</code> is where we specify what we want to make unique. The somewhat tricky part here is that we can make a constraint where <code>(col1,col2)</code> needs to be unique (not individually unique, but the combination of the two), so this parameter takes a list. In our case, the list will only have a single member, <code>provider_game_id</code>. Within the <code>upgrade</code> function in our migration file, we can add:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>def upgrade():
-</span><span class='line'>    op.create_unique_constraint(None,
-</span><span class='line'>                                "games",
-</span><span class='line'>                                ["provider_game_id"])</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">upgrade</span><span class="p">():</span>
+</span><span class='line'>    <span class="n">op</span><span class="o">.</span><span class="n">create_unique_constraint</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span>
+</span><span class='line'>                                <span class="s">&quot;games&quot;</span><span class="p">,</span>
+</span><span class='line'>                                <span class="p">[</span><span class="s">&quot;provider_game_id&quot;</span><span class="p">])</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>and under the <code>downgrade</code> function, we can add:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>def downgrade():
-</span><span class='line'>    op.drop_contraint("provider_game_id",
-</span><span class='line'>                      "games",
-</span><span class='line'>                       "unique")</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">downgrade</span><span class="p">():</span>
+</span><span class='line'>    <span class="n">op</span><span class="o">.</span><span class="n">drop_contraint</span><span class="p">(</span><span class="s">&quot;provider_game_id&quot;</span><span class="p">,</span>
+</span><span class='line'>                      <span class="s">&quot;games&quot;</span><span class="p">,</span>
+</span><span class='line'>                       <span class="s">&quot;unique&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>If there are any existing duplicates and we run this, however, we are going to get an <code>IntegrityError</code>. So it&rsquo;s time to seek and destroy.</p>
@@ -133,36 +138,39 @@
 
 <p>As we&rsquo;re debugging the situation, one of the first things we&rsquo;ll want see how many duplicates we have of our object along the <code>provider_game_id</code>. I wrote this function do do just that:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>from sqlalchemy import func
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">func</span>
 </span><span class='line'>
-</span><span class='line'>def n_dups(session, cls, attr):
-</span><span class='line'>    return session.query(getattr(cls,attr)).group_by(getattr(cls,attr)).\
-</span><span class='line'>            having(func.count(getattr(cls,attr)) &gt; 1).count()</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="k">def</span> <span class="nf">n_dups</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span><span class="n">attr</span><span class="p">))</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span><span class="n">attr</span><span class="p">))</span><span class="o">.</span>\
+</span><span class='line'>            <span class="n">having</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span><span class="n">attr</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Running this, we&rsquo;ll use <code>n_dups(Game, 'provider_game_id')</code> and likely see something more than zero. All this tells us, however, is how many dups we have along that attribute. We now need to iterate though each duplicated <code>provider_game_id</code> and collect all the objects with said <code>provider_game_id</code>. Getting the duplicated <code>provider_game_ids</code> is similar to above:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>def get_duplicated_attrs(session, cls, attr):
-</span><span class='line'>    return session.query(getattr(cls,attr)).group_by(getattr(cls,attr)).\
-</span><span class='line'>            having(func.count(getattr(cls,attr)) &gt; 1).all()</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">get_duplicated_attrs</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span><span class="n">attr</span><span class="p">))</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span><span class="n">attr</span><span class="p">))</span><span class="o">.</span>\
+</span><span class='line'>            <span class="n">having</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span><span class="n">attr</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>So now we can get the duplicated objects:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>def get_duplicated_objs(session, cls, attr, attr_value, order_by_attr):
-</span><span class='line'>    return session.query(cls).filter(getattr(cls,attr) == attr_value)).\
-</span><span class='line'>            order_by(order_by_attr).all()</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">get_duplicated_objs</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">attr_value</span><span class="p">,</span> <span class="n">order_by_attr</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span><span class="n">attr</span><span class="p">)</span> <span class="o">==</span> <span class="n">attr_value</span><span class="p">))</span><span class="o">.</span>\
+</span><span class='line'>            <span class="n">order_by</span><span class="p">(</span><span class="n">order_by_attr</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>The <code>order_by_attr</code> is going to come in handy in the next decision when we decide which duplicated objects get the axe.</p>
@@ -180,7 +188,7 @@
 
 <p>When we delete the duplicate entries in our database, we have to decide on a rule for which one&rsquo;s to delete, and which <em>one</em> to keep. (You could also delete all, and then recreate them with your new protections against creating duplicates.) I decided to keep the oldest entry (not for any particularly good reason, except that I had originally created my objects with <code>created_at</code> attributes. Our example doesn&rsquo;t have these, so I&rsquo;ll use <code>id</code> which is effectively the same thing assuming the <code>id</code> is auto incremented.) Inside my alembic migration file, I added the following function</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -194,35 +202,37 @@
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>from sqlalchemy import func
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">func</span>
 </span><span class='line'>
-</span><span class='line'>def remove_duplicates(session, cls, attr):
-</span><span class='line'>    duplicates = session.query(getattr(cls,attr)).group_by(getattr(cls,attr)).
-</span><span class='line'>                  having(func.count(getattr(cls, attr)) &gt; 1).all()
-</span><span class='line'>    n_dups = len(duplicates)
-</span><span class='line'>    print '{}.{}: {} duplicates found'.format(cls.__name__, attr, n_dups)
-</span><span class='line'>    for duplicate in duplicates:
-</span><span class='line'>        objs = session.query(cls).
-</span><span class='line'>                filter(getattr(cls,attr) == getattr(duplicate, attr)).
-</span><span class='line'>                order_by('id').all()
-</span><span class='line'>        map(session.delete, objs[1:])
-</span><span class='line'>    session.commit()
-</span><span class='line'>    print '{}.{}: {} duplicates removed'.format(cls.__name__, attr, n_dups)</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="k">def</span> <span class="nf">remove_duplicates</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">duplicates</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span><span class="n">attr</span><span class="p">))</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span><span class="n">attr</span><span class="p">))</span><span class="o">.</span>
+</span><span class='line'>                  <span class="n">having</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">attr</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">n_dups</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">duplicates</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&#39;{}.{}: {} duplicates found&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">n_dups</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">for</span> <span class="n">duplicate</span> <span class="ow">in</span> <span class="n">duplicates</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">objs</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span><span class="o">.</span>
+</span><span class='line'>                <span class="nb">filter</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span><span class="n">attr</span><span class="p">)</span> <span class="o">==</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">duplicate</span><span class="p">,</span> <span class="n">attr</span><span class="p">))</span><span class="o">.</span>
+</span><span class='line'>                <span class="n">order_by</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</span><span class='line'>        <span class="nb">map</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">,</span> <span class="n">objs</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+</span><span class='line'>    <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&#39;{}.{}: {} duplicates removed&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">n_dups</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Before we can call this function, however, there are a few caveats (which I just ran into the hard way.) First, we will need to import the <code>db</code> object and the <code>Game</code> object. Typically in Python, we only import things at the top of the file, but in order for things like <code>alembic history</code> to work correctly, we need to import these within the <code>upgrade()</code> function. That way, they will only be loaded with a migration is being run, and not when the migration file is inspected for things like the version number by other tools.</p>
 
 <p>Second, if you are doing a &ldquo;dry run&rdquo; <code>alembic upgrade head</code> (i.e. from a newly created DB with no schema), alembic works through all the migration files and issues one SQL statement at the end of the process. This is a problem if you attempt to query on the <code>Game</code> object, who&rsquo;s table doesn&rsquo;t exist yet. We can safely assume, however, that if the table doesn&rsquo;t exist yet, it doesn&rsquo;t have any duplicates. Luckily, SQLAlchemy has an <code>Inspector</code> object that allows reflection into the existing tables from and engine, and using</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>inspector = Inspector.from_engine(db.engine)
-</span><span class='line'>existing_tables = inspector.get_table_names()</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">inspector</span> <span class="o">=</span> <span class="n">Inspector</span><span class="o">.</span><span class="n">from_engine</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span>
+</span><span class='line'><span class="n">existing_tables</span> <span class="o">=</span> <span class="n">inspector</span><span class="o">.</span><span class="n">get_table_names</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>will do the the trick. Now, within the <code>upgrade()</code> function we call our <code>remove_duplicates</code> function for the objects and their attributes with duplicates like so:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -236,32 +246,34 @@
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>from sqlalchemy.engine.reflection import Inspector
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">sqlalchemy.engine.reflection</span> <span class="kn">import</span> <span class="n">Inspector</span>
 </span><span class='line'>
-</span><span class='line'>def upgrade():
-</span><span class='line'>    from app import db
-</span><span class='line'>    from app.models import Game
+</span><span class='line'><span class="k">def</span> <span class="nf">upgrade</span><span class="p">():</span>
+</span><span class='line'>    <span class="kn">from</span> <span class="nn">app</span> <span class="kn">import</span> <span class="n">db</span>
+</span><span class='line'>    <span class="kn">from</span> <span class="nn">app.models</span> <span class="kn">import</span> <span class="n">Game</span>
 </span><span class='line'>
-</span><span class='line'>    inspector = Inspector.from_engine(db.engine)
-</span><span class='line'>    existing_tables = inspector.get_table_names()
+</span><span class='line'>    <span class="n">inspector</span> <span class="o">=</span> <span class="n">Inspector</span><span class="o">.</span><span class="n">from_engine</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">existing_tables</span> <span class="o">=</span> <span class="n">inspector</span><span class="o">.</span><span class="n">get_table_names</span><span class="p">()</span>
 </span><span class='line'>
-</span><span class='line'>    if Game.__tablename__ in existing_tables:
-</span><span class='line'>        remove_duplicates(db.session, Game, 'provider_game_id')
-</span><span class='line'>    op.create_unique_constraint(None,
-</span><span class='line'>                                "games",
-</span><span class='line'>                                ["provider_game_id"])</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>    <span class="k">if</span> <span class="n">Game</span><span class="o">.</span><span class="n">__tablename__</span> <span class="ow">in</span> <span class="n">existing_tables</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">remove_duplicates</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">Game</span><span class="p">,</span> <span class="s">&#39;provider_game_id&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">op</span><span class="o">.</span><span class="n">create_unique_constraint</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span>
+</span><span class='line'>                                <span class="s">&quot;games&quot;</span><span class="p">,</span>
+</span><span class='line'>                                <span class="p">[</span><span class="s">&quot;provider_game_id&quot;</span><span class="p">])</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>and our <code>downgrade</code> function stays the same as above:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>def downgrade():
-</span><span class='line'>    op.drop_contraint("provider_game_id",
-</span><span class='line'>                      "games",
-</span><span class='line'>                       "unique")</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">downgrade</span><span class="p">():</span>
+</span><span class='line'>    <span class="n">op</span><span class="o">.</span><span class="n">drop_contraint</span><span class="p">(</span><span class="s">&quot;provider_game_id&quot;</span><span class="p">,</span>
+</span><span class='line'>                      <span class="s">&quot;games&quot;</span><span class="p">,</span>
+</span><span class='line'>                       <span class="s">&quot;unique&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>(Note: the import statements that happen outside of the functions can just be placed at the top of the migration file. They shouldn&rsquo;t cause any conflicts.)</p>
