@@ -9,7 +9,7 @@
   <meta name="author" content="Erik Taubeneck">
 
   
-  <meta name="description" content="In the beginning, there was LaTeX As a former mathematics student, I have an unusual soft spot for LaTeX. Despite it&rsquo;s obscenely verbose and &hellip;">
+  <meta name="description" content="In a previous post, I wrote about writing a get_one_or_create() function for SQLAlchemy. Turns out that I had inadvertently created a race condition &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2014/01/31/adding-unique-contraints-after-the-fact-in-sqlalchemy/">Adding Unique Constraints After the Fact in SQLAlchemy</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-31T16:40:00-05:00" pubdate data-updated="true">Jan 31<span>st</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In a <a href="http://skien.cc/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/">previous post</a>, I wrote about writing a <code>get_one_or_create()</code> function for SQLAlchemy. Turns out that I had inadvertently created a race condition while horizontally scaling on Heroku. That post explains, in detail, the solution I came up with for moving forward, however I still had duplicate objects in my database that needed to remove. Since I&rsquo;m on Heroku, I&rsquo;m using Postgres (although I&rsquo;m highly opinionated towards using Postgres often), so some of this may be Postgres specific, and I will do my best to note when that&rsquo;s the case.</p>
+
+<p>I&rsquo;ll use the same example models that I used in my previous post. We had <code>Game</code> and <code>GameBeat</code> models:</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/31/adding-unique-contraints-after-the-fact-in-sqlalchemy/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -431,6 +476,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/01/31/adding-unique-contraints-after-the-fact-in-sqlalchemy/">Adding Unique Constraints After the Fact in SQLAlchemy</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/01/23/on-markdown/">On Markdown</a>
       </li>
     
@@ -444,10 +493,6 @@
     
       <li class="post">
         <a href="/blog/2013/05/21/unlocking-technology/">Unlocking Technology</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/03/19/print-can-be-deceiving/">Print Can Be Deceiving</a>
       </li>
     
   </ul>
