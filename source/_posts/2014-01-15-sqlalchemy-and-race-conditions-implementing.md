@@ -290,6 +290,8 @@ You'll notice one major difference from our earlier versions: `session.commit()`
 
 The reason we must add this into our function call here, is that if we do the `db.session.commit()` after making several calls to `get_one_or_create()` and the `IntegrityError` was raised, we'd have no idea which created object caused it and we'd have to start the entire transaction over (and we'd have to write logic outside the function to handle all this). Since our `get_one_or_create()` function is written generally for any model and unique keywords, rather than specific logic tied to a specific model, I don't think it seriously conflicts with the SQLAlchemy philosophy. 
 
+**UPDATE:** I have recanted here and decided that using `session.flush()` is superior to `session.commit()` for line 13 of the function. See my [newer blog post](http://skien.cc/blog/2014/02/06/sqlalchemy-and-race-conditions-follow-up/) for a detailed explanation of why.
+
 ## Final Thoughts
 
 Race conditions and asynchronous programing are difficult, especially when working in a framework that doesn't force you to work or think that way. Flask and certainly Flask-SQLAlchemy aren't extremely well suited to handle this, but also with Flask's synchronous handling of requests, it doesn't become a issue often. When scaling, however, you being to increase the probability of such occurrences happen.
