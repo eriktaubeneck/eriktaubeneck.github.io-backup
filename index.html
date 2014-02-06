@@ -9,7 +9,7 @@
   <meta name="author" content="Erik Taubeneck">
 
   
-  <meta name="description" content="In a previous post, I wrote about writing a get_one_or_create() function for SQLAlchemy. Turns out that I had inadvertently created a race condition &hellip;">
+  <meta name="description" content="In an earlier post, I talked about my adventures in creating a get_one_or_create() function for SQLAlchemy to use with Flask and Postgres. There was &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2014/02/05/sqlalchemy-and-race-conditions-follow-up/">SQLAlchemy and Race Conditions: Follow Up on Commits and Flushes</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-05T23:58:13-05:00" pubdate data-updated="true">Feb 5<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In an <a href="http://skien.cc/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/">earlier post</a>, I talked about my adventures in creating a <code>get_one_or_create()</code> function for SQLAlchemy to use with Flask and Postgres.</p>
+
+<p>There was an <a href="http://skien.cc/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/#comment-1202518666">excellent question</a> asked in the comments about weather <code>session.flush()</code> could be used on line 13 instead of <code>session.commit()</code>. I didn&rsquo;t fully understand the answer, but explained that I had landed on this for safety of efficiency. The author of SQLAlchemy also echoed that it&rsquo;s not a simple answer. I spent some time with a small test app on Heroku to figure out how this all works, and what the best approach really was.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/02/05/sqlalchemy-and-race-conditions-follow-up/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -476,6 +521,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/02/05/sqlalchemy-and-race-conditions-follow-up/">SQLAlchemy and Race Conditions: Follow Up on Commits and Flushes</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/01/31/adding-unique-contraints-after-the-fact-in-sqlalchemy/">Adding Unique Constraints After the Fact in SQLAlchemy</a>
       </li>
     
@@ -489,10 +538,6 @@
     
       <li class="post">
         <a href="/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/">Flask-Twitter-OEmbedder and Flask Extension Testing</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/21/unlocking-technology/">Unlocking Technology</a>
       </li>
     
   </ul>

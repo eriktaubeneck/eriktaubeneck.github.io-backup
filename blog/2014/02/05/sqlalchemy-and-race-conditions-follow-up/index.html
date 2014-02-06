@@ -1,0 +1,378 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>SQLAlchemy and Race Conditions: Follow Up on Commits and Flushes - skien.cc</title>
+  <meta name="author" content="Erik Taubeneck">
+
+  
+  <meta name="description" content="In an earlier post, I talked about my adventures in creating a get_one_or_create() function for SQLAlchemy to use with Flask and Postgres. There was &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://skien.cc/blog/2014/02/05/sqlalchemy-and-race-conditions-follow-up/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="skien.cc" type="application/atom+xml">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">skien.cc</a></h1>
+  
+    <h2>a mathematician/economist/statistician by schooling, a data scientist by trade, and a python hacker by night, skien.cc (pronounced skīəns) is my blog aimed to track explorations in all of the above.</h2>
+  
+  <div class="clear"></div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:skien.cc" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">SQLAlchemy and Race Conditions: Follow Up on Commits and Flushes</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-05T23:58:13-05:00" pubdate data-updated="true">Feb 5<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>In an <a href="http://skien.cc/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/">earlier post</a>, I talked about my adventures in creating a <code>get_one_or_create()</code> function for SQLAlchemy to use with Flask and Postgres.</p>
+
+<p>There was an <a href="http://skien.cc/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/#comment-1202518666">excellent question</a> asked in the comments about weather <code>session.flush()</code> could be used on line 13 instead of <code>session.commit()</code>. I didn&rsquo;t fully understand the answer, but explained that I had landed on this for safety of efficiency. The author of SQLAlchemy also echoed that it&rsquo;s not a simple answer. I spent some time with a small test app on Heroku to figure out how this all works, and what the best approach really was.</p>
+
+<!-- more -->
+
+
+<p>For quick reference, the solution I landed on was:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def get_one_or_create(session,
+</span><span class='line'>                      model,
+</span><span class='line'>                      create_method='',
+</span><span class='line'>                      create_method_kwargs={},
+</span><span class='line'>                      **kwargs):
+</span><span class='line'>    try:
+</span><span class='line'>        return session.query(model).filter_by(**kwargs).one(), True
+</span><span class='line'>    except NoResultFound:
+</span><span class='line'>        kwargs.update(create_method_kwargs)
+</span><span class='line'>        created = getattr(model, create_method, model)(**kwargs)
+</span><span class='line'>        try:
+</span><span class='line'>            session.add(created)
+</span><span class='line'>            session.commit()
+</span><span class='line'>            return created, False
+</span><span class='line'>        except IntegrityError:
+</span><span class='line'>            session.rollback()
+</span><span class='line'>            return session.query(model).filter_by(**kwargs).one(), True</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Important Note:</strong> The app that I used for testing can be referenced in <a href="https://github.com/eriktaubeneck/heroku-test">this repo on GitHub</a>, and I am using Python 2.7.4, with Flask 0.10.1, Flask-SQLAlchemy 1.0, SQLAlchemy 0.9.2, and Postgres 9.3.2 running on Heroku. Many of the ways in which SQLAlchemy works rely heavily on the configuration, so if you are using a different se up, I urge you to take this with a grain of salt and as useful ideas for testing your own setup.</p>
+
+<h2><code>session.commit()</code> vs <code>session.flush()</code></h2>
+
+<p>At the surface, the difference between these two operations is fairly straight forward.</p>
+
+<p>A call to <code>session.commit()</code> takes any new objects or changes to existing objects in the <code>session</code> and attempts to write them to the database. If a new object has a key or other attribute that the database creates, that is created during the write and in turn populated on the object in the session.</p>
+
+<p>A call to <code>session.flush()</code> however, <em>only</em> populates our objects, but does not write to the datastore yet. (I&rsquo;ve italicized <em>only</em> because I am about to show that it actually does more than that.)</p>
+
+<p>So what happens if I have an object with a unique constraint on an attribute, and in two different sessions/processes/Heroku dynos create the object with the same value for that attribute, and then try call <code>session.flush()</code>? Since neither value has been written to the database, we don&rsquo;t expect an <code>IntegrityError</code>. But we also ideally wouldn&rsquo;t want this to roll by without issue. So what does happen?</p>
+
+<p>I created a <a href="https://github.com/eriktaubeneck/heroku-test">small test Flask app</a> and deployed it to Heroku. I then spun up two sessions of iPython, also on Heroku, imported our <code>Game</code> object and attempted to violate our unique constraint on <code>provider_game_id</code>. Check out what happened:</p>
+
+<p><img src="/images/heroku-testing.gif"></p>
+
+<p>Notice how the first call to <code>session.flush()</code> (on the left) works just fine. But then the second call (on the right) hangs &ndash; note this is a completely different Heroku dyno. The only connection these two have are the Postgres database. So (at least with Postgres), <code>session.flush()</code> is able to use Postgres to <em>stage</em> our value, but not write it yet. That&rsquo;s pretty rad.</p>
+
+<h2>Changing <code>get_one_or_create()</code></h2>
+
+<p>This will work with the <code>get_one_or_create()</code> function above by replacing line 13 (as suggested in the comment) as so</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def get_one_or_create(session,
+</span><span class='line'>                      model,
+</span><span class='line'>                      create_method='',
+</span><span class='line'>                      create_method_kwargs={},
+</span><span class='line'>                      **kwargs):
+</span><span class='line'>    try:
+</span><span class='line'>        return session.query(model).filter_by(**kwargs).one(), True
+</span><span class='line'>    except NoResultFound:
+</span><span class='line'>        kwargs.update(create_method_kwargs)
+</span><span class='line'>        created = getattr(model, create_method, model)(**kwargs)
+</span><span class='line'>        try:
+</span><span class='line'>            session.add(created)
+</span><span class='line'>            session.flush()
+</span><span class='line'>            return created, False
+</span><span class='line'>        except IntegrityError:
+</span><span class='line'>            session.rollback()
+</span><span class='line'>            return session.query(model).filter_by(**kwargs).one(), True</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In this case, if one process creates an object, and a second process attempts to create the same object (i.e. overlapping in a unique constraint), the second process will stall at the <code>session.flush()</code>. If the first process eventually calls <code>session.commit()</code>, the second process will raise the <code>IntegrityError</code>, as expected, and then be able to actually query the object. If, instead, it dies or or whatever other reason doesn&rsquo;t call <code>session.commit()</code> but it&rsquo;s session clears, then the second session will resume and return the newly created object.</p>
+
+<p>My original fear was that the <code>session.flush()</code> could pass in both cases before the <code>session.commit()</code> was called, and then when the second <code>session.commit()</code> (or a <code>session.flush()</code>) the <code>IntegrityError</code> would raise out of the context of the <code>get_one_or_create()</code> and we wouldn&rsquo;t (easily) know which object to get instead of create. This isn&rsquo;t the case.</p>
+
+<p>There is likely interesting economics in the balance between batching your commits (less frequent large commits are generally more efficient than frequent small commits) and the probability of a process stalling on the <code>session.flush()</code>  (and hence the expected loss of computation from that stalling). Generally, though, I would opt towards committing whenever a new object is created. There are some times, however, that you may want slightly more delicate control, which makes the above approach superior to the originally proposed solution.</p>
+
+<p>Consider a new object <code>GameStat</code>, which for every <code>Game</code> this object <em>must</em> exist (it&rsquo;s a pretty contrived example, but in other situations this relation can come up). When doing web programming (or really any program), you should assume that at any point any process could die. If the <code>GameStat</code> object <em>must</em> exist for every <code>Game</code>, then we can delay our call to <code>session.commit()</code> until both objects are been initialized. In this relatively small amount of time, it&rsquo;s unlikely that we will get an overlap, but if we do, the call to <code>session.flush()</code> shouldn&rsquo;t stall the process for very long.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Erik Taubeneck</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-05T23:58:13-05:00" pubdate data-updated="true">Feb 5<span>th</span>, 2014</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://skien.cc/blog/2014/02/05/sqlalchemy-and-race-conditions-follow-up/" data-via="" data-counturl="http://skien.cc/blog/2014/02/05/sqlalchemy-and-race-conditions-follow-up/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2014/01/31/adding-unique-contraints-after-the-fact-in-sqlalchemy/" title="Previous Post: Adding Unique Constraints After the Fact in SQLAlchemy">&laquo; Adding Unique Constraints After the Fact in SQLAlchemy</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  <img src="/images/me.jpg">
+  <p>
+  Follow Me <a href="https://twitter.com/taubeneck">@taubeneck</a>
+  </p>
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/02/05/sqlalchemy-and-race-conditions-follow-up/">SQLAlchemy and Race Conditions: Follow Up on Commits and Flushes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/31/adding-unique-contraints-after-the-fact-in-sqlalchemy/">Adding Unique Constraints After the Fact in SQLAlchemy</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/23/on-markdown/">On Markdown</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/">SQLAlchemy and Race Conditions: Implementing `get_one_or_create()`</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/">Flask-Twitter-OEmbedder and Flask Extension Testing</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/eriktaubeneck">@eriktaubeneck</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'eriktaubeneck',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Erik Taubeneck -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'skiencc';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://skien.cc/blog/2014/02/05/sqlalchemy-and-race-conditions-follow-up/';
+        var disqus_url = 'http://skien.cc/blog/2014/02/05/sqlalchemy-and-race-conditions-follow-up/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
