@@ -4,7 +4,7 @@
   <title><![CDATA[skien.cc]]></title>
   <link href="http://skien.cc/atom.xml" rel="self"/>
   <link href="http://skien.cc/"/>
-  <updated>2014-02-06T12:28:07-05:00</updated>
+  <updated>2014-02-06T12:30:06-05:00</updated>
   <id>http://skien.cc/</id>
   <author>
     <name><![CDATA[Erik Taubeneck]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[SQLAlchemy and Race Conditions: Follow Up on Commits and Flushes]]></title>
-    <link href="http://skien.cc/blog/2014/02/05/sqlalchemy-and-race-conditions-follow-up/"/>
-    <updated>2014-02-05T23:58:13-05:00</updated>
-    <id>http://skien.cc/blog/2014/02/05/sqlalchemy-and-race-conditions-follow-up</id>
+    <link href="http://skien.cc/blog/2014/02/06/sqlalchemy-and-race-conditions-follow-up/"/>
+    <updated>2014-02-06T12:30:13-05:00</updated>
+    <id>http://skien.cc/blog/2014/02/06/sqlalchemy-and-race-conditions-follow-up</id>
     <content type="html"><![CDATA[<p>In an <a href="http://skien.cc/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/">earlier post</a>, I talked about my adventures in creating a <code>get_one_or_create()</code> function for SQLAlchemy to use with Flask and Postgres.</p>
 
 <p>There was an <a href="http://skien.cc/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/#comment-1202518666">excellent question</a> asked in the comments about weather <code>session.flush()</code> could be used on line 13 instead of <code>session.commit()</code>. I didn&rsquo;t fully understand the answer, but explained that I had landed on this for safety of efficiency. The author of SQLAlchemy also echoed that it&rsquo;s not a simple answer. I spent some time with a small test app on Heroku to figure out how this all works, and what the best approach really was.</p>
