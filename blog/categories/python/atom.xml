@@ -4,7 +4,7 @@
   <title><![CDATA[Category: python | skien.cc]]></title>
   <link href="http://skien.cc/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://skien.cc/"/>
-  <updated>2014-02-06T12:33:58-05:00</updated>
+  <updated>2014-02-06T12:45:12-05:00</updated>
   <id>http://skien.cc/</id>
   <author>
     <name><![CDATA[Erik Taubeneck]]></name>
@@ -567,6 +567,8 @@ except NoResultFound:
 <blockquote><p>As a general rule, keep the lifecycle of the session separate and external from functions and objects that access and/or manipulate database data.</p></blockquote>
 
 <p>The reason we must add this into our function call here, is that if we do the <code>db.session.commit()</code> after making several calls to <code>get_one_or_create()</code> and the <code>IntegrityError</code> was raised, we&rsquo;d have no idea which created object caused it and we&rsquo;d have to start the entire transaction over (and we&rsquo;d have to write logic outside the function to handle all this). Since our <code>get_one_or_create()</code> function is written generally for any model and unique keywords, rather than specific logic tied to a specific model, I don&rsquo;t think it seriously conflicts with the SQLAlchemy philosophy.</p>
+
+<p><strong>UPDATE:</strong> I have recanted here and decided that using <code>session.flush()</code> is superior to <code>session.commit()</code> for line 13 of the function. See my <a href="http://skien.cc/blog/2014/02/06/sqlalchemy-and-race-conditions-follow-up/">newer blog post</a> for a detailed explanation of why.</p>
 
 <h2>Final Thoughts</h2>
 
