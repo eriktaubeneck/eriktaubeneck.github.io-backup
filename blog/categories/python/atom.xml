@@ -4,7 +4,7 @@
   <title><![CDATA[Category: python | skien.cc]]></title>
   <link href="http://skien.cc/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://skien.cc/"/>
-  <updated>2014-02-06T12:45:12-05:00</updated>
+  <updated>2014-04-09T11:56:13-04:00</updated>
   <id>http://skien.cc/</id>
   <author>
     <name><![CDATA[Erik Taubeneck]]></name>
@@ -12,6 +12,180 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Unpythonic Python]]></title>
+    <link href="http://skien.cc/blog/2014/04/09/unpythonic-python/"/>
+    <updated>2014-04-09T03:09:54-04:00</updated>
+    <id>http://skien.cc/blog/2014/04/09/unpythonic-python</id>
+    <content type="html"><![CDATA[<h2>FizzBuzz</h2>
+
+<p>When I applied to <a href="http://www.hackerschool.com">Hacker School</a>, one of the application question was FizzBuzz:</p>
+
+<blockquote><p>Write a program that prints out the numbers 1 to 100 (inclusive). If the number is divisible by 3, print <em>Fizz</em> instead of the number. If it&rsquo;s divisible by 5, print <em>Buzz</em>. If it&rsquo;s divisible by both 3 and 5, print <em>FizzBuzz</em>. You can use any language.</p></blockquote>
+
+<p>(Hacker School has since updated the question slightly, likely to make it more difficult to solve via Google. I&rsquo;ve left out the updated version intentionally to minimize my effect on Googlability.)</p>
+
+<p>This problem is fairly straight forward, and a good bite size problem to use as an example for different languages and programming styles; it&rsquo;s similar to &ldquo;Hello, World!&rdquo; and &ldquo;Fibonacci&rdquo;.</p>
+
+<h2>Some Unpythonic Python</h2>
+
+<p>I looked at this problem today while showing a friend the Hacker School application, and started thinking about the many ways to tackle the problem just in Python alone. Python, specifically with <a href="http://legacy.python.org/dev/peps/pep-0008/">PEP 8</a>, lays out the ideal way to write <em>Pythonic Python</em>. But Python doesn&rsquo;t enforce <em>Pythonic Python</em>, so I started thinking, what other kinds of Python could I write this in.</p>
+
+<p><strong>Warning: Very Unpythonic Python ahead.</strong> However, all code should work (with Python 2.7.5).</p>
+
+<p>Feel free to <a href="https://twitter.com/taubeneck">tweet me</a> or comment with suggested fixes, or new additions.</p>
+
+<!-- more -->
+
+
+<h3>Pythonic Python</h3>
+
+<p>``` python
+def fizzbuzz(number):</p>
+
+<pre><code>if number % 3 == 0 and number % 5 == 0:
+    return 'FizzBuzz'
+elif number % 3 == 0:
+    return 'Fizz'
+elif number % 5 == 0:
+    return 'Buzz'
+else:
+    return number
+</code></pre>
+
+<p>for number in range(1, 101):</p>
+
+<pre><code>print fizzbuzz(number)
+</code></pre>
+
+<p>```</p>
+
+<h3>Lispy Python</h3>
+
+<p>```
+fizzbuzz = lambda n: &lsquo;FizzBuzz&rsquo; if n % 3 == 0 and n % 5 == 0 else None
+fizz = lambda n: &lsquo;Fizz&rsquo; if n % 3 == 0 else None
+buzz = lambda n: &lsquo;Buzz&rsquo; if n % 5 == 0 else None
+fizz_andor_maybenot_buzz = lambda n: fizzbuzz(n) or fizz(n) or buzz(n) or str(n)</p>
+
+<p>print reduce(lambda m,n: m+&lsquo;\n&rsquo;+n, map(fizz_andor_maybenot_buzz, range(1, 101))
+```</p>
+
+<h3>Javacious Python</h3>
+
+<p>```
+import sys</p>
+
+<p>class Value(object):</p>
+
+<pre><code>def __init__(self,value):
+    self.setValue(value)
+
+def setValue(self,value):
+    self.value = value
+
+def getValue(self):
+    return self.value
+
+def toString(self):
+    return self.getValue().__str__()
+</code></pre>
+
+<p>class FizzBuzz(object):</p>
+
+<pre><code>def __init__(self, n):
+    if n % 15 == 0:
+        value = 'FizzBuzz';
+    elif n % 3 == 0:
+        value = 'Fizz';
+    elif n % 5 == 0:
+        value = 'Buzz';
+    else:
+        value = str(n);
+    self.set_value(value);
+
+def setValue(self,value):
+    self.value = value;
+
+def getValue(self):
+    return self.value;
+</code></pre>
+
+<p>class FizzBuzzRunner(object):</p>
+
+<pre><code>def __init__(self, n):
+    self.set_n(n)
+
+def setN(self, n):
+    self.n = n
+
+def run(self):
+    for i in range(self.n):
+        sys.stdout.write(FizzBuzz(i).getValue().toString()+'\n');
+</code></pre>
+
+<p>if <strong>name</strong> == &lsquo;<strong>main</strong>&rsquo;:</p>
+
+<pre><code>n = 101;
+FizzBuzzRunner(n).run()    
+</code></pre>
+
+<p>```</p>
+
+<h3>C-ly Python</h3>
+
+<p>```
+def main():</p>
+
+<pre><code>i = 0;
+value = '';
+
+while i &lt; 100:
+    i += 1
+    if i % 15 == 0:
+        value = 'FizzBuzz';
+    elif i % 3 == 0:
+        value = 'Fizz';
+    elif i % 5 == 0:
+        value = 'Buzz';
+    else:
+        value = str(i);
+    print value;
+
+return 0;
+</code></pre>
+
+<p>main();
+```</p>
+
+<h3>Clojurly Python</h3>
+
+<p>```
+def fizzbuzz(n):</p>
+
+<pre><code>return 'FizzBuzz' if n % 3 == 0 and n % 5 == 0 else None
+</code></pre>
+
+<p>def fizz(n):</p>
+
+<pre><code>return 'Fizz' if n % 3 == 0 else None
+</code></pre>
+
+<p>def buzz(n):</p>
+
+<pre><code>return 'Buzz' if n % 5 == 0 else None
+</code></pre>
+
+<p>def fizz_andor_maybenot_buzz(n):</p>
+
+<pre><code>print fizzbuzz(n) or fizz(n) or buzz(n) or str(n)
+</code></pre>
+
+<p>map(fizz_andor_maybenot_buzz, xrange(1, 101))
+```</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Adding Unique Constraints After the Fact in SQLAlchemy]]></title>
