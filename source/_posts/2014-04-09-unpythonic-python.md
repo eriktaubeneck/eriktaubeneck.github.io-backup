@@ -51,7 +51,7 @@ fizz = lambda n: 'Fizz' if n % 3 == 0 else None
 buzz = lambda n: 'Buzz' if n % 5 == 0 else None
 fizz_andor_maybenot_buzz = lambda n: fizzbuzz(n) or fizz(n) or buzz(n) or str(n)
 
-print reduce(lambda m,n: m+'\n'+n, map(fizz_andor_maybenot_buzz, range(1, 101))
+print reduce(lambda m,n: m+'\n'+n, map(fizz_andor_maybenot_buzz, range(1, 101)))
 ```
 
 ### Javacious Python
@@ -82,17 +82,17 @@ class FizzBuzz(object):
             value = 'Buzz';
         else:
             value = str(n);
-        self.set_value(value);
+        self.setValue(value);
     
     def setValue(self,value):
-        self.value = value;
+        self.value = Value(value);
 
     def getValue(self):
         return self.value;
 
 class FizzBuzzRunner(object):
     def __init__(self, n):
-        self.set_n(n)
+        self.setN(n)
        
     def setN(self, n):
         self.n = n
