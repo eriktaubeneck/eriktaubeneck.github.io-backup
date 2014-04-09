@@ -98,7 +98,7 @@ class FizzBuzzRunner(object):
         self.n = n
       
     def run(self):
-        for i in range(self.n):
+        for i in range(1,self.n):
             sys.stdout.write(FizzBuzz(i).getValue().toString()+'\n');
 
 if __name__ == '__main__':
