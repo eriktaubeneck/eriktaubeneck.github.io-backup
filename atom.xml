@@ -4,7 +4,7 @@
   <title><![CDATA[skien.cc]]></title>
   <link href="http://skien.cc/atom.xml" rel="self"/>
   <link href="http://skien.cc/"/>
-  <updated>2014-04-09T11:56:13-04:00</updated>
+  <updated>2014-04-09T12:04:23-04:00</updated>
   <id>http://skien.cc/</id>
   <author>
     <name><![CDATA[Erik Taubeneck]]></name>
@@ -81,7 +81,7 @@
 </span><span class='line'><span class="n">buzz</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">n</span><span class="p">:</span> <span class="s">&#39;Buzz&#39;</span> <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">None</span>
 </span><span class='line'><span class="n">fizz_andor_maybenot_buzz</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">n</span><span class="p">:</span> <span class="n">fizzbuzz</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="ow">or</span> <span class="n">fizz</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="ow">or</span> <span class="n">buzz</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">print</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">m</span><span class="p">,</span><span class="n">n</span><span class="p">:</span> <span class="n">m</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">+</span><span class="n">n</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">fizz_andor_maybenot_buzz</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">101</span><span class="p">))</span>
+</span><span class='line'><span class="k">print</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">m</span><span class="p">,</span><span class="n">n</span><span class="p">:</span> <span class="n">m</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">+</span><span class="n">n</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">fizz_andor_maybenot_buzz</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">101</span><span class="p">)))</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -159,17 +159,17 @@
 </span><span class='line'>            <span class="n">value</span> <span class="o">=</span> <span class="s">&#39;Buzz&#39;</span><span class="p">;</span>
 </span><span class='line'>        <span class="k">else</span><span class="p">:</span>
 </span><span class='line'>            <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="k">def</span> <span class="nf">setValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">Value</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="k">def</span> <span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span class='line'>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">;</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">class</span> <span class="nc">FizzBuzzRunner</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 </span><span class='line'>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">set_n</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">setN</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="k">def</span> <span class="nf">setN</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
 </span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>

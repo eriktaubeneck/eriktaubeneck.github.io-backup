@@ -4,7 +4,7 @@
   <title><![CDATA[Category: python | skien.cc]]></title>
   <link href="http://skien.cc/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://skien.cc/"/>
-  <updated>2014-04-09T11:56:13-04:00</updated>
+  <updated>2014-04-09T12:04:23-04:00</updated>
   <id>http://skien.cc/</id>
   <author>
     <name><![CDATA[Erik Taubeneck]]></name>
@@ -69,7 +69,7 @@ fizz = lambda n: &lsquo;Fizz&rsquo; if n % 3 == 0 else None
 buzz = lambda n: &lsquo;Buzz&rsquo; if n % 5 == 0 else None
 fizz_andor_maybenot_buzz = lambda n: fizzbuzz(n) or fizz(n) or buzz(n) or str(n)</p>
 
-<p>print reduce(lambda m,n: m+&lsquo;\n&rsquo;+n, map(fizz_andor_maybenot_buzz, range(1, 101))
+<p>print reduce(lambda m,n: m+&lsquo;\n&rsquo;+n, map(fizz_andor_maybenot_buzz, range(1, 101)))
 ```</p>
 
 <h3>Javacious Python</h3>
@@ -103,10 +103,10 @@ def toString(self):
         value = 'Buzz';
     else:
         value = str(n);
-    self.set_value(value);
+    self.setValue(value);
 
 def setValue(self,value):
-    self.value = value;
+    self.value = Value(value);
 
 def getValue(self):
     return self.value;
@@ -115,7 +115,7 @@ def getValue(self):
 <p>class FizzBuzzRunner(object):</p>
 
 <pre><code>def __init__(self, n):
-    self.set_n(n)
+    self.setN(n)
 
 def setN(self, n):
     self.n = n
