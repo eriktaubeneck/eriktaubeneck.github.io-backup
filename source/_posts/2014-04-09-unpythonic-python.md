@@ -1,9 +1,10 @@
 ---
 layout: post
-title: "Very Unpythonic Python"
+title: "Unpythonic Python"
 date: 2014-04-09 03:09:54 -0400
 comments: true
-categories: 'python'
+categories: 
+- python
 ---
 
 ##FizzBuzz
@@ -16,17 +17,18 @@ When I applied to [Hacker School](http://www.hackerschool.com), one of the appli
 
 This problem is fairly straight forward, and a good bite size problem to use as an example for different languages and programming styles; it's similar to "Hello, World!" and "Fibonacci".
 
-## Unpythonic Python
+## Some Unpythonic Python
 
 I looked at this problem today while showing a friend the Hacker School application, and started thinking about the many ways to tackle the problem just in Python alone. Python, specifically with [PEP 8](http://legacy.python.org/dev/peps/pep-0008/), lays out the ideal way to write *Pythonic Python*. But Python doesn't enforce *Pythonic Python*, so I started thinking, what other kinds of Python could I write this in.
 
 **Warning: Very Unpythonic Python ahead.** However, all code should work (with Python 2.7.5).
 
 Feel free to [tweet me](https://twitter.com/taubeneck) or comment with suggested fixes, or new additions.
+<!-- more -->
 
 ### Pythonic Python
 
-~~~
+``` python
 def fizzbuzz(number):
     if number % 3 == 0 and number % 5 == 0:
         return 'FizzBuzz'
@@ -39,72 +41,80 @@ def fizzbuzz(number):
 
 for number in range(1, 101):
     print fizzbuzz(number)
-
-~~~
+```
 
 ### Lispy Python
 
-~~~
+```
 fizzbuzz = lambda n: 'FizzBuzz' if n % 3 == 0 and n % 5 == 0 else None
 fizz = lambda n: 'Fizz' if n % 3 == 0 else None
 buzz = lambda n: 'Buzz' if n % 5 == 0 else None
+fizz_andor_maybenot_buzz = lambda n: fizzbuzz(n) or fizz(n) or buzz(n) or str(n)
 
-print '\n'.join(map(lambda n: fizzbuzz(n) or fizz(n) or buzz(n) or str(n), range(1, 101)))
-~~~
-
-### Clojurly Python
-
-~~~
-def fizzbuzz(n):
-    return 'FizzBuzz' if n % 3 == 0 and n % 5 == 0 else None
-
-def fizz(n):
-    return 'Fizz' if n % 3 == 0 else None
-
-def buzz(n):
-    return 'Buzz' if n % 5 == 0 else None
-
-def fizz_andor_maybenot_buzz(n):
-    print fizzbuzz(n) or fizz(n) or buzz(n) or str(n)
-
-map( fizz_andor_maybenot_buzz, xrange(1, 101))
-~~~
+print reduce(lambda m,n: m+'\n'+n, map(fizz_andor_maybenot_buzz, range(1, 101))
+```
 
 ### Javacious Python
 
-~~~
+```
 import sys
 
+class Value(object):
+    def __init__(self,value):
+        self.setValue(value)
+    
+    def setValue(self,value):
+        self.value = value
+    
+    def getValue(self):
+        return self.value
+        
+    def toString(self):
+        return self.getValue().__str__()
 
 class FizzBuzz(object):
     def __init__(self, n):
         if n % 15 == 0:
-            self.value = 'FizzBuzz';
+            value = 'FizzBuzz';
         elif n % 3 == 0:
-            self.value = 'Fizz';
+            value = 'Fizz';
         elif n % 5 == 0:
-            self.value = 'Buzz';
+            value = 'Buzz';
         else:
-            self.value = str(n);
+            value = str(n);
+        self.set_value(value);
+    
+    def setValue(self,value):
+        self.value = value;
 
-    def __repr__(self):
+    def getValue(self):
         return self.value;
+
+class FizzBuzzRunner(object):
+    def __init__(self, n):
+        self.set_n(n)
+       
+    def setN(self, n):
+        self.n = n
+      
+    def run(self):
+        for i in range(self.n):
+            sys.stdout.write(FizzBuzz(i).getValue().toString()+'\n');
 
 if __name__ == '__main__':
     n = 101;
-    for i in range(n):
-        sys.stdout.write(str(FizzBuzz(i))+'\n');
-~~~
+    FizzBuzzRunner(n).run()    
+```
 
 ###C-ly Python
 
-~~~
+```
 def main():
-    n, i, N, value = 0, 0, [], '';
-    n = 101;
-    N = range(1, n);
+    i = 0;
+    value = '';
 
-    for i in N:
+    while i < 100:
+        i += 1
         if i % 15 == 0:
             value = 'FizzBuzz';
         elif i % 3 == 0:
@@ -118,23 +128,23 @@ def main():
     return 0;
 
 main();
-~~~
+```
 
-### Javascripty Python
+### Clojurly Python
 
-~~~
-import sys
+```
+def fizzbuzz(n):
+    return 'FizzBuzz' if n % 3 == 0 and n % 5 == 0 else None
 
-n = 101;
-N = range(1, n);
+def fizz(n):
+    return 'Fizz' if n % 3 == 0 else None
 
-for i in N:
-    if (i % 15 == 0):
-        sys.stdout.write('FizzBuzz\n');
-    elif (i % 3 == 0):
-        sys.stdout.write('Fizz\n');
-    elif (i % 5 == 0):
-        sys.stdout.write('Buzz\n');
-    else:
-        sys.stdout.write(str(n)+'\n');
-~~~
+def buzz(n):
+    return 'Buzz' if n % 5 == 0 else None
+
+def fizz_andor_maybenot_buzz(n):
+    print fizzbuzz(n) or fizz(n) or buzz(n) or str(n)
+
+map(fizz_andor_maybenot_buzz, xrange(1, 101))
+```
+
