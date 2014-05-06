@@ -3,7 +3,7 @@ layout: post
 title: "SQLAlchemy and Race Conditions: Follow Up on Commits and Flushes"
 date: 2014-02-06 12:30:13 -0500
 comments: true
-categories: 
+categories:
 published: True
 ---
 
@@ -20,12 +20,12 @@ For quick reference, the solution I landed on was:
 def get_one_or_create(session,
                       model,
                       create_method='',
-                      create_method_kwargs={},
+                      create_method_kwargs=None,
                       **kwargs):
     try:
         return session.query(model).filter_by(**kwargs).one(), True
     except NoResultFound:
-        kwargs.update(create_method_kwargs)
+        kwargs.update(create_method_kwargs or {})
         created = getattr(model, create_method, model)(**kwargs)
         try:
             session.add(created)
@@ -40,13 +40,13 @@ def get_one_or_create(session,
 
 ## `session.commit()` vs `session.flush()`
 
-At the surface, the difference between these two operations is fairly straight forward. 
+At the surface, the difference between these two operations is fairly straight forward.
 
 A call to `session.commit()` takes any new objects or changes to existing objects in the `session` and attempts to write them to the database. If a new object has a key or other attribute that the database creates, that is created during the write and in turn populated on the object in the session.
 
 A call to `session.flush()` however, *only* populates our objects, but does not write to the datastore yet. (I've italicized *only* because I am about to show that it actually does more than that.)
 
-So what happens if I have an object with a unique constraint on an attribute, and in two different sessions/processes/Heroku dynos create the object with the same value for that attribute, and then try call `session.flush()`? Since neither value has been written to the database, we don't expect an `IntegrityError`. But we also ideally wouldn't want this to roll by without issue. So what does happen? 
+So what happens if I have an object with a unique constraint on an attribute, and in two different sessions/processes/Heroku dynos create the object with the same value for that attribute, and then try call `session.flush()`? Since neither value has been written to the database, we don't expect an `IntegrityError`. But we also ideally wouldn't want this to roll by without issue. So what does happen?
 
 I created a [small test Flask app](https://github.com/eriktaubeneck/heroku-test) and deployed it to Heroku. I then spun up two sessions of iPython, also on Heroku, imported our `Game` object and attempted to violate our unique constraint on `provider_game_id`. Check out what happened:
 
@@ -62,12 +62,12 @@ This will work with the `get_one_or_create()` function above by replacing line 1
 def get_one_or_create(session,
                       model,
                       create_method='',
-                      create_method_kwargs={},
+                      create_method_kwargs=None,
                       **kwargs):
     try:
         return session.query(model).filter_by(**kwargs).one(), True
     except NoResultFound:
-        kwargs.update(create_method_kwargs)
+        kwargs.update(create_method_kwargs or {})
         created = getattr(model, create_method, model)(**kwargs)
         try:
             session.add(created)
@@ -77,7 +77,7 @@ def get_one_or_create(session,
             session.rollback()
             return session.query(model).filter_by(**kwargs).one(), True
 ```
-In this case, if one process creates an object, and a second process attempts to create the same object (i.e. overlapping in a unique constraint), the second process will stall at the `session.flush()`. If the first process eventually calls `session.commit()`, the second process will raise the `IntegrityError`, as expected, and then be able to actually query the object. If, instead, it dies or or whatever other reason doesn't call `session.commit()` but it's session clears, then the second session will resume and return the newly created object. 
+In this case, if one process creates an object, and a second process attempts to create the same object (i.e. overlapping in a unique constraint), the second process will stall at the `session.flush()`. If the first process eventually calls `session.commit()`, the second process will raise the `IntegrityError`, as expected, and then be able to actually query the object. If, instead, it dies or or whatever other reason doesn't call `session.commit()` but it's session clears, then the second session will resume and return the newly created object.
 
 My original fear was that the `session.flush()` could pass in both cases before the `session.commit()` was called, and then when the second `session.commit()` (or a `session.flush()`) the `IntegrityError` would raise out of the context of the `get_one_or_create()` and we wouldn't (easily) know which object to get instead of create. This isn't the case.
 
@@ -85,3 +85,4 @@ There is likely interesting economics in the balance between batching your commi
 
 Consider a new object `GameStat`, which for every `Game` this object *must* exist (it's a pretty contrived example, but in other situations this relation can come up). When doing web programming (or really any program), you should assume that at any point any process could die. If the `GameStat` object *must* exist for every `Game`, then we can delay our call to `session.commit()` until both objects are been initialized. In this relatively small amount of time, it's unlikely that we will get an overlap, but if we do, the call to `session.flush()` shouldn't stall the process for very long.
 
+**UPDATE:** I've updated using a `{}` as a default value in the function as this is typical Python gotcha. Thanks for the [comment](http://skien.cc/blog/2014/02/06/sqlalchemy-and-race-conditions-follow-up/#comment-1371570667), Nigel! If your curious about this gotcha, check out this [StackOverflow question](http://stackoverflow.com/questions/5712904/empty-dictionary-as-default-value-for-keyword-argument-in-python-function-dicti) and [this blog post](http://pythonconquerstheuniverse.wordpress.com/category/python-gotchas/).

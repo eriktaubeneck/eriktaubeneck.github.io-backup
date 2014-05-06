@@ -179,4 +179,4 @@ def downgrade():
 
 (Note: the import statements that happen outside of the functions can just be placed at the top of the migration file. They shouldn't cause any conflicts.)
 
-Woo! That's it. There are certainly a few *hacks* in here, so as usual, through some feedback in the comments.
+Woo! That's it. There are certainly a few *hacks* in here, so as usual, throw some feedback in the comments.

@@ -76,7 +76,7 @@ def get_one_or_create(session,
    try:
        return session.query(model).filter_by(**kwargs).one()
    except NoResultFound:
-       return model(**kwargs)                 
+       return model(**kwargs)
 ```
 
 There are a couple small differences here. Most obvious is the change to a `try/except` block rather than getting the `count()` explicitly. The advantage here is that if the object exists, we only have to make one call to the datastore. The other is the use of `filter_by()`, which is just a version of `filter` that uses keyword arguments.
@@ -182,12 +182,12 @@ from sqlalchemy.orm.exc import NoResultFound
 def get_one_or_create(session,
                       model,
                       create_method='',
-                      create_method_kwargs={},
+                      create_method_kwargs=None,
                       **kwargs):
     try:
         return session.query(model).filter_by(**kwargs).one(), True
     except NoResultFound:
-        kwargs.update(create_method_kwargs)
+        kwargs.update(create_method_kwargs or {})
         return getattr(model, create_method, model)(**kwargs), False
 ```
 
@@ -199,7 +199,7 @@ At this point, we have a pretty robust `get_one_or_create()` function that worke
 
 By using my newly minted `get_one_or_create()` wherever I create objects, you can imagine my surprise when `MultipleResultsFound` exceptions starting being raised when trying to `get_one_or_create()` a `Game`. I scoured my code for any place that I created a `Game`; luckily `grep` makes this easy. Nothing. I expanded my test so that I was mocking a scan for 100 users. Nothing. Maybe there was a unicode issue where the *get* part was trying to match to a unicode to string (and failing) but the *create* part was then creating the attribute as a string. A new test quickly disproved this. Nothing.
 
-I was lost. I was writing tests *hoping* that they would fail just so I could figure out what was going wrong. And it was 4am. I *hate* going to sleep at a point like this. (I use *sleep* loosely here - I generally don't sleep well and lay awake trying to figure out how to fix my problem.) I'm not sure if it was that night or the next morning (or even when you draw the line going to bed at 4am for that matter…), but I eventually realized why I was getting duplicate objects in my datastore. 
+I was lost. I was writing tests *hoping* that they would fail just so I could figure out what was going wrong. And it was 4am. I *hate* going to sleep at a point like this. (I use *sleep* loosely here - I generally don't sleep well and lay awake trying to figure out how to fix my problem.) I'm not sure if it was that night or the next morning (or even when you draw the line going to bed at 4am for that matter…), but I eventually realized why I was getting duplicate objects in my datastore.
 
 During the time between the *get* call when the object doesn't exist and the call to `db.session.commit()`, the object was created somewhere else. I was using Celery to batch the update and it was a brand new scan, so a lot of stuff was being created. Since the `db.session.commit()` comes at the end of the loop, there can actually be a fair amount of time between these calls. But even if a `db.session.commit()` happened sooner, we want to be *sure* that another matching object didn't get created between the *get* and *create* parts of a function.
 
@@ -207,7 +207,7 @@ During the time between the *get* call when the object doesn't exist and the cal
 
 ### `@celery.task()`
 
-I use quotes here in the way I'd use air quotes if we were talking: the [Celery](http://www.celeryproject.org/) async task model isn't true async in the way that [Twisted](http://twistedmatrix.com/trac/) or [`asyncio`](http://docs.python.org/3.4/library/asyncio.html) is. Instead it uses an external messaging system (I use [Redis](http://redis.io/) - mostly due to the price on [Heroku](https://www.heroku.com/)). Functions and their inputs (remember that in Python, functions, like everything else, are objects) are JSONified, stored in the message system, and then deJSONified and executed in a completely separate process. 
+I use quotes here in the way I'd use air quotes if we were talking: the [Celery](http://www.celeryproject.org/) async task model isn't true async in the way that [Twisted](http://twistedmatrix.com/trac/) or [`asyncio`](http://docs.python.org/3.4/library/asyncio.html) is. Instead it uses an external messaging system (I use [Redis](http://redis.io/) - mostly due to the price on [Heroku](https://www.heroku.com/)). Functions and their inputs (remember that in Python, functions, like everything else, are objects) are JSONified, stored in the message system, and then deJSONified and executed in a completely separate process.
 
 It does become more complicated if you care about the result of a function call, but often you call functions only for their side effects. Sometimes you'll want to kick off a job of a few such function calls as a result of a web request. If the job takes awhile (anything more than a second) you certainly do not wish to wait (or can't, eventually you'll timeout) for that function to complete before responding. Celery makes this pattern straight forward, if not easy, to accomplish with a synchronous web framework like Flask.
 
@@ -243,7 +243,7 @@ This makes it possible to spin up a number of Celery workers (Heroku for this is
 
 ### Race Conditions
 
-Whenever you have multiple concurrent processes interacting with an external service, you have to be concerned about race conditions, e.g. from the perspective of any process, the state of that external service may change at anytime without any interaction from that process. Luckily, Celery is designed to handle this and maps jobs out in a way that no two processes will receive the same message. 
+Whenever you have multiple concurrent processes interacting with an external service, you have to be concerned about race conditions, e.g. from the perspective of any process, the state of that external service may change at anytime without any interaction from that process. Luckily, Celery is designed to handle this and maps jobs out in a way that no two processes will receive the same message.
 
 SQLAlchemy even has some protection against this, although I'm not sure exactly how it's implemented. I do know that if I have an `ipython` shell open with a transition pending, a query in another process will stall. This goes out the window, however, when we're working with Celery workers on separate Heroku instances or even separate web instances. So we certainly want to protect against this type of thing in production.
 
@@ -266,12 +266,12 @@ Again, think air quotes. As a developer, I never think or anything as final. Or 
 def get_one_or_create(session,
                       model,
                       create_method='',
-                      create_method_kwargs={},
+                      create_method_kwargs=None,
                       **kwargs):
     try:
         return session.query(model).filter_by(**kwargs).one(), True
     except NoResultFound:
-        kwargs.update(create_method_kwargs)
+        kwargs.update(create_method_kwargs or {})
         created = getattr(model, create_method, model)(**kwargs)
         try:
             session.add(created)
@@ -288,9 +288,11 @@ You'll notice one major difference from our earlier versions: `session.commit()`
 
 > As a general rule, keep the lifecycle of the session separate and external from functions and objects that access and/or manipulate database data.
 
-The reason we must add this into our function call here, is that if we do the `db.session.commit()` after making several calls to `get_one_or_create()` and the `IntegrityError` was raised, we'd have no idea which created object caused it and we'd have to start the entire transaction over (and we'd have to write logic outside the function to handle all this). Since our `get_one_or_create()` function is written generally for any model and unique keywords, rather than specific logic tied to a specific model, I don't think it seriously conflicts with the SQLAlchemy philosophy. 
+The reason we must add this into our function call here, is that if we do the `db.session.commit()` after making several calls to `get_one_or_create()` and the `IntegrityError` was raised, we'd have no idea which created object caused it and we'd have to start the entire transaction over (and we'd have to write logic outside the function to handle all this). Since our `get_one_or_create()` function is written generally for any model and unique keywords, rather than specific logic tied to a specific model, I don't think it seriously conflicts with the SQLAlchemy philosophy.
 
 **UPDATE:** I have recanted here and decided that using `session.flush()` is superior to `session.commit()` for line 13 of the function. See my [newer blog post](http://skien.cc/blog/2014/02/06/sqlalchemy-and-race-conditions-follow-up/) for a detailed explanation of why.
+
+**UPDATE 2:** I've updated using a `{}` as a default value in the function as this is typical Python gotcha. Thanks for the [comment](http://skien.cc/blog/2014/02/06/sqlalchemy-and-race-conditions-follow-up/#comment-1371570667), Nigel! If your curious about this gotcha, check out this [StackOverflow question](http://stackoverflow.com/questions/5712904/empty-dictionary-as-default-value-for-keyword-argument-in-python-function-dicti) and [this blog post](http://pythonconquerstheuniverse.wordpress.com/category/python-gotchas/).
 
 ## Final Thoughts
 
