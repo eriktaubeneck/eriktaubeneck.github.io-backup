@@ -123,12 +123,12 @@
 </pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">get_one_or_create</span><span class="p">(</span><span class="n">session</span><span class="p">,</span>
 </span><span class='line'>                      <span class="n">model</span><span class="p">,</span>
 </span><span class='line'>                      <span class="n">create_method</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
-</span><span class='line'>                      <span class="n">create_method_kwargs</span><span class="o">=</span><span class="p">{},</span>
+</span><span class='line'>                      <span class="n">create_method_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
 </span><span class='line'>                      <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 </span><span class='line'>    <span class="k">try</span><span class="p">:</span>
 </span><span class='line'>        <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">(),</span> <span class="bp">True</span>
 </span><span class='line'>    <span class="k">except</span> <span class="n">NoResultFound</span><span class="p">:</span>
-</span><span class='line'>        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">create_method_kwargs</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">create_method_kwargs</span> <span class="ow">or</span> <span class="p">{})</span>
 </span><span class='line'>        <span class="n">created</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">create_method</span><span class="p">,</span> <span class="n">model</span><span class="p">)(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </span><span class='line'>        <span class="k">try</span><span class="p">:</span>
 </span><span class='line'>            <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">created</span><span class="p">)</span>
@@ -182,12 +182,12 @@
 </pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">get_one_or_create</span><span class="p">(</span><span class="n">session</span><span class="p">,</span>
 </span><span class='line'>                      <span class="n">model</span><span class="p">,</span>
 </span><span class='line'>                      <span class="n">create_method</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
-</span><span class='line'>                      <span class="n">create_method_kwargs</span><span class="o">=</span><span class="p">{},</span>
+</span><span class='line'>                      <span class="n">create_method_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
 </span><span class='line'>                      <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 </span><span class='line'>    <span class="k">try</span><span class="p">:</span>
 </span><span class='line'>        <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">(),</span> <span class="bp">True</span>
 </span><span class='line'>    <span class="k">except</span> <span class="n">NoResultFound</span><span class="p">:</span>
-</span><span class='line'>        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">create_method_kwargs</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">create_method_kwargs</span> <span class="ow">or</span> <span class="p">{})</span>
 </span><span class='line'>        <span class="n">created</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">create_method</span><span class="p">,</span> <span class="n">model</span><span class="p">)(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </span><span class='line'>        <span class="k">try</span><span class="p">:</span>
 </span><span class='line'>            <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">created</span><span class="p">)</span>
@@ -206,6 +206,8 @@
 <p>There is likely interesting economics in the balance between batching your commits (less frequent large commits are generally more efficient than frequent small commits) and the probability of a process stalling on the <code>session.flush()</code>  (and hence the expected loss of computation from that stalling). Generally, though, I would opt towards committing whenever a new object is created. There are some times, however, that you may want slightly more delicate control, which makes the above approach superior to the originally proposed solution.</p>
 
 <p>Consider a new object <code>GameStat</code>, which for every <code>Game</code> this object <em>must</em> exist (it&rsquo;s a pretty contrived example, but in other situations this relation can come up). When doing web programming (or really any program), you should assume that at any point any process could die. If the <code>GameStat</code> object <em>must</em> exist for every <code>Game</code>, then we can delay our call to <code>session.commit()</code> until both objects are been initialized. In this relatively small amount of time, it&rsquo;s unlikely that we will get an overlap, but if we do, the call to <code>session.flush()</code> shouldn&rsquo;t stall the process for very long.</p>
+
+<p><strong>UPDATE:</strong> I&rsquo;ve updated using a <code>{}</code> as a default value in the function as this is typical Python gotcha. Thanks for the <a href="http://skien.cc/blog/2014/02/06/sqlalchemy-and-race-conditions-follow-up/#comment-1371570667">comment</a>, Nigel! If your curious about this gotcha, check out this <a href="http://stackoverflow.com/questions/5712904/empty-dictionary-as-default-value-for-keyword-argument-in-python-function-dicti">StackOverflow question</a> and <a href="http://pythonconquerstheuniverse.wordpress.com/category/python-gotchas/">this blog post</a>.</p>
 </div>
 
 

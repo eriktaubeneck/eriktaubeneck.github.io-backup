@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Celery | skien.cc]]></title>
   <link href="http://skien.cc/blog/categories/celery/atom.xml" rel="self"/>
   <link href="http://skien.cc/"/>
-  <updated>2014-04-09T13:57:21-04:00</updated>
+  <updated>2014-05-06T10:01:44-04:00</updated>
   <id>http://skien.cc/</id>
   <author>
     <name><![CDATA[Erik Taubeneck]]></name>
@@ -105,7 +105,7 @@ from sqlalchemy.orm.exc import NoResultFound</p>
 
 <p>   except NoResultFound:</p>
 
-<pre><code>   return model(**kwargs)                 
+<pre><code>   return model(**kwargs)
 </code></pre>
 
 <p>```</p>
@@ -230,12 +230,12 @@ from sqlalchemy.orm.exc import NoResultFound</p>
 
 <pre><code>                  model,
                   create_method='',
-                  create_method_kwargs={},
+                  create_method_kwargs=None,
                   **kwargs):
 try:
     return session.query(model).filter_by(**kwargs).one(), True
 except NoResultFound:
-    kwargs.update(create_method_kwargs)
+    kwargs.update(create_method_kwargs or {})
     return getattr(model, create_method, model)(**kwargs), False
 </code></pre>
 
@@ -326,12 +326,12 @@ def get_one_or_create(session,</p>
 
 <pre><code>                  model,
                   create_method='',
-                  create_method_kwargs={},
+                  create_method_kwargs=None,
                   **kwargs):
 try:
     return session.query(model).filter_by(**kwargs).one(), True
 except NoResultFound:
-    kwargs.update(create_method_kwargs)
+    kwargs.update(create_method_kwargs or {})
     created = getattr(model, create_method, model)(**kwargs)
     try:
         session.add(created)
@@ -353,6 +353,8 @@ except NoResultFound:
 <p>The reason we must add this into our function call here, is that if we do the <code>db.session.commit()</code> after making several calls to <code>get_one_or_create()</code> and the <code>IntegrityError</code> was raised, we&rsquo;d have no idea which created object caused it and we&rsquo;d have to start the entire transaction over (and we&rsquo;d have to write logic outside the function to handle all this). Since our <code>get_one_or_create()</code> function is written generally for any model and unique keywords, rather than specific logic tied to a specific model, I don&rsquo;t think it seriously conflicts with the SQLAlchemy philosophy.</p>
 
 <p><strong>UPDATE:</strong> I have recanted here and decided that using <code>session.flush()</code> is superior to <code>session.commit()</code> for line 13 of the function. See my <a href="http://skien.cc/blog/2014/02/06/sqlalchemy-and-race-conditions-follow-up/">newer blog post</a> for a detailed explanation of why.</p>
+
+<p><strong>UPDATE 2:</strong> I&rsquo;ve updated using a <code>{}</code> as a default value in the function as this is typical Python gotcha. Thanks for the <a href="http://skien.cc/blog/2014/02/06/sqlalchemy-and-race-conditions-follow-up/#comment-1371570667">comment</a>, Nigel! If your curious about this gotcha, check out this <a href="http://stackoverflow.com/questions/5712904/empty-dictionary-as-default-value-for-keyword-argument-in-python-function-dicti">StackOverflow question</a> and <a href="http://pythonconquerstheuniverse.wordpress.com/category/python-gotchas/">this blog post</a>.</p>
 
 <h2>Final Thoughts</h2>
 

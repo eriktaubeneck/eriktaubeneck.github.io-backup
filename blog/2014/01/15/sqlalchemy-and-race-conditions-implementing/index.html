@@ -379,12 +379,12 @@
 </span><span class='line'><span class="k">def</span> <span class="nf">get_one_or_create</span><span class="p">(</span><span class="n">session</span><span class="p">,</span>
 </span><span class='line'>                      <span class="n">model</span><span class="p">,</span>
 </span><span class='line'>                      <span class="n">create_method</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
-</span><span class='line'>                      <span class="n">create_method_kwargs</span><span class="o">=</span><span class="p">{},</span>
+</span><span class='line'>                      <span class="n">create_method_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
 </span><span class='line'>                      <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 </span><span class='line'>    <span class="k">try</span><span class="p">:</span>
 </span><span class='line'>        <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">(),</span> <span class="bp">True</span>
 </span><span class='line'>    <span class="k">except</span> <span class="n">NoResultFound</span><span class="p">:</span>
-</span><span class='line'>        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">create_method_kwargs</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">create_method_kwargs</span> <span class="ow">or</span> <span class="p">{})</span>
 </span><span class='line'>        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">create_method</span><span class="p">,</span> <span class="n">model</span><span class="p">)(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="bp">False</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -502,12 +502,12 @@
 </pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">def</span> <span class="nf">get_one_or_create</span><span class="p">(</span><span class="n">session</span><span class="p">,</span>
 </span><span class='line'>                      <span class="n">model</span><span class="p">,</span>
 </span><span class='line'>                      <span class="n">create_method</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
-</span><span class='line'>                      <span class="n">create_method_kwargs</span><span class="o">=</span><span class="p">{},</span>
+</span><span class='line'>                      <span class="n">create_method_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
 </span><span class='line'>                      <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 </span><span class='line'>    <span class="k">try</span><span class="p">:</span>
 </span><span class='line'>        <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">(),</span> <span class="bp">True</span>
 </span><span class='line'>    <span class="k">except</span> <span class="n">NoResultFound</span><span class="p">:</span>
-</span><span class='line'>        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">create_method_kwargs</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">create_method_kwargs</span> <span class="ow">or</span> <span class="p">{})</span>
 </span><span class='line'>        <span class="n">created</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">create_method</span><span class="p">,</span> <span class="n">model</span><span class="p">)(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </span><span class='line'>        <span class="k">try</span><span class="p">:</span>
 </span><span class='line'>            <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">created</span><span class="p">)</span>
@@ -528,6 +528,8 @@
 <p>The reason we must add this into our function call here, is that if we do the <code>db.session.commit()</code> after making several calls to <code>get_one_or_create()</code> and the <code>IntegrityError</code> was raised, we&rsquo;d have no idea which created object caused it and we&rsquo;d have to start the entire transaction over (and we&rsquo;d have to write logic outside the function to handle all this). Since our <code>get_one_or_create()</code> function is written generally for any model and unique keywords, rather than specific logic tied to a specific model, I don&rsquo;t think it seriously conflicts with the SQLAlchemy philosophy.</p>
 
 <p><strong>UPDATE:</strong> I have recanted here and decided that using <code>session.flush()</code> is superior to <code>session.commit()</code> for line 13 of the function. See my <a href="http://skien.cc/blog/2014/02/06/sqlalchemy-and-race-conditions-follow-up/">newer blog post</a> for a detailed explanation of why.</p>
+
+<p><strong>UPDATE 2:</strong> I&rsquo;ve updated using a <code>{}</code> as a default value in the function as this is typical Python gotcha. Thanks for the <a href="http://skien.cc/blog/2014/02/06/sqlalchemy-and-race-conditions-follow-up/#comment-1371570667">comment</a>, Nigel! If your curious about this gotcha, check out this <a href="http://stackoverflow.com/questions/5712904/empty-dictionary-as-default-value-for-keyword-argument-in-python-function-dicti">StackOverflow question</a> and <a href="http://pythonconquerstheuniverse.wordpress.com/category/python-gotchas/">this blog post</a>.</p>
 
 <h2>Final Thoughts</h2>
 
