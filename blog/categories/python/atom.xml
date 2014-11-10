@@ -4,7 +4,7 @@
   <title><![CDATA[Category: python | skien.cc]]></title>
   <link href="http://skien.cc/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://skien.cc/"/>
-  <updated>2014-05-06T10:01:44-04:00</updated>
+  <updated>2014-11-10T11:35:45-05:00</updated>
   <id>http://skien.cc/</id>
   <author>
     <name><![CDATA[Erik Taubeneck]]></name>
@@ -41,149 +41,120 @@
 
 <h3>Pythonic Python</h3>
 
-<p>``` python
-def fizzbuzz(number):</p>
+<pre><code class="python">def fizzbuzz(number):
+    if number % 3 == 0 and number % 5 == 0:
+        return 'FizzBuzz'
+    elif number % 3 == 0:
+        return 'Fizz'
+    elif number % 5 == 0:
+        return 'Buzz'
+    else:
+        return number
 
-<pre><code>if number % 3 == 0 and number % 5 == 0:
-    return 'FizzBuzz'
-elif number % 3 == 0:
-    return 'Fizz'
-elif number % 5 == 0:
-    return 'Buzz'
-else:
-    return number
+for number in range(1, 101):
+    print fizzbuzz(number)
 </code></pre>
-
-<p>for number in range(1, 101):</p>
-
-<pre><code>print fizzbuzz(number)
-</code></pre>
-
-<p>```</p>
 
 <h3>Lispy Python</h3>
 
-<p>```
-fizzbuzz = lambda n: &lsquo;FizzBuzz&rsquo; if n % 3 == 0 and n % 5 == 0 else None
-fizz = lambda n: &lsquo;Fizz&rsquo; if n % 3 == 0 else None
-buzz = lambda n: &lsquo;Buzz&rsquo; if n % 5 == 0 else None
-fizz_andor_maybenot_buzz = lambda n: fizzbuzz(n) or fizz(n) or buzz(n) or str(n)</p>
+<pre><code>fizzbuzz = lambda n: 'FizzBuzz' if n % 3 == 0 and n % 5 == 0 else None
+fizz = lambda n: 'Fizz' if n % 3 == 0 else None
+buzz = lambda n: 'Buzz' if n % 5 == 0 else None
+fizz_andor_maybenot_buzz = lambda n: fizzbuzz(n) or fizz(n) or buzz(n) or str(n)
 
-<p>print reduce(lambda m,n: m+&lsquo;\n&rsquo;+n, map(fizz_andor_maybenot_buzz, range(1, 101)))
-```</p>
+print reduce(lambda m,n: m+'\n'+n, map(fizz_andor_maybenot_buzz, range(1, 101)))
+</code></pre>
 
 <h3>Javacious Python</h3>
 
-<p>```
-import sys</p>
+<pre><code>import sys
 
-<p>class Value(object):</p>
+class Value(object):
+    def __init__(self,value):
+        self.setValue(value)
 
-<pre><code>def __init__(self,value):
-    self.setValue(value)
+    def setValue(self,value):
+        self.value = value
 
-def setValue(self,value):
-    self.value = value
+    def getValue(self):
+        return self.value
 
-def getValue(self):
-    return self.value
+    def toString(self):
+        return self.getValue().__str__()
 
-def toString(self):
-    return self.getValue().__str__()
+class FizzBuzz(object):
+    def __init__(self, n):
+        if n % 15 == 0:
+            value = 'FizzBuzz';
+        elif n % 3 == 0:
+            value = 'Fizz';
+        elif n % 5 == 0:
+            value = 'Buzz';
+        else:
+            value = str(n);
+        self.setValue(value);
+
+    def setValue(self,value):
+        self.value = Value(value);
+
+    def getValue(self):
+        return self.value;
+
+class FizzBuzzRunner(object):
+    def __init__(self, n):
+        self.setN(n)
+
+    def setN(self, n):
+        self.n = n
+
+    def run(self):
+        for i in range(1,self.n):
+            sys.stdout.write(FizzBuzz(i).getValue().toString()+'\n');
+
+if __name__ == '__main__':
+    n = 101;
+    FizzBuzzRunner(n).run()    
 </code></pre>
-
-<p>class FizzBuzz(object):</p>
-
-<pre><code>def __init__(self, n):
-    if n % 15 == 0:
-        value = 'FizzBuzz';
-    elif n % 3 == 0:
-        value = 'Fizz';
-    elif n % 5 == 0:
-        value = 'Buzz';
-    else:
-        value = str(n);
-    self.setValue(value);
-
-def setValue(self,value):
-    self.value = Value(value);
-
-def getValue(self):
-    return self.value;
-</code></pre>
-
-<p>class FizzBuzzRunner(object):</p>
-
-<pre><code>def __init__(self, n):
-    self.setN(n)
-
-def setN(self, n):
-    self.n = n
-
-def run(self):
-    for i in range(1,self.n):
-        sys.stdout.write(FizzBuzz(i).getValue().toString()+'\n');
-</code></pre>
-
-<p>if <strong>name</strong> == &lsquo;<strong>main</strong>&rsquo;:</p>
-
-<pre><code>n = 101;
-FizzBuzzRunner(n).run()    
-</code></pre>
-
-<p>```</p>
 
 <h3>C-ly Python</h3>
 
-<p>```
-def main():</p>
+<pre><code>def main():
+    i = 0;
+    value = '';
 
-<pre><code>i = 0;
-value = '';
+    while i &lt; 100:
+        i += 1
+        if i % 15 == 0:
+            value = 'FizzBuzz';
+        elif i % 3 == 0:
+            value = 'Fizz';
+        elif i % 5 == 0:
+            value = 'Buzz';
+        else:
+            value = str(i);
+        print value;
 
-while i &lt; 100:
-    i += 1
-    if i % 15 == 0:
-        value = 'FizzBuzz';
-    elif i % 3 == 0:
-        value = 'Fizz';
-    elif i % 5 == 0:
-        value = 'Buzz';
-    else:
-        value = str(i);
-    print value;
+    return 0;
 
-return 0;
+main();
 </code></pre>
-
-<p>main();
-```</p>
 
 <h3>Clojurly Python</h3>
 
-<p>```
-def fizzbuzz(n):</p>
+<pre><code>def fizzbuzz(n):
+    return 'FizzBuzz' if n % 3 == 0 and n % 5 == 0 else None
 
-<pre><code>return 'FizzBuzz' if n % 3 == 0 and n % 5 == 0 else None
+def fizz(n):
+    return 'Fizz' if n % 3 == 0 else None
+
+def buzz(n):
+    return 'Buzz' if n % 5 == 0 else None
+
+def fizz_andor_maybenot_buzz(n):
+    print fizzbuzz(n) or fizz(n) or buzz(n) or str(n)
+
+map(fizz_andor_maybenot_buzz, xrange(1, 101))
 </code></pre>
-
-<p>def fizz(n):</p>
-
-<pre><code>return 'Fizz' if n % 3 == 0 else None
-</code></pre>
-
-<p>def buzz(n):</p>
-
-<pre><code>return 'Buzz' if n % 5 == 0 else None
-</code></pre>
-
-<p>def fizz_andor_maybenot_buzz(n):</p>
-
-<pre><code>print fizzbuzz(n) or fizz(n) or buzz(n) or str(n)
-</code></pre>
-
-<p>map(fizz_andor_maybenot_buzz, xrange(1, 101))
-```</p>
 ]]></content>
   </entry>
   
@@ -199,87 +170,69 @@ def fizzbuzz(n):</p>
 <!-- more -->
 
 
-<p>``` python
-class Game(db.Model):</p>
+<pre><code class="python">class Game(db.Model):
+    __tablename__  = 'games'
+    id = db.Column(db.Integer, primary_key=True)
+    provider_game_id = db.Column(db.String(255))
+    provider_game_name = db.Column(db.String(255))
+    provider_game_category = db.Column(db.String(255))
 
-<pre><code>__tablename__  = 'games'
-id = db.Column(db.Integer, primary_key=True)
-provider_game_id = db.Column(db.String(255))
-provider_game_name = db.Column(db.String(255))
-provider_game_category = db.Column(db.String(255))
+class GameBeat(db.Model):
+    __tablename__ = 'game_beats'
+    id = db.Column(db.Integer, primary_key=True)
+    game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
+    game = db.relationship("Game",
+                           backref="beats",
+                           lazy="joined",
+                           innerjoin=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user = db.relationship("User",
+                           backref="game_beats",
+                           lazy="joined",
+                           innerjoin=True)
+    beat_at = db.Column(db.DateTime())
 </code></pre>
-
-<p>class GameBeat(db.Model):</p>
-
-<pre><code>__tablename__ = 'game_beats'
-id = db.Column(db.Integer, primary_key=True)
-game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
-game = db.relationship("Game",
-                       backref="beats",
-                       lazy="joined",
-                       innerjoin=True)
-user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-user = db.relationship("User",
-                       backref="game_beats",
-                       lazy="joined",
-                       innerjoin=True)
-beat_at = db.Column(db.DateTime())
-</code></pre>
-
-<p>```</p>
 
 <p>but had accidentally created multiple <code>Game</code> objects with the same <code>provider_game_id</code> attribute. At the very least, we would rather have the class definition and database representation put a unique constraint on this attribute so that if we ever attempted to create such a duplicate <code>Game</code> object, we&rsquo;ll end up raising a <code>IntegrityError</code> and the duplicate won&rsquo;t actually get added to the datastore. (Again, a <a href="http://skien.cc/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/">previous post</a> discusses how to handle this).</p>
 
 <p>The class definition updates to:</p>
 
-<p>```
-class Game(db.Model):</p>
-
-<pre><code>__tablename__  = 'games'
-id = db.Column(db.Integer, primary_key=True)
-provider_game_id = db.Column(db.String(255), unique=True)
-provider_game_name = db.Column(db.String(255))
-provider_game_category = db.Column(db.String(255))
+<pre><code>class Game(db.Model):
+    __tablename__  = 'games'
+    id = db.Column(db.Integer, primary_key=True)
+    provider_game_id = db.Column(db.String(255), unique=True)
+    provider_game_name = db.Column(db.String(255))
+    provider_game_category = db.Column(db.String(255))
 </code></pre>
-
-<p>```</p>
 
 <p>We still, however need to make the update to our datastore (Postgres, in our case), along with finding and eliminating the duplicates we introduced into the system.</p>
 
 <h2>Using <code>alembic</code> to update the datastore</h2>
 
-<p>If you&rsquo;re not using <a href="http://alembic.readthedocs.org/en/latest/"><code>alembic</code></a> with <code>SQLAlchemy</code>, you&rsquo;re doing it wrong. OK &ndash; that&rsquo;s a bit harsh (and if you&rsquo;re doing it some other way, let me know!), but if you ever plan to change your data model, you&rsquo;ll need to change your datastore along with it, and <code>alembic</code> is an excellent tool to help you along. It&rsquo;s version control for your database schema; think Git for your class models.</p>
+<p>If you&rsquo;re not using <a href="http://alembic.readthedocs.org/en/latest/"><code>alembic</code></a> with <code>SQLAlchemy</code>, you&rsquo;re doing it wrong. OK - that&rsquo;s a bit harsh (and if you&rsquo;re doing it some other way, let me know!), but if you ever plan to change your data model, you&rsquo;ll need to change your datastore along with it, and <code>alembic</code> is an excellent tool to help you along. It&rsquo;s version control for your database schema; think Git for your class models.</p>
 
 <p><code>alembic</code> provides the useful <code>autogenerate</code> option that can be used like so:</p>
 
-<p><code>
-$ alembic --autogenerate -m "add unique constraint to Game.provider_game_id"
-</code></p>
+<pre><code>$ alembic --autogenerate -m "add unique constraint to Game.provider_game_id"
+</code></pre>
 
 <p>(Some <a href="http://alembic.readthedocs.org/en/latest/tutorial.html#auto-generating-migrations">setup</a> is required to get this option to work.) You should now have a new file in your <code>alembic/versions</code> directory with the name something like <code>10f2a956bad5_add_unique_constrain.py</code>. (Your hash at the beginning is going to almost certainly be different.) If you look at the file, you&rsquo;ll notice that it is mostly empty. Unfortunately, <code>alembic</code> isn&rsquo;t able to identify newly added unique constraints automatically, so we will have to fill it in.</p>
 
 <p>I found the <a href="http://alembic.readthedocs.org/en/rel_0_1/ops.html#alembic.op.create_unique_constraint">documentation</a> on adding a unique constraint a bit confusing at first. The function we want to use is <code>op.create_unique_constraint()</code>, which takes arguments <code>name</code>, <code>source</code>, and <code>local_cols</code>. At first, I thought <code>name</code> was the name of the column which I wanted to make unique, however it&rsquo;s actually the name of the constraint. In my setup (with Postgres), I was able to let <code>name = None</code> and have SQLAlchemy and Postgres sort it out. The <code>source</code> is just a string of the name of the table, and <code>local_cols</code> is where we specify what we want to make unique. The somewhat tricky part here is that we can make a constraint where <code>(col1,col2)</code> needs to be unique (not individually unique, but the combination of the two), so this parameter takes a list. In our case, the list will only have a single member, <code>provider_game_id</code>. Within the <code>upgrade</code> function in our migration file, we can add:</p>
 
-<p>```
-def upgrade():</p>
-
-<pre><code>op.create_unique_constraint(None,
-                            "games",
-                            ["provider_game_id"])
+<pre><code>def upgrade():
+    op.create_unique_constraint(None,
+                                "games",
+                                ["provider_game_id"])
 </code></pre>
 
-<p><code>``
-and under the</code>downgrade` function, we can add:</p>
+<p>and under the <code>downgrade</code> function, we can add:</p>
 
-<p>```
-def downgrade():</p>
-
-<pre><code>op.drop_contraint("provider_game_id",
-                  "games",
-                   "unique")
+<pre><code>def downgrade():
+    op.drop_contraint("provider_game_id",
+                      "games",
+                       "unique")
 </code></pre>
-
-<p>```</p>
 
 <p>If there are any existing duplicates and we run this, however, we are going to get an <code>IntegrityError</code>. So it&rsquo;s time to seek and destroy.</p>
 
@@ -287,38 +240,26 @@ def downgrade():</p>
 
 <p>As we&rsquo;re debugging the situation, one of the first things we&rsquo;ll want see how many duplicates we have of our object along the <code>provider_game_id</code>. I wrote this function do do just that:</p>
 
-<p>```
-from sqlalchemy import func</p>
+<pre><code>from sqlalchemy import func
 
-<p>def n_dups(session, cls, attr):</p>
-
-<pre><code>return session.query(getattr(cls,attr)).group_by(getattr(cls,attr)).\
-        having(func.count(getattr(cls,attr)) &gt; 1).count()
+def n_dups(session, cls, attr):
+    return session.query(getattr(cls,attr)).group_by(getattr(cls,attr)).\
+            having(func.count(getattr(cls,attr)) &gt; 1).count()
 </code></pre>
-
-<p>```</p>
 
 <p>Running this, we&rsquo;ll use <code>n_dups(Game, 'provider_game_id')</code> and likely see something more than zero. All this tells us, however, is how many dups we have along that attribute. We now need to iterate though each duplicated <code>provider_game_id</code> and collect all the objects with said <code>provider_game_id</code>. Getting the duplicated <code>provider_game_ids</code> is similar to above:</p>
 
-<p>```
-def get_duplicated_attrs(session, cls, attr):</p>
-
-<pre><code>return session.query(getattr(cls,attr)).group_by(getattr(cls,attr)).\
-        having(func.count(getattr(cls,attr)) &gt; 1).all()
+<pre><code>def get_duplicated_attrs(session, cls, attr):
+    return session.query(getattr(cls,attr)).group_by(getattr(cls,attr)).\
+            having(func.count(getattr(cls,attr)) &gt; 1).all()
 </code></pre>
-
-<p>```</p>
 
 <p>So now we can get the duplicated objects:</p>
 
-<p>```
-def get_duplicated_objs(session, cls, attr, attr_value, order_by_attr):</p>
-
-<pre><code>return session.query(cls).filter(getattr(cls,attr) == attr_value)).\
-        order_by(order_by_attr).all()
+<pre><code>def get_duplicated_objs(session, cls, attr, attr_value, order_by_attr):
+    return session.query(cls).filter(getattr(cls,attr) == attr_value)).\
+            order_by(order_by_attr).all()
 </code></pre>
-
-<p>```</p>
 
 <p>The <code>order_by_attr</code> is going to come in handy in the next decision when we decide which duplicated objects get the axe.</p>
 
@@ -335,67 +276,55 @@ def get_duplicated_objs(session, cls, attr, attr_value, order_by_attr):</p>
 
 <p>When we delete the duplicate entries in our database, we have to decide on a rule for which one&rsquo;s to delete, and which <em>one</em> to keep. (You could also delete all, and then recreate them with your new protections against creating duplicates.) I decided to keep the oldest entry (not for any particularly good reason, except that I had originally created my objects with <code>created_at</code> attributes. Our example doesn&rsquo;t have these, so I&rsquo;ll use <code>id</code> which is effectively the same thing assuming the <code>id</code> is auto incremented.) Inside my alembic migration file, I added the following function</p>
 
-<p>```
-from sqlalchemy import func</p>
+<pre><code>from sqlalchemy import func
 
-<p>def remove_duplicates(session, cls, attr):</p>
-
-<pre><code>duplicates = session.query(getattr(cls,attr)).group_by(getattr(cls,attr)).
-              having(func.count(getattr(cls, attr)) &gt; 1).all()
-n_dups = len(duplicates)
-print '{}.{}: {} duplicates found'.format(cls.__name__, attr, n_dups)
-for duplicate in duplicates:
-    objs = session.query(cls).
-            filter(getattr(cls,attr) == getattr(duplicate, attr)).
-            order_by('id').all()
-    map(session.delete, objs[1:])
-session.commit()
-print '{}.{}: {} duplicates removed'.format(cls.__name__, attr, n_dups)
+def remove_duplicates(session, cls, attr):
+    duplicates = session.query(getattr(cls,attr)).group_by(getattr(cls,attr)).
+                  having(func.count(getattr(cls, attr)) &gt; 1).all()
+    n_dups = len(duplicates)
+    print '{}.{}: {} duplicates found'.format(cls.__name__, attr, n_dups)
+    for duplicate in duplicates:
+        objs = session.query(cls).
+                filter(getattr(cls,attr) == getattr(duplicate, attr)).
+                order_by('id').all()
+        map(session.delete, objs[1:])
+    session.commit()
+    print '{}.{}: {} duplicates removed'.format(cls.__name__, attr, n_dups)
 </code></pre>
-
-<p>```</p>
 
 <p>Before we can call this function, however, there are a few caveats (which I just ran into the hard way.) First, we will need to import the <code>db</code> object and the <code>Game</code> object. Typically in Python, we only import things at the top of the file, but in order for things like <code>alembic history</code> to work correctly, we need to import these within the <code>upgrade()</code> function. That way, they will only be loaded with a migration is being run, and not when the migration file is inspected for things like the version number by other tools.</p>
 
 <p>Second, if you are doing a &ldquo;dry run&rdquo; <code>alembic upgrade head</code> (i.e. from a newly created DB with no schema), alembic works through all the migration files and issues one SQL statement at the end of the process. This is a problem if you attempt to query on the <code>Game</code> object, who&rsquo;s table doesn&rsquo;t exist yet. We can safely assume, however, that if the table doesn&rsquo;t exist yet, it doesn&rsquo;t have any duplicates. Luckily, SQLAlchemy has an <code>Inspector</code> object that allows reflection into the existing tables from and engine, and using</p>
 
-<p><code>
-inspector = Inspector.from_engine(db.engine)
+<pre><code>inspector = Inspector.from_engine(db.engine)
 existing_tables = inspector.get_table_names()
-</code>
-will do the the trick. Now, within the <code>upgrade()</code> function we call our <code>remove_duplicates</code> function for the objects and their attributes with duplicates like so:</p>
-
-<p>```
-from sqlalchemy.engine.reflection import Inspector</p>
-
-<p>def upgrade():</p>
-
-<pre><code>from app import db
-from app.models import Game
-
-inspector = Inspector.from_engine(db.engine)
-existing_tables = inspector.get_table_names()
-
-if Game.__tablename__ in existing_tables:
-    remove_duplicates(db.session, Game, 'provider_game_id')
-op.create_unique_constraint(None,
-                            "games",
-                            ["provider_game_id"])
 </code></pre>
 
-<p>```</p>
+<p>will do the the trick. Now, within the <code>upgrade()</code> function we call our <code>remove_duplicates</code> function for the objects and their attributes with duplicates like so:</p>
+
+<pre><code>from sqlalchemy.engine.reflection import Inspector
+
+def upgrade():
+    from app import db
+    from app.models import Game
+
+    inspector = Inspector.from_engine(db.engine)
+    existing_tables = inspector.get_table_names()
+
+    if Game.__tablename__ in existing_tables:
+        remove_duplicates(db.session, Game, 'provider_game_id')
+    op.create_unique_constraint(None,
+                                "games",
+                                ["provider_game_id"])
+</code></pre>
 
 <p>and our <code>downgrade</code> function stays the same as above:</p>
 
-<p>```
-def downgrade():</p>
-
-<pre><code>op.drop_contraint("provider_game_id",
-                  "games",
-                   "unique")
+<pre><code>def downgrade():
+    op.drop_contraint("provider_game_id",
+                      "games",
+                       "unique")
 </code></pre>
-
-<p>```</p>
 
 <p>(Note: the import statements that happen outside of the functions can just be placed at the top of the migration file. They shouldn&rsquo;t cause any conflicts.)</p>
 
@@ -412,39 +341,33 @@ def downgrade():</p>
 
 <h2>Motivation</h2>
 
-<p>Suppose we have a <a href="http://flask.pocoo.org/">Flask</a> app that interacts with an API on a site that hosts webgames. Our users have OAuth'ed our application into the API so we can see their activity, and we want to track which games they have beat. (We&rsquo;ll assume that users only beat a game once or more generally we are only concerned with the first time they beat it.) We create the <code>Game</code> and <code>GameBeat</code> models like so:</p>
+<p>Suppose we have a <a href="http://flask.pocoo.org/">Flask</a> app that interacts with an API on a site that hosts webgames. Our users have OAuth&#8217;ed our application into the API so we can see their activity, and we want to track which games they have beat. (We&rsquo;ll assume that users only beat a game once or more generally we are only concerned with the first time they beat it.) We create the <code>Game</code> and <code>GameBeat</code> models like so:</p>
 
 <!-- more -->
 
 
-<p>``` python
-class Game(db.Model):</p>
+<pre><code class="python">class Game(db.Model):
+    __tablename__  = 'games'
+    id = db.Column(db.Integer, primary_key=True)
+    provider_game_id = db.Column(db.String(255))
+    provider_game_name = db.Column(db.String(255))
+    provider_game_category = db.Column(db.String(255))
 
-<pre><code>__tablename__  = 'games'
-id = db.Column(db.Integer, primary_key=True)
-provider_game_id = db.Column(db.String(255))
-provider_game_name = db.Column(db.String(255))
-provider_game_category = db.Column(db.String(255))
+class GameBeat(db.Model):
+    __tablename__ = 'game_beats'
+    id = db.Column(db.Integer, primary_key=True)
+    game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
+    game = db.relationship("Game",
+                           backref="beats",
+                           lazy="joined",
+                           innerjoin=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user = db.relationship("User",
+                           backref="game_beats",
+                           lazy="joined",
+                           innerjoin=True)
+    beat_at = db.Column(db.DateTime())
 </code></pre>
-
-<p>class GameBeat(db.Model):</p>
-
-<pre><code>__tablename__ = 'game_beats'
-id = db.Column(db.Integer, primary_key=True)
-game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
-game = db.relationship("Game",
-                       backref="beats",
-                       lazy="joined",
-                       innerjoin=True)
-user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-user = db.relationship("User",
-                       backref="game_beats",
-                       lazy="joined",
-                       innerjoin=True)
-beat_at = db.Column(db.DateTime())
-</code></pre>
-
-<p>```</p>
 
 <p>A few notes on these models. This assumes that each <code>Game</code> object coming from the API has an <code>id</code>, <code>name</code>, and <code>category</code> attribute, and anytime a game is beat by a user, you can get the datetime of when it was beat. One other convention is using <code>db.String(255)</code> for <code>provider_game_id</code> (rather than <code>db.Integer</code>). You will often see this with APIs where the <code>ids</code> can be very large integers (think of the number of Tweets on Twitter for example), and while Python handles big ints well, unless you want to use big ints for actually doing math, a string will be much more efficient (and you&rsquo;ll be less likely to have an issue with your backend datastore).</p>
 
@@ -454,76 +377,58 @@ beat_at = db.Column(db.DateTime())
 
 <p>If you&rsquo;ve ever played around with <a href="https://www.djangoproject.com/">Django</a>, you&rsquo;ve probably seen the <code>get_or_create()</code> function, but if not the concept is straight forward. First look for an object given a set of constraints, and if it doesn&rsquo;t exist, create it. The usefulness here is pretty obvious in our above example. Without it, given a list of <code>game_beats</code> from the API and a <code>user</code>, we&rsquo;d have to do something like</p>
 
-<p>```
-for game_beat_data in game_beat_data_list:</p>
-
-<pre><code>if db.session.query(Game).filter(Game.provider_game_id == game_beat_data['game']['game_id']).count() == 0:
-    game = Game(provider_game_id = game_beat_data['game']['game_id'],
-                provider_game_name = game_beat_data['game']['game_name'],
-                provider_game_category = game_beat_data['game']['game_category']
-                )
-else:
-    game = db.session.query(Game).filter(Game.provider_game_id == game_beat_data['game']['game_id']).one()
-if db.session.query(GameBeat).filter(GameBeat.game == game).filter(GameBeat.user == user).count() == 0:
-    game_beat = GameBeat(game = game,
-                         user = user,
-                         beat_at = game_beat_data['beat_at']
-                         )
-else:
-    game_beat = db.session.query(GameBeat).filter(GameBeat.game == game).filter(GameBeat.user == user).one()
-db.session.add(game_beat)
+<pre><code>for game_beat_data in game_beat_data_list:
+    if db.session.query(Game).filter(Game.provider_game_id == game_beat_data['game']['game_id']).count() == 0:
+        game = Game(provider_game_id = game_beat_data['game']['game_id'],
+                    provider_game_name = game_beat_data['game']['game_name'],
+                    provider_game_category = game_beat_data['game']['game_category']
+                    )
+    else:
+        game = db.session.query(Game).filter(Game.provider_game_id == game_beat_data['game']['game_id']).one()
+    if db.session.query(GameBeat).filter(GameBeat.game == game).filter(GameBeat.user == user).count() == 0:
+        game_beat = GameBeat(game = game,
+                             user = user,
+                             beat_at = game_beat_data['beat_at']
+                             )
+    else:
+        game_beat = db.session.query(GameBeat).filter(GameBeat.game == game).filter(GameBeat.user == user).one()
+    db.session.add(game_beat)
+db.session.commit()
 </code></pre>
-
-<p>db.session.commit()
-```</p>
 
 <p>This is quite verbose, and the logic is repeated twice, so it seems like a perfect place to write a function. Here&rsquo;s a first attempt, (and we&rsquo;ll build from here):</p>
 
-<p>```
-from sqlalchemy.orm.exc import NoResultFound</p>
+<pre><code>from sqlalchemy.orm.exc import NoResultFound
 
-<p>def get_one_or_create(session,</p>
-
-<pre><code>                  model,
-                  **kwargs):
+def get_one_or_create(session,
+                      model,
+                      **kwargs):
+   try:
+       return session.query(model).filter_by(**kwargs).one()
+   except NoResultFound:
+       return model(**kwargs)
 </code></pre>
-
-<p>   try:</p>
-
-<pre><code>   return session.query(model).filter_by(**kwargs).one()
-</code></pre>
-
-<p>   except NoResultFound:</p>
-
-<pre><code>   return model(**kwargs)
-</code></pre>
-
-<p>```</p>
 
 <p>There are a couple small differences here. Most obvious is the change to a <code>try/except</code> block rather than getting the <code>count()</code> explicitly. The advantage here is that if the object exists, we only have to make one call to the datastore. The other is the use of <code>filter_by()</code>, which is just a version of <code>filter</code> that uses keyword arguments.</p>
 
 <p>Using this function, our above example now becomes:</p>
 
-<p>```
-for game_beat_data in game_beat_data_list:</p>
-
-<pre><code>game = get_one_or_create(
-    db.session,
-    Game,
-    provider_game_id = game_beat_data['game']['game_id']
-)
-game_beat = get_one_or_create(
-    db.session,
-    GameBeat,
-    game = game,
-    user = user,
-    beat_at = game_beat_data['beat_at']
-)
-db.session.add(game_beat)
+<pre><code>for game_beat_data in game_beat_data_list:
+    game = get_one_or_create(
+        db.session,
+        Game,
+        provider_game_id = game_beat_data['game']['game_id']
+    )
+    game_beat = get_one_or_create(
+        db.session,
+        GameBeat,
+        game = game,
+        user = user,
+        beat_at = game_beat_data['beat_at']
+    )
+    db.session.add(game_beat)
+db.session.commit()
 </code></pre>
-
-<p>db.session.commit()
-```</p>
 
 <p>Now, since I&rsquo;ve broken the inputs into our function onto multiple lines, we&rsquo;ve only dropped from 17 lines to 15, however I&rsquo;d still argue this is a HUGE decrease in complexity. We can now actually fit in under 80 characters without having to use <code>\</code> for newlines, but more generally, it&rsquo;s simply more readable.</p>
 
@@ -531,32 +436,21 @@ db.session.add(game_beat)
 
 <p>I&rsquo;m not going to motivate this, but sometimes you&rsquo;ll want to know if the object you&rsquo;re getting back was newly created or pulled from the datastore, so we can easily return a <code>bool</code> as well by updating our function to</p>
 
-<p>```
-from sqlalchemy.orm.exc import NoResultFound</p>
+<pre><code>from sqlalchemy.orm.exc import NoResultFound
 
-<p>def get_one_or_create(session,</p>
-
-<pre><code>                  model,
-                  **kwargs):
+def get_one_or_create(session,
+                      model,
+                      **kwargs):
+   try:
+       return session.query(model).filter_by(**kwargs).one(), True
+   except NoResultFound:
+       return model(**kwargs), False
 </code></pre>
-
-<p>   try:</p>
-
-<pre><code>   return session.query(model).filter_by(**kwargs).one(), True
-</code></pre>
-
-<p>   except NoResultFound:</p>
-
-<pre><code>   return model(**kwargs), False
-</code></pre>
-
-<p>```</p>
 
 <p>and now we just have to remember that when we use it, to unpack into two variables</p>
 
-<p><code>
-obj, exists = get_one_or_create( … )
-</code></p>
+<pre><code>obj, exists = get_one_or_create( … )
+</code></pre>
 
 <p>or else we will end up with a <code>tuple</code> where we expected <code>obj</code>.</p>
 
@@ -564,72 +458,59 @@ obj, exists = get_one_or_create( … )
 
 <p>One of my favorite Python patterns is using the <code>@classmethod</code> decorator with a creator function. In our above example, suppose we want to be able to create a <code>Game</code> object, but we may or may not have the <code>provider_game_name</code> and <code>provider_game_category</code> immediately available. We can update our model definition (assuming we have a <code>get_game_data_from_api</code> function from our API):</p>
 
-<p>```
-class Game(db.Model):</p>
+<pre><code>class Game(db.Model):
+    __tablename__  = 'games'
+    id = db.Column(db.Integer, primary_key=True)
+    provider_game_id = db.Column(db.String(255))
+    provider_game_name = db.Column(db.String(255))
+    provider_game_category = db.Column(db.String(255))
 
-<pre><code>__tablename__  = 'games'
-id = db.Column(db.Integer, primary_key=True)
-provider_game_id = db.Column(db.String(255))
-provider_game_name = db.Column(db.String(255))
-provider_game_category = db.Column(db.String(255))
-
-@classmethod
-create_from_provider_game_id(cls, provider_game_id,**kwargs):
-    provider_game_name = kwargs.get('provider_game_name', None)
-    provider_game_category = kwargs.get('provider_game_category', None)
-    if not provider_game_name and provider_game_category:
-        game_data = get_game_data_from_api(provider_game_id)
-        provider_game_name = game_data['provider_game_name']
-        provider_game_category = game_data['provider_game_category']
-    return cls(provider_game_id = provider_game_id,
-               provider_game_name = provider_game_name,
-               provider_game_category = provider_game_category)
+    @classmethod
+    create_from_provider_game_id(cls, provider_game_id,**kwargs):
+        provider_game_name = kwargs.get('provider_game_name', None)
+        provider_game_category = kwargs.get('provider_game_category', None)
+        if not provider_game_name and provider_game_category:
+            game_data = get_game_data_from_api(provider_game_id)
+            provider_game_name = game_data['provider_game_name']
+            provider_game_category = game_data['provider_game_category']
+        return cls(provider_game_id = provider_game_id,
+                   provider_game_name = provider_game_name,
+                   provider_game_category = provider_game_category)
 </code></pre>
-
-<p>```</p>
 
 <p>now if we do</p>
 
-<p><code>
-game = Game.create_from_provider_game_id(provider_game_id = game_beat_data['game']['id'])
-</code></p>
+<pre><code>game = Game.create_from_provider_game_id(provider_game_id = game_beat_data['game']['id'])
+</code></pre>
 
 <p>we get a new <code>Game</code> object which will ping the API in order to get the other data to fill it out. But, if we already have the data (or we <em>maybe</em> have the data), we can do the following:</p>
 
-<p>```
-game = Game.create_from_provider_game_id(</p>
-
-<pre><code>       provider_game_id = game_beat_data['game']['id'],
-       provider_game_name = game_beat_data['game'].get('name', None),
-       provider_game_category = game_beat_data['game'].get('category', None)
-   )
+<pre><code>game = Game.create_from_provider_game_id(
+           provider_game_id = game_beat_data['game']['id'],
+           provider_game_name = game_beat_data['game'].get('name', None),
+           provider_game_category = game_beat_data['game'].get('category', None)
+       )
 </code></pre>
 
-<p>```</p>
-
-<p>I like to think of writing code like this as being <em>fault tolerant</em>. If you&rsquo;ve played with external APIs before, their behavior can often change slightly. Moreover, writing code like this gives me a consistent pattern, so if in one case I have a collection of <code>dict</code>s from an API with all the relevant game data, and in another case I only have a collection of the <code>provider_game_id</code>s, I can use the same pattern. If I have all the data, I can save myself <code>n</code> calls to the API, and if I&rsquo;m not sure (or maybe the API is inconsistent &ndash; yes it happens), it will still work.</p>
+<p>I like to think of writing code like this as being <em>fault tolerant</em>. If you&rsquo;ve played with external APIs before, their behavior can often change slightly. Moreover, writing code like this gives me a consistent pattern, so if in one case I have a collection of <code>dict</code>s from an API with all the relevant game data, and in another case I only have a collection of the <code>provider_game_id</code>s, I can use the same pattern. If I have all the data, I can save myself <code>n</code> calls to the API, and if I&rsquo;m not sure (or maybe the API is inconsistent - yes it happens), it will still work.</p>
 
 <h2>Updating <code>get_one_or_create</code></h2>
 
 <p>It&rsquo;s quickly obvious that our current implementation of <code>get_one_or_create()</code> won&rsquo;t handle such pattern for creating model instances. But this is programming, we are the creators. Let&rsquo;s update our function:</p>
 
-<p>```
-from sqlalchemy.orm.exc import NoResultFound</p>
+<pre><code>from sqlalchemy.orm.exc import NoResultFound
 
-<p>def get_one_or_create(session,</p>
-
-<pre><code>                  model,
-                  create_method='',
-                  create_method_kwargs=None,
-                  **kwargs):
-try:
-    return session.query(model).filter_by(**kwargs).one(), True
-except NoResultFound:
-    kwargs.update(create_method_kwargs or {})
-    return getattr(model, create_method, model)(**kwargs), False
+def get_one_or_create(session,
+                      model,
+                      create_method='',
+                      create_method_kwargs=None,
+                      **kwargs):
+    try:
+        return session.query(model).filter_by(**kwargs).one(), True
+    except NoResultFound:
+        kwargs.update(create_method_kwargs or {})
+        return getattr(model, create_method, model)(**kwargs), False
 </code></pre>
-
-<p>```</p>
 
 <p>The reason for adding this <code>create_method_kwargs</code> <code>dict</code> is fairly straight forward: consider a case where we need to hand a <code>user</code> to our API method <code>get_game_data_from_api</code>, but we don&rsquo;t store a <code>user</code> on the <code>Game</code> object and certainly don&rsquo;t want to include it in the <code>filter_by</code>.</p>
 
@@ -639,7 +520,7 @@ except NoResultFound:
 
 <p>By using my newly minted <code>get_one_or_create()</code> wherever I create objects, you can imagine my surprise when <code>MultipleResultsFound</code> exceptions starting being raised when trying to <code>get_one_or_create()</code> a <code>Game</code>. I scoured my code for any place that I created a <code>Game</code>; luckily <code>grep</code> makes this easy. Nothing. I expanded my test so that I was mocking a scan for 100 users. Nothing. Maybe there was a unicode issue where the <em>get</em> part was trying to match to a unicode to string (and failing) but the <em>create</em> part was then creating the attribute as a string. A new test quickly disproved this. Nothing.</p>
 
-<p>I was lost. I was writing tests <em>hoping</em> that they would fail just so I could figure out what was going wrong. And it was 4am. I <em>hate</em> going to sleep at a point like this. (I use <em>sleep</em> loosely here &ndash; I generally don&rsquo;t sleep well and lay awake trying to figure out how to fix my problem.) I&rsquo;m not sure if it was that night or the next morning (or even when you draw the line going to bed at 4am for that matter…), but I eventually realized why I was getting duplicate objects in my datastore.</p>
+<p>I was lost. I was writing tests <em>hoping</em> that they would fail just so I could figure out what was going wrong. And it was 4am. I <em>hate</em> going to sleep at a point like this. (I use <em>sleep</em> loosely here - I generally don&rsquo;t sleep well and lay awake trying to figure out how to fix my problem.) I&rsquo;m not sure if it was that night or the next morning (or even when you draw the line going to bed at 4am for that matter…), but I eventually realized why I was getting duplicate objects in my datastore.</p>
 
 <p>During the time between the <em>get</em> call when the object doesn&rsquo;t exist and the call to <code>db.session.commit()</code>, the object was created somewhere else. I was using Celery to batch the update and it was a brand new scan, so a lot of stuff was being created. Since the <code>db.session.commit()</code> comes at the end of the loop, there can actually be a fair amount of time between these calls. But even if a <code>db.session.commit()</code> happened sooner, we want to be <em>sure</em> that another matching object didn&rsquo;t get created between the <em>get</em> and <em>create</em> parts of a function.</p>
 
@@ -647,43 +528,35 @@ except NoResultFound:
 
 <h3><code>@celery.task()</code></h3>
 
-<p>I use quotes here in the way I&rsquo;d use air quotes if we were talking: the <a href="http://www.celeryproject.org/">Celery</a> async task model isn&rsquo;t true async in the way that <a href="http://twistedmatrix.com/trac/">Twisted</a> or <a href="http://docs.python.org/3.4/library/asyncio.html"><code>asyncio</code></a> is. Instead it uses an external messaging system (I use <a href="http://redis.io/">Redis</a> &ndash; mostly due to the price on <a href="https://www.heroku.com/">Heroku</a>). Functions and their inputs (remember that in Python, functions, like everything else, are objects) are JSONified, stored in the message system, and then deJSONified and executed in a completely separate process.</p>
+<p>I use quotes here in the way I&rsquo;d use air quotes if we were talking: the <a href="http://www.celeryproject.org/">Celery</a> async task model isn&rsquo;t true async in the way that <a href="http://twistedmatrix.com/trac/">Twisted</a> or <a href="http://docs.python.org/3.4/library/asyncio.html"><code>asyncio</code></a> is. Instead it uses an external messaging system (I use <a href="http://redis.io/">Redis</a> - mostly due to the price on <a href="https://www.heroku.com/">Heroku</a>). Functions and their inputs (remember that in Python, functions, like everything else, are objects) are JSONified, stored in the message system, and then deJSONified and executed in a completely separate process.</p>
 
 <p>It does become more complicated if you care about the result of a function call, but often you call functions only for their side effects. Sometimes you&rsquo;ll want to kick off a job of a few such function calls as a result of a web request. If the job takes awhile (anything more than a second) you certainly do not wish to wait (or can&rsquo;t, eventually you&rsquo;ll timeout) for that function to complete before responding. Celery makes this pattern straight forward, if not easy, to accomplish with a synchronous web framework like Flask.</p>
 
 <p>Celery also makes it really easy to horizontally scale a batch of jobs. Suppose we want to update the <code>GameBeat</code>s for all our users. We could create a celery task like so</p>
 
-<p>```
-from app import celery, db
+<pre><code>from app import celery, db
 from app.models import User
-from app.provider_apis import get_provider_api</p>
+from app.provider_apis import get_provider_api
 
-<p>@celery.task()
-def update_game_beats_for_user_id(user_id):</p>
-
-<pre><code>user = db.session.query(User).get(user_id)
-api = get_provider_api(user)
-game_beat_data_list = api.get_game_beats()
-for game_beat_data in game_beat_data_list:
-    …
+@celery.task()
+def update_game_beats_for_user_id(user_id):
+    user = db.session.query(User).get(user_id)
+    api = get_provider_api(user)
+    game_beat_data_list = api.get_game_beats()
+    for game_beat_data in game_beat_data_list:
+        …
 </code></pre>
-
-<p>```</p>
 
 <p>where the <code>…</code> completes the pattern above showing the usage of <code>get_one_or_create()</code>. We can now create a task for each user by running</p>
 
-<p>```
-from app.tasks import update_game_beats_for_user_id
+<pre><code>from app.tasks import update_game_beats_for_user_id
 from app import db
-from app.models import User</p>
+from app.models import User
 
-<p>users = db.session.query(User).query.all()
-for user in users</p>
-
-<pre><code>update_game_beats_for_user_id.delay(user.id)
+users = db.session.query(User).query.all()
+for user in users
+    update_game_beats_for_user_id.delay(user.id)
 </code></pre>
-
-<p>```</p>
 
 <p>This makes it possible to spin up a number of Celery workers (Heroku for this is as easy as scrolling a slider on a web interface and clicking &ldquo;Apply&rdquo;, or a single short bash command) and get all these tasks done quickly.</p>
 
@@ -695,15 +568,11 @@ for user in users</p>
 
 <p>In our example, since we plan to look up <code>Game</code> objects by <code>provider_game_id</code> and expect only one instance, we should have defined that column with a unique constraint like so:</p>
 
-<p>```
-class Game(db.Model):</p>
-
-<pre><code>…
-provider_game_id = db.Column(db.String(255), unique=True)
-…
+<pre><code>class Game(db.Model):
+    …
+    provider_game_id = db.Column(db.String(255), unique=True)
+    …
 </code></pre>
-
-<p>```</p>
 
 <p>Luckily we can make this change after the fact (which I won&rsquo;t show here, but I plan to write about next). Had we done this originally, we would never have gotten the <code>MultipleResultsFound</code> exception, but instead would have gotten a <code>IntegrityError</code> when trying to execute <code>db.session.commit()</code> of an transition that would <em>create</em> our duplicated item. This is desirable since the exception comes <em>before</em> the duplicate is introduced into the datastore. However, it would be best for our <code>get_one_or_create</code> function to take care of this as well.</p>
 
@@ -711,28 +580,24 @@ provider_game_id = db.Column(db.String(255), unique=True)
 
 <p>Again, think air quotes. As a developer, I never think or anything as final. Or maybe I always think an implementation is final, and I&rsquo;m always wrong. Regardless, of the concerns I&rsquo;ve reached so far, here is a &ldquo;final&rdquo; version:</p>
 
-<p>```
-def get_one_or_create(session,</p>
-
-<pre><code>                  model,
-                  create_method='',
-                  create_method_kwargs=None,
-                  **kwargs):
-try:
-    return session.query(model).filter_by(**kwargs).one(), True
-except NoResultFound:
-    kwargs.update(create_method_kwargs or {})
-    created = getattr(model, create_method, model)(**kwargs)
+<pre><code>def get_one_or_create(session,
+                      model,
+                      create_method='',
+                      create_method_kwargs=None,
+                      **kwargs):
     try:
-        session.add(created)
-        session.commit()
-        return created, False
-    except IntegrityError:
-        session.rollback()
         return session.query(model).filter_by(**kwargs).one(), True
+    except NoResultFound:
+        kwargs.update(create_method_kwargs or {})
+        created = getattr(model, create_method, model)(**kwargs)
+        try:
+            session.add(created)
+            session.commit()
+            return created, False
+        except IntegrityError:
+            session.rollback()
+            return session.query(model).filter_by(**kwargs).one(), True
 </code></pre>
-
-<p>```</p>
 
 <p>Here&rsquo;s what&rsquo;s happening. It tries to find the right object, and if it finds it, it returns it. If not, it creates it, adds it to the session, and attempts to commit. In the mean time, if another process has created and committed an object with the same details we filtered by, an <code>IntegrityError</code> raises and is caught. This means we should be able to get the newly created object, so we now get that and return it.</p>
 
@@ -753,6 +618,76 @@ except NoResultFound:
 <p>How does this work in Tornado or Twisted? My friend and former colleague <a href="https://github.com/bmuller">Brian Muller</a> wrote <a href="http://findingscience.com/twistar/">Twistar</a>, a Python implementation of a nonblocking active record pattern interface to relational databases (built to use with Twisted). It&rsquo;s been on my list of packages to read. To some extent, building a webapp in Twisted has a high upfront cost, but it also has this added value of forcing you to think deeper and see these problems before you have a few hundred duplicated entries in your database.</p>
 
 <p>I love Flask and the community, and it has all been very good to me as being quite new to web app development, but part of me wants to start playing around with the JS template systems like <a href="http://facebook.github.io/react/">React</a>. This also makes sense as you start getting into the realm of iOS and Android apps. At some point you have many different &ldquo;front ends&rdquo; and your backend is really just serving up data to fill it. At that point, a centralized template system like Jinja makes less sense, and moving from Flask to Twisted makes more sense.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Flask-Twitter-OEmbedder and Flask Extension Testing]]></title>
+    <link href="http://skien.cc/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing/"/>
+    <updated>2013-06-26T15:37:00-04:00</updated>
+    <id>http://skien.cc/blog/2013/06/26/flask-twitter-oembedder-and-flask-extension-testing</id>
+    <content type="html"><![CDATA[<h2>Flask-Twitter-OEmbedder</h2>
+
+<p>The Twitter API V1.1 provides an endpoint for easily <a href="https://dev.twitter.com/docs/api/1.1/get/statuses/oembed">embedding tweets</a> into your webpages. However, Twitter rate limits this endpoint and requires authorization. Flask Twitter OEmbedder gets your Twitter credentials from your <code>app.config</code> and exposes the <code>oembed_tweet</code> function to the Jinja templates. Flask Twitter OEmbedder also manages the caching of the tweets, given an arbitrary cache using Flask-Cache.</p>
+
+<p>You can check it out and fork it on <a href="https://github.com/eriktaubeneck/flask-twitter-oembedder">GitHub</a>. Feature requests, issues, and anything else are encouraged! This is very much alpha and I plan to continue working on it.</p>
+
+<h2>Flask Extension Testing</h2>
+
+<p><a href="https://github.com/eriktaubeneck/flask-twitter-oembedder">Flask-Twitter-OEmbedder</a> was the first Flask extension I have written (and really the first proper Python package I&rsquo;ve ever written). This summer I am lucky enough to be participating in <a href="https://www.hackerschool.com/">Hacker School</a> and one of my goals for the batch was to be able to write unit tests for my code that I develop. Since this was my first proper package, I figured it was a great place to start.</p>
+
+<!-- more -->
+
+
+<p>Testing in the abstract seems reflexive and redundent; I wrote code specifically to perform <code>x</code>, why would I write more code to make sure that it does <code>x</code>? This was a particularly difficult mental block for me, especially coming to development from mathematics. However, as your code base grows and relies on more and more abstraction, when something breaks, testing helps you find exactly what you broke and where to fix it. It&rsquo;s not uncommon for libraries and extensions to change their API&rsquo;s at times, in which case it may not even be code that you wrote to do <code>x</code>, and now it does <code>y</code>. Luckily earlier this year, I attended PyCon and saw <a href="http://pyvideo.org/video/1674/getting-started-with-automated-testing">this</a> great presentation on getting starting with automated testing Python.</p>
+
+<p>After getting past my mental testing block, I was faced with a few other challanges with getting testing working with my Flask extension. I had broken my extension into a handful of base states which I wanted to test:</p>
+
+<ul>
+<li>the <code>oembed_tweet()</code> function is avaliable in the Jinja templates</li>
+<li>the <code>oembed_tweet()</code> function properly embeds a tweet when given a valid tweet id</li>
+<li>the <code>oembed_tweet()</code> function fails properly (depending on the <code>app.debug</code> and local <code>debug</code> state) when given an invalid tweet id</li>
+</ul>
+
+
+<p>Each of these presented their own challanges. The first challange however, was just approaching the problem at hand. The testing documentation for Flask is all based for testing Flask apps, not Flask extensions. However, it quickly became clear that it was sufficent to use <a href="http://pythonhosted.org/Flask-Testing/">Flask-Testing</a> to create a &ldquo;dummy&rdquo; app which would utilize my extension and be able to test if it worked properly.  Unfortunetly, Flask-Testing doesn&rsquo;t have a method like <code>assertExists</code>, so I ended up testing</p>
+
+<pre><code> assert type(self.get_context_variable('oembed_tweet')) is types.FunctionType
+</code></pre>
+
+<p>The next challange was being able to run the tests offline. In general, unit tests shouldn&rsquo;t care if external API&rsquo;s are working or not. It is certainly useful and appropriate in some cases to write tests that to check for this, but for this test we just want to know if our code is working as expected, assuming that Twitter&rsquo;s API is working correctly.We(I paired with one of the awesome Hacker School facilitators, <a href="https://github.com/zachallaun">Zach Allaun</a>) started with <a href="https://github.com/kevin1024/vcrpy">vcrpy</a>, which is a port of the Ruby <a href="https://github.com/vcr/vcr">vcr</a> gem, however this didn&rsquo;t work quite right. We then moved onto <a href="https://github.com/uber/cassette">cassette</a> but it unfortunetly didn&rsquo;t play nice with HTTPS. Finally we landed on <a href="https://github.com/gabrielfalcao/HTTPretty">HTTPretty</a> which did exactly what we needed. We grabbed the actual response from Twitter and dumped it into a JSON, then HTTPretty blocks any out going requests to specific urls and returns the content of the JSON as if the request had gone through normally. It can be used as followed:</p>
+
+<pre><code>@httpretty.activate    
+def test_oembed_tweet_valid_id_debug_off(self):
+    with open('tests/data/99530515043983360.json') as f:
+        httpretty.register_uri(httpretty.GET, 'https://api.twitter.com/1.1/statuses/oembed.json?id=99530515043983360',
+            body = f.read())
+    response = self.client.get('/')
+    oembed_tweet = self.get_context_variable('oembed_tweet')
+    valid = oembed_tweet('99530515043983360')
+    assert type(valid) is Markup
+</code></pre>
+
+<p>In this example, the <code>oembed_tweet</code> fuction makes a GET request using the <code>requests</code> package to the <code>uri</code> that we specified in the <code>httpretty.register_uri()</code> call, and the response is what we specified as the <code>body</code> in the same function.</p>
+
+<p>One final interesting case is when we wanted to test what happens when we want to test how Flask-Twitter-OEmbedder handles an error from the Twitter API. In a development setting, we likely want this to actually raise an exception so that we can investigate what is causing the error (this could be a number of things: incorrect tweet id, Twitter API outage, deleted tweet, etc), but in production we would likely want it to fail gracefully and just return an empty string. Testing for an exception is fairly straight forward:</p>
+
+<pre><code>try:
+    invalid = oembed_tweet('abc')
+except Exception as e:
+    assert type(e) is KeyError
+</code></pre>
+
+<p>There is one little trick here, however, that is easy to overlook. We are expecting the second line to fail, and then we are asserting that the failure is the type that we expect. However, what if the second line doesn&rsquo;t fail? In the context of the test, we would classify this as a failure, since the failure on line 2 is what we want. But in the code above, if line 2 doesn&rsquo;t fail for some reason, the <code>assert</code> will never happen and the test will pass. We can fix this by adding one line after line 2:</p>
+
+<pre><code>try:
+    invalid = oembed_tweet('abc')
+    assert False
+except Exception as e:
+    assert type(e) is KeyError
+</code></pre>
+
+<p>The addition of <code>assert False</code> will force the <code>try</code> clause to fail, even if line 2 doesn&rsquo;t fail as expected, and since <code>assert False</code> raises an <code>Assertion Error</code>, line 5 will fail properly.</p>
 ]]></content>
   </entry>
   

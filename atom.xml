@@ -4,7 +4,7 @@
   <title><![CDATA[skien.cc]]></title>
   <link href="http://skien.cc/atom.xml" rel="self"/>
   <link href="http://skien.cc/"/>
-  <updated>2014-05-06T10:01:44-04:00</updated>
+  <updated>2014-11-10T11:35:45-05:00</updated>
   <id>http://skien.cc/</id>
   <author>
     <name><![CDATA[Erik Taubeneck]]></name>
@@ -12,6 +12,31 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Behind the Scenes of the Startup Podcast]]></title>
+    <link href="http://skien.cc/blog/2014/11/10/behind-the-scenes-of-the-startup-podcast/"/>
+    <updated>2014-11-10T15:00:00-05:00</updated>
+    <id>http://skien.cc/blog/2014/11/10/behind-the-scenes-of-the-startup-podcast</id>
+    <content type="html"><![CDATA[<p>I&rsquo;m a huge fan of podcasts: I never miss an episode of <a href="http://www.marketplace.org/">Marketplace</a>; I am near giddy when a new episode of <a href="http://www.radiolab.org/">Radiolab</a> is released; I credit <a href="http://www.npr.org/blogs/money/">Planet Money</a> with preparing me for a successful first interview out of college at Freddie Mac. The hottest new podcast is undoubtedly <a href="http://www.hearstartup.com">Startup</a> (<a href="http://serialpodcast.org/">Serial</a> is a close second.) Created and narrated by Alex Blumberg (of Planet Money and <a href="http://www.thisamericanlife.org/">This American Life</a>), it tracks Alex and his cofounder Matt Lieber on their journey to launch Gimlet Media, a podcasting company.</p>
+
+<p>This podcast offers a rare look into the startup/VC/Silicon Valley tech scene and the process of launching a company from the ground up. While popularity of this topic has certainly grown in recent years, rarely do we get to see such a raw and personal take on it. Certainly, any method of storytelling that condenses months of work into half hour pieces cannot escape an editorial aspect, but Alex manages to capture his story in an unsensational yet insightful way.</p>
+
+<!-- more -->
+
+
+<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/176185715&color=ff5500"></iframe>
+
+
+<p>In this <a href="http://hearstartup.com/episodes/how-listeners-become-owners">most recent episode</a> of Startup, Alex and Matt announce their crowdfunding deal on <a href="https://www.alphaworks.net/c/gimlet-media">Alphaworks</a>. This is particularly exciting for me as I&rsquo;ve been working with Alphaworks for the last few months. We&rsquo;ve been working hard to create an excellent experience for potential Gimlet Media investors, one that&rsquo;s interactive, full of audio content (appropriately), and presents their pitch deck and deal terms. Engineers (software or otherwise) can often get lost in abstract, technical challenges; solving these is a cherished opportunity. More exciting, however, is the realization of a team&rsquo;s work coming together to run a campaign (and even better: for a company I am personally excited about!)</p>
+
+<p>This episode has a bit of a call back to Alex&rsquo;s Planet Money days by discussing the JOBS act, the law that allows early stage crowdfunded equity markets to exist. One particular point that they address is the issue of an accredited investor, and how the SEC has delayed writing rules regarding the changes to this classification in the JOBS act for the last year. This is a tricky issue. To some extent, all investments are risky and even with established stocks there is always risk of declining value. Early stage investments amplify this risk (but also the reward), and the chance that an investment is fraudulent increases. Alphaworks takes an interesting approach to this problem: all deals are sponsored by an established venture capital group which sponsors the deal. This doesn&rsquo;t mean the deal is an automatic home run, mind you, but it does allow smaller and inexperienced investors assurance that some diligence has occurred.</p>
+
+<p>The Startup Podcast is admittedly meta (a podcast about starting a podcast company) and their fundraising page on Alphaworks takes that one level deeper. It&rsquo;s a look directly into how Gimlet Media is presenting itself to a large group of investors, and as such I invite all the Startup Podcast fans to take a <a href="https://www.alphaworks.net/c/gimlet-media">look behind the scenes!</a></p>
+
+<p>DISCLAIMER: All opinions and statements in this post (and in my blog in general) are my own. They are not intended to nor do they represent those of Alphaworks, Betaworks, Gimlet Media, or any other people or organization.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Unpythonic Python]]></title>
@@ -329,7 +354,7 @@
 
 <p><img src="http://skien.cc/images/heroku-testing.gif"></p>
 
-<p>Notice how the first call to <code>session.flush()</code> (on the left) works just fine. But then the second call (on the right) hangs &ndash; note this is a completely different Heroku dyno. The only connection these two have are the Postgres database. So (at least with Postgres), <code>session.flush()</code> is able to use Postgres to <em>stage</em> our value, but not write it yet. That&rsquo;s pretty rad.</p>
+<p>Notice how the first call to <code>session.flush()</code> (on the left) works just fine. But then the second call (on the right) hangs - note this is a completely different Heroku dyno. The only connection these two have are the Postgres database. So (at least with Postgres), <code>session.flush()</code> is able to use Postgres to <em>stage</em> our value, but not write it yet. That&rsquo;s pretty rad.</p>
 
 <h2>Changing <code>get_one_or_create()</code></h2>
 
@@ -466,7 +491,7 @@
 
 <h2>Using <code>alembic</code> to update the datastore</h2>
 
-<p>If you&rsquo;re not using <a href="http://alembic.readthedocs.org/en/latest/"><code>alembic</code></a> with <code>SQLAlchemy</code>, you&rsquo;re doing it wrong. OK &ndash; that&rsquo;s a bit harsh (and if you&rsquo;re doing it some other way, let me know!), but if you ever plan to change your data model, you&rsquo;ll need to change your datastore along with it, and <code>alembic</code> is an excellent tool to help you along. It&rsquo;s version control for your database schema; think Git for your class models.</p>
+<p>If you&rsquo;re not using <a href="http://alembic.readthedocs.org/en/latest/"><code>alembic</code></a> with <code>SQLAlchemy</code>, you&rsquo;re doing it wrong. OK - that&rsquo;s a bit harsh (and if you&rsquo;re doing it some other way, let me know!), but if you ever plan to change your data model, you&rsquo;ll need to change your datastore along with it, and <code>alembic</code> is an excellent tool to help you along. It&rsquo;s version control for your database schema; think Git for your class models.</p>
 
 <p><code>alembic</code> provides the useful <code>autogenerate</code> option that can be used like so:</p>
 
@@ -964,7 +989,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>I like to think of writing code like this as being <em>fault tolerant</em>. If you&rsquo;ve played with external APIs before, their behavior can often change slightly. Moreover, writing code like this gives me a consistent pattern, so if in one case I have a collection of <code>dict</code>s from an API with all the relevant game data, and in another case I only have a collection of the <code>provider_game_id</code>s, I can use the same pattern. If I have all the data, I can save myself <code>n</code> calls to the API, and if I&rsquo;m not sure (or maybe the API is inconsistent &ndash; yes it happens), it will still work.</p>
+<p>I like to think of writing code like this as being <em>fault tolerant</em>. If you&rsquo;ve played with external APIs before, their behavior can often change slightly. Moreover, writing code like this gives me a consistent pattern, so if in one case I have a collection of <code>dict</code>s from an API with all the relevant game data, and in another case I only have a collection of the <code>provider_game_id</code>s, I can use the same pattern. If I have all the data, I can save myself <code>n</code> calls to the API, and if I&rsquo;m not sure (or maybe the API is inconsistent - yes it happens), it will still work.</p>
 
 <h2>Updating <code>get_one_or_create</code></h2>
 
@@ -1005,7 +1030,7 @@
 
 <p>By using my newly minted <code>get_one_or_create()</code> wherever I create objects, you can imagine my surprise when <code>MultipleResultsFound</code> exceptions starting being raised when trying to <code>get_one_or_create()</code> a <code>Game</code>. I scoured my code for any place that I created a <code>Game</code>; luckily <code>grep</code> makes this easy. Nothing. I expanded my test so that I was mocking a scan for 100 users. Nothing. Maybe there was a unicode issue where the <em>get</em> part was trying to match to a unicode to string (and failing) but the <em>create</em> part was then creating the attribute as a string. A new test quickly disproved this. Nothing.</p>
 
-<p>I was lost. I was writing tests <em>hoping</em> that they would fail just so I could figure out what was going wrong. And it was 4am. I <em>hate</em> going to sleep at a point like this. (I use <em>sleep</em> loosely here &ndash; I generally don&rsquo;t sleep well and lay awake trying to figure out how to fix my problem.) I&rsquo;m not sure if it was that night or the next morning (or even when you draw the line going to bed at 4am for that matter…), but I eventually realized why I was getting duplicate objects in my datastore.</p>
+<p>I was lost. I was writing tests <em>hoping</em> that they would fail just so I could figure out what was going wrong. And it was 4am. I <em>hate</em> going to sleep at a point like this. (I use <em>sleep</em> loosely here - I generally don&rsquo;t sleep well and lay awake trying to figure out how to fix my problem.) I&rsquo;m not sure if it was that night or the next morning (or even when you draw the line going to bed at 4am for that matter…), but I eventually realized why I was getting duplicate objects in my datastore.</p>
 
 <p>During the time between the <em>get</em> call when the object doesn&rsquo;t exist and the call to <code>db.session.commit()</code>, the object was created somewhere else. I was using Celery to batch the update and it was a brand new scan, so a lot of stuff was being created. Since the <code>db.session.commit()</code> comes at the end of the loop, there can actually be a fair amount of time between these calls. But even if a <code>db.session.commit()</code> happened sooner, we want to be <em>sure</em> that another matching object didn&rsquo;t get created between the <em>get</em> and <em>create</em> parts of a function.</p>
 
@@ -1013,7 +1038,7 @@
 
 <h3><code>@celery.task()</code></h3>
 
-<p>I use quotes here in the way I&rsquo;d use air quotes if we were talking: the <a href="http://www.celeryproject.org/">Celery</a> async task model isn&rsquo;t true async in the way that <a href="http://twistedmatrix.com/trac/">Twisted</a> or <a href="http://docs.python.org/3.4/library/asyncio.html"><code>asyncio</code></a> is. Instead it uses an external messaging system (I use <a href="http://redis.io/">Redis</a> &ndash; mostly due to the price on <a href="https://www.heroku.com/">Heroku</a>). Functions and their inputs (remember that in Python, functions, like everything else, are objects) are JSONified, stored in the message system, and then deJSONified and executed in a completely separate process.</p>
+<p>I use quotes here in the way I&rsquo;d use air quotes if we were talking: the <a href="http://www.celeryproject.org/">Celery</a> async task model isn&rsquo;t true async in the way that <a href="http://twistedmatrix.com/trac/">Twisted</a> or <a href="http://docs.python.org/3.4/library/asyncio.html"><code>asyncio</code></a> is. Instead it uses an external messaging system (I use <a href="http://redis.io/">Redis</a> - mostly due to the price on <a href="https://www.heroku.com/">Heroku</a>). Functions and their inputs (remember that in Python, functions, like everything else, are objects) are JSONified, stored in the message system, and then deJSONified and executed in a completely separate process.</p>
 
 <p>It does become more complicated if you care about the result of a function call, but often you call functions only for their side effects. Sometimes you&rsquo;ll want to kick off a job of a few such function calls as a result of a web request. If the job takes awhile (anything more than a second) you certainly do not wish to wait (or can&rsquo;t, eventually you&rsquo;ll timeout) for that function to complete before responding. Celery makes this pattern straight forward, if not easy, to accomplish with a synchronous web framework like Flask.</p>
 
@@ -1375,7 +1400,7 @@ def channel():
 
 <p>and in <code>templates/</code> add a file called <code>channel.html</code> with just</p>
 
-<pre><code>&lt;script src="http://skien.cc//connect.facebook.net/en_US/all.js"&gt;&lt;/script&gt;
+<pre><code>&lt;script src="//connect.facebook.net/en_US/all.js"&gt;&lt;/script&gt;
 </code></pre>
 
 <p>in it.  Now we are set up to interface with Facebook. We now will need to check if the user is logged into Facebook and has authorized our app. In the above code block <code>facebook_js</code>, add the following within the <code>window.fbAsyncInit</code> function declaration (where we have <code>// Additional init code here</code>):</p>

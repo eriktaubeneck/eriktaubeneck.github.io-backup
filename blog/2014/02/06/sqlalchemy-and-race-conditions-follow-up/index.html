@@ -87,7 +87,7 @@
   
 
 
-<time datetime="2014-02-06T12:30:13-05:00" pubdate data-updated="true">Feb 6<span>th</span>, 2014</time>
+<time datetime="2014-02-06T12:30:13-05:00" pubdate data-updated="true"></time>
         
       </p>
     
@@ -156,7 +156,7 @@
 
 <p><img src="/images/heroku-testing.gif"></p>
 
-<p>Notice how the first call to <code>session.flush()</code> (on the left) works just fine. But then the second call (on the right) hangs &ndash; note this is a completely different Heroku dyno. The only connection these two have are the Postgres database. So (at least with Postgres), <code>session.flush()</code> is able to use Postgres to <em>stage</em> our value, but not write it yet. That&rsquo;s pretty rad.</p>
+<p>Notice how the first call to <code>session.flush()</code> (on the left) works just fine. But then the second call (on the right) hangs - note this is a completely different Heroku dyno. The only connection these two have are the Postgres database. So (at least with Postgres), <code>session.flush()</code> is able to use Postgres to <em>stage</em> our value, but not write it yet. That&rsquo;s pretty rad.</p>
 
 <h2>Changing <code>get_one_or_create()</code></h2>
 
@@ -230,7 +230,7 @@
   
 
 
-<time datetime="2014-02-06T12:30:13-05:00" pubdate data-updated="true">Feb 6<span>th</span>, 2014</time>
+<time datetime="2014-02-06T12:30:13-05:00" pubdate data-updated="true"></time>
       
 
 
@@ -275,6 +275,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/10/behind-the-scenes-of-the-startup-podcast/">Behind the Scenes of the Startup Podcast</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/09/unpythonic-python/">Unpythonic Python</a>
       </li>
     
@@ -290,17 +294,13 @@
         <a href="/blog/2014/01/23/on-markdown/">On Markdown</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/">SQLAlchemy and Race Conditions: Implementing `get_one_or_create()`</a>
-      </li>
-    
   </ul>
 </section>
 
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
+    <li class="loading">Status updating&#8230;</li>
   </ul>
   
   <a href="https://github.com/eriktaubeneck">@eriktaubeneck</a> on GitHub

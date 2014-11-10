@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Celery | skien.cc]]></title>
+  <title><![CDATA[Category: celery | skien.cc]]></title>
   <link href="http://skien.cc/blog/categories/celery/atom.xml" rel="self"/>
   <link href="http://skien.cc/"/>
-  <updated>2014-05-06T10:01:44-04:00</updated>
+  <updated>2014-11-10T11:35:45-05:00</updated>
   <id>http://skien.cc/</id>
   <author>
     <name><![CDATA[Erik Taubeneck]]></name>
@@ -22,39 +22,33 @@
 
 <h2>Motivation</h2>
 
-<p>Suppose we have a <a href="http://flask.pocoo.org/">Flask</a> app that interacts with an API on a site that hosts webgames. Our users have OAuth'ed our application into the API so we can see their activity, and we want to track which games they have beat. (We&rsquo;ll assume that users only beat a game once or more generally we are only concerned with the first time they beat it.) We create the <code>Game</code> and <code>GameBeat</code> models like so:</p>
+<p>Suppose we have a <a href="http://flask.pocoo.org/">Flask</a> app that interacts with an API on a site that hosts webgames. Our users have OAuth&#8217;ed our application into the API so we can see their activity, and we want to track which games they have beat. (We&rsquo;ll assume that users only beat a game once or more generally we are only concerned with the first time they beat it.) We create the <code>Game</code> and <code>GameBeat</code> models like so:</p>
 
 <!-- more -->
 
 
-<p>``` python
-class Game(db.Model):</p>
+<pre><code class="python">class Game(db.Model):
+    __tablename__  = 'games'
+    id = db.Column(db.Integer, primary_key=True)
+    provider_game_id = db.Column(db.String(255))
+    provider_game_name = db.Column(db.String(255))
+    provider_game_category = db.Column(db.String(255))
 
-<pre><code>__tablename__  = 'games'
-id = db.Column(db.Integer, primary_key=True)
-provider_game_id = db.Column(db.String(255))
-provider_game_name = db.Column(db.String(255))
-provider_game_category = db.Column(db.String(255))
+class GameBeat(db.Model):
+    __tablename__ = 'game_beats'
+    id = db.Column(db.Integer, primary_key=True)
+    game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
+    game = db.relationship("Game",
+                           backref="beats",
+                           lazy="joined",
+                           innerjoin=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user = db.relationship("User",
+                           backref="game_beats",
+                           lazy="joined",
+                           innerjoin=True)
+    beat_at = db.Column(db.DateTime())
 </code></pre>
-
-<p>class GameBeat(db.Model):</p>
-
-<pre><code>__tablename__ = 'game_beats'
-id = db.Column(db.Integer, primary_key=True)
-game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
-game = db.relationship("Game",
-                       backref="beats",
-                       lazy="joined",
-                       innerjoin=True)
-user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-user = db.relationship("User",
-                       backref="game_beats",
-                       lazy="joined",
-                       innerjoin=True)
-beat_at = db.Column(db.DateTime())
-</code></pre>
-
-<p>```</p>
 
 <p>A few notes on these models. This assumes that each <code>Game</code> object coming from the API has an <code>id</code>, <code>name</code>, and <code>category</code> attribute, and anytime a game is beat by a user, you can get the datetime of when it was beat. One other convention is using <code>db.String(255)</code> for <code>provider_game_id</code> (rather than <code>db.Integer</code>). You will often see this with APIs where the <code>ids</code> can be very large integers (think of the number of Tweets on Twitter for example), and while Python handles big ints well, unless you want to use big ints for actually doing math, a string will be much more efficient (and you&rsquo;ll be less likely to have an issue with your backend datastore).</p>
 
@@ -64,76 +58,58 @@ beat_at = db.Column(db.DateTime())
 
 <p>If you&rsquo;ve ever played around with <a href="https://www.djangoproject.com/">Django</a>, you&rsquo;ve probably seen the <code>get_or_create()</code> function, but if not the concept is straight forward. First look for an object given a set of constraints, and if it doesn&rsquo;t exist, create it. The usefulness here is pretty obvious in our above example. Without it, given a list of <code>game_beats</code> from the API and a <code>user</code>, we&rsquo;d have to do something like</p>
 
-<p>```
-for game_beat_data in game_beat_data_list:</p>
-
-<pre><code>if db.session.query(Game).filter(Game.provider_game_id == game_beat_data['game']['game_id']).count() == 0:
-    game = Game(provider_game_id = game_beat_data['game']['game_id'],
-                provider_game_name = game_beat_data['game']['game_name'],
-                provider_game_category = game_beat_data['game']['game_category']
-                )
-else:
-    game = db.session.query(Game).filter(Game.provider_game_id == game_beat_data['game']['game_id']).one()
-if db.session.query(GameBeat).filter(GameBeat.game == game).filter(GameBeat.user == user).count() == 0:
-    game_beat = GameBeat(game = game,
-                         user = user,
-                         beat_at = game_beat_data['beat_at']
-                         )
-else:
-    game_beat = db.session.query(GameBeat).filter(GameBeat.game == game).filter(GameBeat.user == user).one()
-db.session.add(game_beat)
+<pre><code>for game_beat_data in game_beat_data_list:
+    if db.session.query(Game).filter(Game.provider_game_id == game_beat_data['game']['game_id']).count() == 0:
+        game = Game(provider_game_id = game_beat_data['game']['game_id'],
+                    provider_game_name = game_beat_data['game']['game_name'],
+                    provider_game_category = game_beat_data['game']['game_category']
+                    )
+    else:
+        game = db.session.query(Game).filter(Game.provider_game_id == game_beat_data['game']['game_id']).one()
+    if db.session.query(GameBeat).filter(GameBeat.game == game).filter(GameBeat.user == user).count() == 0:
+        game_beat = GameBeat(game = game,
+                             user = user,
+                             beat_at = game_beat_data['beat_at']
+                             )
+    else:
+        game_beat = db.session.query(GameBeat).filter(GameBeat.game == game).filter(GameBeat.user == user).one()
+    db.session.add(game_beat)
+db.session.commit()
 </code></pre>
-
-<p>db.session.commit()
-```</p>
 
 <p>This is quite verbose, and the logic is repeated twice, so it seems like a perfect place to write a function. Here&rsquo;s a first attempt, (and we&rsquo;ll build from here):</p>
 
-<p>```
-from sqlalchemy.orm.exc import NoResultFound</p>
+<pre><code>from sqlalchemy.orm.exc import NoResultFound
 
-<p>def get_one_or_create(session,</p>
-
-<pre><code>                  model,
-                  **kwargs):
+def get_one_or_create(session,
+                      model,
+                      **kwargs):
+   try:
+       return session.query(model).filter_by(**kwargs).one()
+   except NoResultFound:
+       return model(**kwargs)
 </code></pre>
-
-<p>   try:</p>
-
-<pre><code>   return session.query(model).filter_by(**kwargs).one()
-</code></pre>
-
-<p>   except NoResultFound:</p>
-
-<pre><code>   return model(**kwargs)
-</code></pre>
-
-<p>```</p>
 
 <p>There are a couple small differences here. Most obvious is the change to a <code>try/except</code> block rather than getting the <code>count()</code> explicitly. The advantage here is that if the object exists, we only have to make one call to the datastore. The other is the use of <code>filter_by()</code>, which is just a version of <code>filter</code> that uses keyword arguments.</p>
 
 <p>Using this function, our above example now becomes:</p>
 
-<p>```
-for game_beat_data in game_beat_data_list:</p>
-
-<pre><code>game = get_one_or_create(
-    db.session,
-    Game,
-    provider_game_id = game_beat_data['game']['game_id']
-)
-game_beat = get_one_or_create(
-    db.session,
-    GameBeat,
-    game = game,
-    user = user,
-    beat_at = game_beat_data['beat_at']
-)
-db.session.add(game_beat)
+<pre><code>for game_beat_data in game_beat_data_list:
+    game = get_one_or_create(
+        db.session,
+        Game,
+        provider_game_id = game_beat_data['game']['game_id']
+    )
+    game_beat = get_one_or_create(
+        db.session,
+        GameBeat,
+        game = game,
+        user = user,
+        beat_at = game_beat_data['beat_at']
+    )
+    db.session.add(game_beat)
+db.session.commit()
 </code></pre>
-
-<p>db.session.commit()
-```</p>
 
 <p>Now, since I&rsquo;ve broken the inputs into our function onto multiple lines, we&rsquo;ve only dropped from 17 lines to 15, however I&rsquo;d still argue this is a HUGE decrease in complexity. We can now actually fit in under 80 characters without having to use <code>\</code> for newlines, but more generally, it&rsquo;s simply more readable.</p>
 
@@ -141,32 +117,21 @@ db.session.add(game_beat)
 
 <p>I&rsquo;m not going to motivate this, but sometimes you&rsquo;ll want to know if the object you&rsquo;re getting back was newly created or pulled from the datastore, so we can easily return a <code>bool</code> as well by updating our function to</p>
 
-<p>```
-from sqlalchemy.orm.exc import NoResultFound</p>
+<pre><code>from sqlalchemy.orm.exc import NoResultFound
 
-<p>def get_one_or_create(session,</p>
-
-<pre><code>                  model,
-                  **kwargs):
+def get_one_or_create(session,
+                      model,
+                      **kwargs):
+   try:
+       return session.query(model).filter_by(**kwargs).one(), True
+   except NoResultFound:
+       return model(**kwargs), False
 </code></pre>
-
-<p>   try:</p>
-
-<pre><code>   return session.query(model).filter_by(**kwargs).one(), True
-</code></pre>
-
-<p>   except NoResultFound:</p>
-
-<pre><code>   return model(**kwargs), False
-</code></pre>
-
-<p>```</p>
 
 <p>and now we just have to remember that when we use it, to unpack into two variables</p>
 
-<p><code>
-obj, exists = get_one_or_create( … )
-</code></p>
+<pre><code>obj, exists = get_one_or_create( … )
+</code></pre>
 
 <p>or else we will end up with a <code>tuple</code> where we expected <code>obj</code>.</p>
 
@@ -174,72 +139,59 @@ obj, exists = get_one_or_create( … )
 
 <p>One of my favorite Python patterns is using the <code>@classmethod</code> decorator with a creator function. In our above example, suppose we want to be able to create a <code>Game</code> object, but we may or may not have the <code>provider_game_name</code> and <code>provider_game_category</code> immediately available. We can update our model definition (assuming we have a <code>get_game_data_from_api</code> function from our API):</p>
 
-<p>```
-class Game(db.Model):</p>
+<pre><code>class Game(db.Model):
+    __tablename__  = 'games'
+    id = db.Column(db.Integer, primary_key=True)
+    provider_game_id = db.Column(db.String(255))
+    provider_game_name = db.Column(db.String(255))
+    provider_game_category = db.Column(db.String(255))
 
-<pre><code>__tablename__  = 'games'
-id = db.Column(db.Integer, primary_key=True)
-provider_game_id = db.Column(db.String(255))
-provider_game_name = db.Column(db.String(255))
-provider_game_category = db.Column(db.String(255))
-
-@classmethod
-create_from_provider_game_id(cls, provider_game_id,**kwargs):
-    provider_game_name = kwargs.get('provider_game_name', None)
-    provider_game_category = kwargs.get('provider_game_category', None)
-    if not provider_game_name and provider_game_category:
-        game_data = get_game_data_from_api(provider_game_id)
-        provider_game_name = game_data['provider_game_name']
-        provider_game_category = game_data['provider_game_category']
-    return cls(provider_game_id = provider_game_id,
-               provider_game_name = provider_game_name,
-               provider_game_category = provider_game_category)
+    @classmethod
+    create_from_provider_game_id(cls, provider_game_id,**kwargs):
+        provider_game_name = kwargs.get('provider_game_name', None)
+        provider_game_category = kwargs.get('provider_game_category', None)
+        if not provider_game_name and provider_game_category:
+            game_data = get_game_data_from_api(provider_game_id)
+            provider_game_name = game_data['provider_game_name']
+            provider_game_category = game_data['provider_game_category']
+        return cls(provider_game_id = provider_game_id,
+                   provider_game_name = provider_game_name,
+                   provider_game_category = provider_game_category)
 </code></pre>
-
-<p>```</p>
 
 <p>now if we do</p>
 
-<p><code>
-game = Game.create_from_provider_game_id(provider_game_id = game_beat_data['game']['id'])
-</code></p>
+<pre><code>game = Game.create_from_provider_game_id(provider_game_id = game_beat_data['game']['id'])
+</code></pre>
 
 <p>we get a new <code>Game</code> object which will ping the API in order to get the other data to fill it out. But, if we already have the data (or we <em>maybe</em> have the data), we can do the following:</p>
 
-<p>```
-game = Game.create_from_provider_game_id(</p>
-
-<pre><code>       provider_game_id = game_beat_data['game']['id'],
-       provider_game_name = game_beat_data['game'].get('name', None),
-       provider_game_category = game_beat_data['game'].get('category', None)
-   )
+<pre><code>game = Game.create_from_provider_game_id(
+           provider_game_id = game_beat_data['game']['id'],
+           provider_game_name = game_beat_data['game'].get('name', None),
+           provider_game_category = game_beat_data['game'].get('category', None)
+       )
 </code></pre>
 
-<p>```</p>
-
-<p>I like to think of writing code like this as being <em>fault tolerant</em>. If you&rsquo;ve played with external APIs before, their behavior can often change slightly. Moreover, writing code like this gives me a consistent pattern, so if in one case I have a collection of <code>dict</code>s from an API with all the relevant game data, and in another case I only have a collection of the <code>provider_game_id</code>s, I can use the same pattern. If I have all the data, I can save myself <code>n</code> calls to the API, and if I&rsquo;m not sure (or maybe the API is inconsistent &ndash; yes it happens), it will still work.</p>
+<p>I like to think of writing code like this as being <em>fault tolerant</em>. If you&rsquo;ve played with external APIs before, their behavior can often change slightly. Moreover, writing code like this gives me a consistent pattern, so if in one case I have a collection of <code>dict</code>s from an API with all the relevant game data, and in another case I only have a collection of the <code>provider_game_id</code>s, I can use the same pattern. If I have all the data, I can save myself <code>n</code> calls to the API, and if I&rsquo;m not sure (or maybe the API is inconsistent - yes it happens), it will still work.</p>
 
 <h2>Updating <code>get_one_or_create</code></h2>
 
 <p>It&rsquo;s quickly obvious that our current implementation of <code>get_one_or_create()</code> won&rsquo;t handle such pattern for creating model instances. But this is programming, we are the creators. Let&rsquo;s update our function:</p>
 
-<p>```
-from sqlalchemy.orm.exc import NoResultFound</p>
+<pre><code>from sqlalchemy.orm.exc import NoResultFound
 
-<p>def get_one_or_create(session,</p>
-
-<pre><code>                  model,
-                  create_method='',
-                  create_method_kwargs=None,
-                  **kwargs):
-try:
-    return session.query(model).filter_by(**kwargs).one(), True
-except NoResultFound:
-    kwargs.update(create_method_kwargs or {})
-    return getattr(model, create_method, model)(**kwargs), False
+def get_one_or_create(session,
+                      model,
+                      create_method='',
+                      create_method_kwargs=None,
+                      **kwargs):
+    try:
+        return session.query(model).filter_by(**kwargs).one(), True
+    except NoResultFound:
+        kwargs.update(create_method_kwargs or {})
+        return getattr(model, create_method, model)(**kwargs), False
 </code></pre>
-
-<p>```</p>
 
 <p>The reason for adding this <code>create_method_kwargs</code> <code>dict</code> is fairly straight forward: consider a case where we need to hand a <code>user</code> to our API method <code>get_game_data_from_api</code>, but we don&rsquo;t store a <code>user</code> on the <code>Game</code> object and certainly don&rsquo;t want to include it in the <code>filter_by</code>.</p>
 
@@ -249,7 +201,7 @@ except NoResultFound:
 
 <p>By using my newly minted <code>get_one_or_create()</code> wherever I create objects, you can imagine my surprise when <code>MultipleResultsFound</code> exceptions starting being raised when trying to <code>get_one_or_create()</code> a <code>Game</code>. I scoured my code for any place that I created a <code>Game</code>; luckily <code>grep</code> makes this easy. Nothing. I expanded my test so that I was mocking a scan for 100 users. Nothing. Maybe there was a unicode issue where the <em>get</em> part was trying to match to a unicode to string (and failing) but the <em>create</em> part was then creating the attribute as a string. A new test quickly disproved this. Nothing.</p>
 
-<p>I was lost. I was writing tests <em>hoping</em> that they would fail just so I could figure out what was going wrong. And it was 4am. I <em>hate</em> going to sleep at a point like this. (I use <em>sleep</em> loosely here &ndash; I generally don&rsquo;t sleep well and lay awake trying to figure out how to fix my problem.) I&rsquo;m not sure if it was that night or the next morning (or even when you draw the line going to bed at 4am for that matter…), but I eventually realized why I was getting duplicate objects in my datastore.</p>
+<p>I was lost. I was writing tests <em>hoping</em> that they would fail just so I could figure out what was going wrong. And it was 4am. I <em>hate</em> going to sleep at a point like this. (I use <em>sleep</em> loosely here - I generally don&rsquo;t sleep well and lay awake trying to figure out how to fix my problem.) I&rsquo;m not sure if it was that night or the next morning (or even when you draw the line going to bed at 4am for that matter…), but I eventually realized why I was getting duplicate objects in my datastore.</p>
 
 <p>During the time between the <em>get</em> call when the object doesn&rsquo;t exist and the call to <code>db.session.commit()</code>, the object was created somewhere else. I was using Celery to batch the update and it was a brand new scan, so a lot of stuff was being created. Since the <code>db.session.commit()</code> comes at the end of the loop, there can actually be a fair amount of time between these calls. But even if a <code>db.session.commit()</code> happened sooner, we want to be <em>sure</em> that another matching object didn&rsquo;t get created between the <em>get</em> and <em>create</em> parts of a function.</p>
 
@@ -257,43 +209,35 @@ except NoResultFound:
 
 <h3><code>@celery.task()</code></h3>
 
-<p>I use quotes here in the way I&rsquo;d use air quotes if we were talking: the <a href="http://www.celeryproject.org/">Celery</a> async task model isn&rsquo;t true async in the way that <a href="http://twistedmatrix.com/trac/">Twisted</a> or <a href="http://docs.python.org/3.4/library/asyncio.html"><code>asyncio</code></a> is. Instead it uses an external messaging system (I use <a href="http://redis.io/">Redis</a> &ndash; mostly due to the price on <a href="https://www.heroku.com/">Heroku</a>). Functions and their inputs (remember that in Python, functions, like everything else, are objects) are JSONified, stored in the message system, and then deJSONified and executed in a completely separate process.</p>
+<p>I use quotes here in the way I&rsquo;d use air quotes if we were talking: the <a href="http://www.celeryproject.org/">Celery</a> async task model isn&rsquo;t true async in the way that <a href="http://twistedmatrix.com/trac/">Twisted</a> or <a href="http://docs.python.org/3.4/library/asyncio.html"><code>asyncio</code></a> is. Instead it uses an external messaging system (I use <a href="http://redis.io/">Redis</a> - mostly due to the price on <a href="https://www.heroku.com/">Heroku</a>). Functions and their inputs (remember that in Python, functions, like everything else, are objects) are JSONified, stored in the message system, and then deJSONified and executed in a completely separate process.</p>
 
 <p>It does become more complicated if you care about the result of a function call, but often you call functions only for their side effects. Sometimes you&rsquo;ll want to kick off a job of a few such function calls as a result of a web request. If the job takes awhile (anything more than a second) you certainly do not wish to wait (or can&rsquo;t, eventually you&rsquo;ll timeout) for that function to complete before responding. Celery makes this pattern straight forward, if not easy, to accomplish with a synchronous web framework like Flask.</p>
 
 <p>Celery also makes it really easy to horizontally scale a batch of jobs. Suppose we want to update the <code>GameBeat</code>s for all our users. We could create a celery task like so</p>
 
-<p>```
-from app import celery, db
+<pre><code>from app import celery, db
 from app.models import User
-from app.provider_apis import get_provider_api</p>
+from app.provider_apis import get_provider_api
 
-<p>@celery.task()
-def update_game_beats_for_user_id(user_id):</p>
-
-<pre><code>user = db.session.query(User).get(user_id)
-api = get_provider_api(user)
-game_beat_data_list = api.get_game_beats()
-for game_beat_data in game_beat_data_list:
-    …
+@celery.task()
+def update_game_beats_for_user_id(user_id):
+    user = db.session.query(User).get(user_id)
+    api = get_provider_api(user)
+    game_beat_data_list = api.get_game_beats()
+    for game_beat_data in game_beat_data_list:
+        …
 </code></pre>
-
-<p>```</p>
 
 <p>where the <code>…</code> completes the pattern above showing the usage of <code>get_one_or_create()</code>. We can now create a task for each user by running</p>
 
-<p>```
-from app.tasks import update_game_beats_for_user_id
+<pre><code>from app.tasks import update_game_beats_for_user_id
 from app import db
-from app.models import User</p>
+from app.models import User
 
-<p>users = db.session.query(User).query.all()
-for user in users</p>
-
-<pre><code>update_game_beats_for_user_id.delay(user.id)
+users = db.session.query(User).query.all()
+for user in users
+    update_game_beats_for_user_id.delay(user.id)
 </code></pre>
-
-<p>```</p>
 
 <p>This makes it possible to spin up a number of Celery workers (Heroku for this is as easy as scrolling a slider on a web interface and clicking &ldquo;Apply&rdquo;, or a single short bash command) and get all these tasks done quickly.</p>
 
@@ -305,15 +249,11 @@ for user in users</p>
 
 <p>In our example, since we plan to look up <code>Game</code> objects by <code>provider_game_id</code> and expect only one instance, we should have defined that column with a unique constraint like so:</p>
 
-<p>```
-class Game(db.Model):</p>
-
-<pre><code>…
-provider_game_id = db.Column(db.String(255), unique=True)
-…
+<pre><code>class Game(db.Model):
+    …
+    provider_game_id = db.Column(db.String(255), unique=True)
+    …
 </code></pre>
-
-<p>```</p>
 
 <p>Luckily we can make this change after the fact (which I won&rsquo;t show here, but I plan to write about next). Had we done this originally, we would never have gotten the <code>MultipleResultsFound</code> exception, but instead would have gotten a <code>IntegrityError</code> when trying to execute <code>db.session.commit()</code> of an transition that would <em>create</em> our duplicated item. This is desirable since the exception comes <em>before</em> the duplicate is introduced into the datastore. However, it would be best for our <code>get_one_or_create</code> function to take care of this as well.</p>
 
@@ -321,28 +261,24 @@ provider_game_id = db.Column(db.String(255), unique=True)
 
 <p>Again, think air quotes. As a developer, I never think or anything as final. Or maybe I always think an implementation is final, and I&rsquo;m always wrong. Regardless, of the concerns I&rsquo;ve reached so far, here is a &ldquo;final&rdquo; version:</p>
 
-<p>```
-def get_one_or_create(session,</p>
-
-<pre><code>                  model,
-                  create_method='',
-                  create_method_kwargs=None,
-                  **kwargs):
-try:
-    return session.query(model).filter_by(**kwargs).one(), True
-except NoResultFound:
-    kwargs.update(create_method_kwargs or {})
-    created = getattr(model, create_method, model)(**kwargs)
+<pre><code>def get_one_or_create(session,
+                      model,
+                      create_method='',
+                      create_method_kwargs=None,
+                      **kwargs):
     try:
-        session.add(created)
-        session.commit()
-        return created, False
-    except IntegrityError:
-        session.rollback()
         return session.query(model).filter_by(**kwargs).one(), True
+    except NoResultFound:
+        kwargs.update(create_method_kwargs or {})
+        created = getattr(model, create_method, model)(**kwargs)
+        try:
+            session.add(created)
+            session.commit()
+            return created, False
+        except IntegrityError:
+            session.rollback()
+            return session.query(model).filter_by(**kwargs).one(), True
 </code></pre>
-
-<p>```</p>
 
 <p>Here&rsquo;s what&rsquo;s happening. It tries to find the right object, and if it finds it, it returns it. If not, it creates it, adds it to the session, and attempts to commit. In the mean time, if another process has created and committed an object with the same details we filtered by, an <code>IntegrityError</code> raises and is caught. This means we should be able to get the newly created object, so we now get that and return it.</p>
 

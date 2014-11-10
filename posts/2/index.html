@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: celery - skien.cc</title>
+  <title>skien.cc</title>
   <meta name="author" content="Erik Taubeneck">
 
   
-  <meta name="description" content="Category: celery">
+  <meta name="description" content="Starting with AWS I&rsquo;m using Amazon Web Services for hosting my application. It has all sorts of fantastic capabilities, but for small stuff all &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://skien.cc/blog/categories/celery/">
+  <link rel="canonical" href="http://skien.cc/posts/2/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -64,40 +64,67 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
-    <h1 class="entry-title">Category: Celery</h1>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2013/01/07/using-flask-with-nginx-and-uwsgi/">Using Flask With Nginx and uWSGI</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-07T11:49:00-05:00" pubdate data-updated="true"></time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+  <div class="entry-content"><h2>Starting with AWS</h2>
 
-  
-  <h2>2014</h2>
+<p>I&rsquo;m using <a href="http://aws.amazon.com">Amazon Web Services</a> for hosting my application. It has all sorts of fantastic capabilities, but for small stuff all I&rsquo;m really using it for is to run a Ubuntu 12.04 Server. (AMI: ubuntu/images/ebs/ubuntu-precise-12.04-amd64-server-20121001 (ami-3d4ff254)). This is on the free tier, so if you&rsquo;re a new account, you can run one of these for free for a year. If not, running it full time will cost you about $15/month. Attach that thing to a elastic IP (they&rsquo;re free as long as you&rsquo;re using it) and connect with SSH.</p>
 
-<article>
-  
-<h1><a href="/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/">SQLAlchemy and Race Conditions: Implementing `get_one_or_create()`</a></h1>
-<time datetime="2014-01-15T13:57:00-05:00" pubdate><span class='month'>Jan</span> <span class='day'>15</span> <span class='year'>2014</span></time>
+<pre><code>ssh -i key.pem ubuntu@aws-ip-address
+</code></pre>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/celery/'>celery</a>, <a class='category' href='/blog/categories/python/'>python</a>, <a class='category' href='/blog/categories/sqlalchemy/'>sqlalchemy</a></span>
-</footer>
-
-
-</article>
+<p>One of the first things I do is add my public key to <code>~/.ssh/authorized_keys</code> on the server so that I can connect without the <code>-i key.pem</code>.</p>
 
 </div>
-
   
-</article>
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/01/07/using-flask-with-nginx-and-uwsgi/">Read on &rarr;</a>
+    </footer>
+  
 
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="1">Newer &rarr;</a>
+    
+  </div>
 </div>
-
 <aside class="sidebar">
   <img src="/images/me.jpg">
   <p>
@@ -166,7 +193,6 @@
 
   
 </aside>
-
 
     </div>
   </div>

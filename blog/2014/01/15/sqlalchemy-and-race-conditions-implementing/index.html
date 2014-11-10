@@ -87,7 +87,7 @@
   
 
 
-<time datetime="2014-01-15T13:57:00-05:00" pubdate data-updated="true">Jan 15<span>th</span>, 2014</time>
+<time datetime="2014-01-15T13:57:00-05:00" pubdate data-updated="true"></time>
         
       </p>
     
@@ -356,7 +356,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>I like to think of writing code like this as being <em>fault tolerant</em>. If you&rsquo;ve played with external APIs before, their behavior can often change slightly. Moreover, writing code like this gives me a consistent pattern, so if in one case I have a collection of <code>dict</code>s from an API with all the relevant game data, and in another case I only have a collection of the <code>provider_game_id</code>s, I can use the same pattern. If I have all the data, I can save myself <code>n</code> calls to the API, and if I&rsquo;m not sure (or maybe the API is inconsistent &ndash; yes it happens), it will still work.</p>
+<p>I like to think of writing code like this as being <em>fault tolerant</em>. If you&rsquo;ve played with external APIs before, their behavior can often change slightly. Moreover, writing code like this gives me a consistent pattern, so if in one case I have a collection of <code>dict</code>s from an API with all the relevant game data, and in another case I only have a collection of the <code>provider_game_id</code>s, I can use the same pattern. If I have all the data, I can save myself <code>n</code> calls to the API, and if I&rsquo;m not sure (or maybe the API is inconsistent - yes it happens), it will still work.</p>
 
 <h2>Updating <code>get_one_or_create</code></h2>
 
@@ -397,7 +397,7 @@
 
 <p>By using my newly minted <code>get_one_or_create()</code> wherever I create objects, you can imagine my surprise when <code>MultipleResultsFound</code> exceptions starting being raised when trying to <code>get_one_or_create()</code> a <code>Game</code>. I scoured my code for any place that I created a <code>Game</code>; luckily <code>grep</code> makes this easy. Nothing. I expanded my test so that I was mocking a scan for 100 users. Nothing. Maybe there was a unicode issue where the <em>get</em> part was trying to match to a unicode to string (and failing) but the <em>create</em> part was then creating the attribute as a string. A new test quickly disproved this. Nothing.</p>
 
-<p>I was lost. I was writing tests <em>hoping</em> that they would fail just so I could figure out what was going wrong. And it was 4am. I <em>hate</em> going to sleep at a point like this. (I use <em>sleep</em> loosely here &ndash; I generally don&rsquo;t sleep well and lay awake trying to figure out how to fix my problem.) I&rsquo;m not sure if it was that night or the next morning (or even when you draw the line going to bed at 4am for that matter…), but I eventually realized why I was getting duplicate objects in my datastore.</p>
+<p>I was lost. I was writing tests <em>hoping</em> that they would fail just so I could figure out what was going wrong. And it was 4am. I <em>hate</em> going to sleep at a point like this. (I use <em>sleep</em> loosely here - I generally don&rsquo;t sleep well and lay awake trying to figure out how to fix my problem.) I&rsquo;m not sure if it was that night or the next morning (or even when you draw the line going to bed at 4am for that matter…), but I eventually realized why I was getting duplicate objects in my datastore.</p>
 
 <p>During the time between the <em>get</em> call when the object doesn&rsquo;t exist and the call to <code>db.session.commit()</code>, the object was created somewhere else. I was using Celery to batch the update and it was a brand new scan, so a lot of stuff was being created. Since the <code>db.session.commit()</code> comes at the end of the loop, there can actually be a fair amount of time between these calls. But even if a <code>db.session.commit()</code> happened sooner, we want to be <em>sure</em> that another matching object didn&rsquo;t get created between the <em>get</em> and <em>create</em> parts of a function.</p>
 
@@ -405,7 +405,7 @@
 
 <h3><code>@celery.task()</code></h3>
 
-<p>I use quotes here in the way I&rsquo;d use air quotes if we were talking: the <a href="http://www.celeryproject.org/">Celery</a> async task model isn&rsquo;t true async in the way that <a href="http://twistedmatrix.com/trac/">Twisted</a> or <a href="http://docs.python.org/3.4/library/asyncio.html"><code>asyncio</code></a> is. Instead it uses an external messaging system (I use <a href="http://redis.io/">Redis</a> &ndash; mostly due to the price on <a href="https://www.heroku.com/">Heroku</a>). Functions and their inputs (remember that in Python, functions, like everything else, are objects) are JSONified, stored in the message system, and then deJSONified and executed in a completely separate process.</p>
+<p>I use quotes here in the way I&rsquo;d use air quotes if we were talking: the <a href="http://www.celeryproject.org/">Celery</a> async task model isn&rsquo;t true async in the way that <a href="http://twistedmatrix.com/trac/">Twisted</a> or <a href="http://docs.python.org/3.4/library/asyncio.html"><code>asyncio</code></a> is. Instead it uses an external messaging system (I use <a href="http://redis.io/">Redis</a> - mostly due to the price on <a href="https://www.heroku.com/">Heroku</a>). Functions and their inputs (remember that in Python, functions, like everything else, are objects) are JSONified, stored in the message system, and then deJSONified and executed in a completely separate process.</p>
 
 <p>It does become more complicated if you care about the result of a function call, but often you call functions only for their side effects. Sometimes you&rsquo;ll want to kick off a job of a few such function calls as a result of a web request. If the job takes awhile (anything more than a second) you certainly do not wish to wait (or can&rsquo;t, eventually you&rsquo;ll timeout) for that function to complete before responding. Celery makes this pattern straight forward, if not easy, to accomplish with a synchronous web framework like Flask.</p>
 
@@ -560,12 +560,12 @@
   
 
 
-<time datetime="2014-01-15T13:57:00-05:00" pubdate data-updated="true">Jan 15<span>th</span>, 2014</time>
+<time datetime="2014-01-15T13:57:00-05:00" pubdate data-updated="true"></time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/celery/'>Celery</a>, <a class='category' href='/blog/categories/sqlalchemy/'>SQLAlchemy</a>, <a class='category' href='/blog/categories/python/'>python</a>
+    <a class='category' href='/blog/categories/celery/'>celery</a>, <a class='category' href='/blog/categories/python/'>python</a>, <a class='category' href='/blog/categories/sqlalchemy/'>sqlalchemy</a>
   
 </span>
 
@@ -611,6 +611,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/10/behind-the-scenes-of-the-startup-podcast/">Behind the Scenes of the Startup Podcast</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/09/unpythonic-python/">Unpythonic Python</a>
       </li>
     
@@ -626,17 +630,13 @@
         <a href="/blog/2014/01/23/on-markdown/">On Markdown</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/01/15/sqlalchemy-and-race-conditions-implementing/">SQLAlchemy and Race Conditions: Implementing `get_one_or_create()`</a>
-      </li>
-    
   </ul>
 </section>
 
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
+    <li class="loading">Status updating&#8230;</li>
   </ul>
   
   <a href="https://github.com/eriktaubeneck">@eriktaubeneck</a> on GitHub

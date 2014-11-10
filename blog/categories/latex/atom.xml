@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: LaTeX | skien.cc]]></title>
+  <title><![CDATA[Category: latex | skien.cc]]></title>
   <link href="http://skien.cc/blog/categories/latex/atom.xml" rel="self"/>
   <link href="http://skien.cc/"/>
-  <updated>2014-05-06T10:01:44-04:00</updated>
+  <updated>2014-11-10T11:35:45-05:00</updated>
   <id>http://skien.cc/</id>
   <author>
     <name><![CDATA[Erik Taubeneck]]></name>
@@ -27,7 +27,7 @@
 <!-- more -->
 
 
-<p>Even using a slew of macros and shortcuts, reading LaTeX code is burdensome at best, and this will forever keep it&rsquo;s use out of the main stream. Worse, making formatting changes in LaTeX is onerous. Luckily for math students their are really great one&rsquo;s already created that are perfect for your homework, and journals traditionally provide their own. (My University library did not, however. Spent at least 8 hours and an argument with the librarian working on the Title page with spots for my advisors' signatures'.) Because of this, LaTeX will never be a mainstream word processor.</p>
+<p>Even using a slew of macros and shortcuts, reading LaTeX code is burdensome at best, and this will forever keep it&rsquo;s use out of the main stream. Worse, making formatting changes in LaTeX is onerous. Luckily for math students their are really great one&rsquo;s already created that are perfect for your homework, and journals traditionally provide their own. (My University library did not, however. Spent at least 8 hours and an argument with the librarian working on the Title page with spots for my advisors&#8217; signatures&#8217;.) Because of this, LaTeX will never be a mainstream word processor.</p>
 
 <p>However, I think there is one core design aspect of LaTeX that is far more ideal than traditional word processors: separation of corpus and design.</p>
 
@@ -39,10 +39,10 @@
 
 <p>The really clever thing here is that for <em>most</em> documents, there is very limited formatting to add. For web documents, like blog posts and comment sections, you mostly need sections, paragraphs, italics, bold, links, inline images, and inline quotes. Developers like the ability to add in text <code>code</code> and</p>
 
-<p><code>
-inline code blocks.
-</code>
-Best of all, you don&rsquo;t have to write in HTML (Who want&rsquo;s to write an article in <em>raw</em> HTML? Ain&rsquo;t nobody got time for that.) and you can achieve a great deal of formatting.</p>
+<pre><code>inline code blocks.
+</code></pre>
+
+<p>Best of all, you don&rsquo;t have to write in HTML (Who want&rsquo;s to write an article in <em>raw</em> HTML? Ain&rsquo;t nobody got time for that.) and you can achieve a great deal of formatting.</p>
 
 <h3>A Business Case</h3>
 
