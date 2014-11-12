@@ -4,10 +4,10 @@
 
 url: http://skien.cc
 title: skien.cc
-subtitle: a mathematician/economist/statistician by schooling, a data scientist by trade, and a python hacker by night, skien.cc (pronounced skīəns) is my blog aimed to track explorations in all of the above.
+subtitle: a mathematician/economist/statistician by schooling, a data scientist/python hacker by trade, and a homebrewer by night, skien.cc (pronounced skīəns) is my blog aimed to track explorations in all of the above.
 author: Erik Taubeneck
 simple_search: http://google.com/search
-description: a mathematician/economist/statistician by schooling, a data scientist by trade, and a python hacker by night, skien.cc (pronounced skīəns) is my blog aimed to track explorations in all of the above.
+description: a mathematician/economist/statistician by schooling, a data scientist/python hacker by trade, and a homebrewer by night, skien.cc (pronounced skīəns) is my blog aimed to track explorations in all of the above.
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
 # You can customize the format as defined in
@@ -70,7 +70,7 @@ github_show_profile_link: true
 github_skip_forks: true
 
 # Twitter
-twitter_user:
+twitter_user: taubeneck
 twitter_tweet_button: true
 
 # Google +1
